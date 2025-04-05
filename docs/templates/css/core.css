@@ -1004,7 +1004,9 @@ html.disable-code-color .return > var {
 	border: 1px solid light-dark(var(--light-scrollbar-track), var(--dark-scrollbar-track));
 }
 * { /* stylelint-disable-line no-duplicate-selectors */
-	scrollbar-color: light-dark(var(--light-scrollbar-thumb), var(--dark-scrollbar-thumb)) light-dark(var(--light-scrollbar-track), var(--dark-scrollbar-track));
+	scrollbar-color:
+		light-dark(var(--light-scrollbar-thumb), var(--dark-scrollbar-thumb))
+		light-dark(var(--light-scrollbar-track), var(--dark-scrollbar-track));
 	scrollbar-width: thin;
 }
 
