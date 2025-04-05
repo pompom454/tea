@@ -699,18 +699,18 @@ Repeatedly executes its contents. There are three forms: a conditional-only form
 <a href="#macros-macro-break"><code>&lt;&lt;break&gt;&gt;</code></a> and <a href="#macros-macro-continue"><code>&lt;&lt;continue&gt;&gt;</code></a>.
 </p>
 
-##### History:
+#### History:
 
 * `v2.0.0`: Introduced.
 * `v2.20.0`: Added range form.
 * `v2.37.0`: Added range over integers and made range value variable optional.
 
-#### Notes
+#### Notes:
 
 * Loop variables are perfect candidates for the use of temporary variables—e.g., `_i`.
 * To ensure that line-breaks end up where you want them, or not, extra care may be required.
 
-#### Conditional forms *(both conditional-only and 3-part)*
+##### Conditional forms
 
 Executes its contents while the given conditional expression evaluates to `true`.  If no conditional expression is given, it is equivalent to specifying `true`.
 
@@ -718,45 +718,24 @@ Executes its contents while the given conditional expression evaluates to `true`
 The maximum number of loop iterations in the conditional forms is not unlimited by default, however, it is configurable.  See <a href="#config-api-property-macros-maxloopiterations"><code>Config.macros.maxLoopIterations</code></a> for more information.
 </p>
 
-##### Arguments:
+##### Range form
+
+Iterates through all enumerable entries of the given collection.  For each iteration, it assigns the key/value pair of the associated entry in the collection to the iteration variables and then executes its contents.  Valid collection types are: arrays, generic objects, integers, maps, sets, and strings.
+
+#### Arguments:
+
+##### Conditional forms
 
 * **`init`:** (optional) A valid expression, evaluated once at loop initialization.  Typically used to initialize counter variable(s).  See [`<<set>>`](#macros-macro-set) for more information.
 * **`conditional`:** (optional) A valid conditional expression, evaluated prior to each loop iteration.  As long as the expression evaluates to `true`, the loop is executed.  See [`<<if>>`](#macros-macro-if) for more information.
 * **`post`:** (optional) A valid expression, evaluated after each loop iteration.  Typically used to update counter variable(s).  See [`<<set>>`](#macros-macro-set) for more information.
 
-##### Examples: *(only 3-part conditional form shown)*
-
-```
-→ Example setup
-<<set $dwarves to ["Doc", "Dopey", "Bashful", "Grumpy", "Sneezy", "Sleepy", "Happy"]>>
-
-→ Loop
-<<for _i to 0; _i lt $dwarves.length; _i++>>
-<<print _i + 1>>. $dwarves[_i]
-<</for>>
-
-→ Result
-1. Doc
-2. Dopey
-3. Bashful
-4. Grumpy
-5. Sneezy
-6. Sleepy
-7. Happy
-```
-
-#### Range form
-
-Iterates through all enumerable entries of the given collection.  For each iteration, it assigns the key/value pair of the associated entry in the collection to the iteration variables and then executes its contents.  Valid collection types are: arrays, generic objects, integers, maps, sets, and strings.
-
-##### Arguments:
+##### Range form
 
 * **`keyVariable`:** (optional) A story or temporary variable that will be set to the iteration key.
 * **`valueVariable`:** (optional) A story or temporary variable that will be set to the iteration value.
 * **`range`:** Keyword, used to signify that the loop is using the range form syntax.
-* **`collection`:** An expression that yields a valid collection type, evaluated once at loop initialization.
-
-##### Iteration Values:
+* **`collection`:** An expression that yields a valid collection type (see below), evaluated once at loop initialization.
 
 <table>
 <tbody>
@@ -787,45 +766,61 @@ Iterates through all enumerable entries of the given collection.  For each itera
 Strings are iterated by Unicode code point, however, due to historic reasons they are comprised of, and indexed by, individual UTF-16 code units.  This means that some code points may span multiple code units—e.g., the character 💩 is one code point, but two code units.
 </p>
 
-##### Examples:
+#### Examples:
 
-###### Range over array
+##### Conditional forms
+
+Iterating over an array.
 
 ```
-→ Example setup
-<<set $dwarves to ["Doc", "Dopey", "Bashful", "Grumpy", "Sneezy", "Sleepy", "Happy"]>>
+/* Given the following: */
+<<set $pies to ["Apple", "Blueberry", "Cherry", "Pecan", "Raspberry"]>>
 
-→ Loop
-<<for _i, _name range $dwarves>>
+<<for _i to 0; _i lt $pies.length; _i++>>
+<<print _i + 1>>. $pies[_i]
+<</for>>
+
+/* Outputs */
+1. Apple
+2. Blueberry
+3. Cherry
+4. Pecan
+5. Raspberry
+```
+
+##### Range form
+
+Ranging over an array.
+
+```
+/* Given the following: */
+<<set $pies to ["Apple", "Blueberry", "Cherry", "Pecan", "Raspberry"]>>
+
+<<for _i, _name range $pies>>
 <<print _i + 1>>. _name
 <</for>>
 
-→ Result
-1. Doc
-2. Dopey
-3. Bashful
-4. Grumpy
-5. Sneezy
-6. Sleepy
-7. Happy
+/* Outputs */
+1. Apple
+2. Blueberry
+3. Cherry
+4. Pecan
+5. Raspberry
 ```
 
-###### Range over integer
+Ranging over an integer.
 
 ```
-→ Loop
-<<for _value range 7>>
+<<for _value range 5>>
 <<print _value + 1>>.
 <</for>>
 
-→ Result
+/* Outputs */
 1.
 2.
 3.
 4.
 5.
-6.
-7.
 ```
 
 <!-- *********************************************************************** -->
