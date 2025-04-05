@@ -457,7 +457,6 @@ code, kbd, samp, var {
 	border: 1px solid light-dark(var(--light-box-border-color), var(--dark-box-border-color));
 	border-radius: 3px;
 	color: light-dark(var(--light-code-color), var(--dark-code-color));
-	/* font-style: normal; */
 	margin: 0;
 	padding: 0;
 	white-space: nowrap;
@@ -846,6 +845,7 @@ nav h1 {
 	margin: 10px 0 5px;
 	padding: 0;
 }
+
 nav h2 {
 	border: none;
 	border-bottom: 1px solid light-dark(var(--light-separator-color), var(--dark-separator-color));
@@ -908,6 +908,7 @@ nav.enhanced > header > #controls > button#color-toggle.disabled::after {
 }
 nav.enhanced > header > #controls > a {
 	cursor: pointer;
+	font-weight: bold;
 	text-decoration: none;
 }
 nav.enhanced > header > #controls > a#lists-collapse::before {
@@ -917,25 +918,29 @@ nav.enhanced > header > #controls > a#lists-expand::before {
 	content: "\e805";
 }
 nav.enhanced > h2 {
+	display: flex;
 	position: relative;
 }
 nav.enhanced > h2 > .child-heading {
-	margin-left: 0.25em;
+	flex: 0 0 auto;
+	text-align: center;
+	width: 1.25em;
 }
 nav.enhanced > h2 > .child-heading::before {
 	color: light-dark(var(--light-nav-subhead-mark), var(--dark-nav-subhead-mark));
 	content: "\e81a";
 }
+nav.enhanced > h2 > a:first-of-type {
+	flex: 1 0 auto;
+}
 nav.enhanced > h2 > a.list-toggle {
 	cursor: pointer;
-	display: inline-block;
+	flex: 0 0 auto;
 	font-family: sc-doc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
 	font-style: normal;
 	font-variant: normal;
 	font-weight: bold;
-	height: 1.4em;
-	position: absolute;
-	right: 0.2em;
+	height: auto;
 	speak: none;
 	text-align: center;
 	text-decoration: none;
@@ -946,7 +951,7 @@ nav.enhanced > h2 > a.list-toggle {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	width: 1.4em;
+	width: 1.8em;
 
 	/* For macOS. */
 	-webkit-font-smoothing: antialiased;
