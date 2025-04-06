@@ -35,13 +35,13 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Passages settings.
 	let cfgPassagesDisplayTitles = false;
 	let cfgPassagesNobr          = false;
-	let cfgPassagesStart; // Set by `Story.init()`
+	let cfgPassagesStart; // NOTE: Initially set by `Story.init()`
 	let cfgPassagesOnProcess;
 	let cfgPassagesTransitionOut;
 
 	// Saves settings.
 	let cfgSavesDescriptions;
-	let cfgSavesId; // NOTE: Initially set by `Story.init()`.
+	let cfgSavesId; // NOTE: Initially set by `Story.init()`
 	let cfgSavesIsAllowed;
 	let cfgSavesMaxAuto      = 0;
 	let cfgSavesMaxSlot      = 8;
