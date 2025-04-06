@@ -7,7 +7,8 @@
 
 ***********************************************************************************************************************/
 /*
-	global Alert, Config, Dialog, Engine, L10n, Save, Setting, State, Story, UI, Wikifier, setDisplayTitle
+	global Alert, Config, Dialog, Engine, L10n, Save, Setting, State, Story, UI, Wikifier, setDisplayTitle,
+	       warnDeprecated
 */
 
 var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -186,7 +187,7 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 			else {
 				jQuery('#history-jumpto').remove();
 			}
-			/* /[DEPRECATED] */
+			/* [/DEPRECATED] */
 
 			jQuery('#history-forward')
 				.ariaDisabled(State.length === State.size)
@@ -340,6 +341,7 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 			})
 			.text(L10n.get('restartTitle'));
 
+		/* [DEPRECATED] */
 		// Set up the Share menu item.
 		if (Story.has('StoryShare')) {
 			jQuery('#menu-item-share a')
@@ -355,6 +357,7 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 		else {
 			jQuery('#menu-item-share').remove();
 		}
+		/* [/DEPRECATED] */
 	}
 
 	function stow(noAnimation) {
@@ -411,26 +414,6 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	// [DEPRECATED]
-	function update() {
-		if (BUILD_DEBUG) { console.log('[UIBar/update()]'); }
-
-		console.warn('[DEPRECATED] UIBar.update() is deprecated.');
-
-		if (!$uiBar) {
-			return;
-		}
-
-		UI.update();
-
-		return UIBar;
-	}
-
-
-	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
@@ -446,10 +429,37 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 		show     : { value : show },
 		start    : { value : start },
 		stow     : { value : stow },
-		unstow   : { value : unstow },
+		unstow   : { value : unstow }
 
-		// Deprecated Functions.
-		setStoryElements : { value : update },
-		update           : { value : update }
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, setStoryElements : {
+			value() {
+				warnDeprecated('UIBar.setStoryElements()');
+
+				if (!$uiBar) {
+					return;
+				}
+
+				UI.update();
+
+				return UIBar;
+			}
+		}
+		, update : {
+			value() {
+				warnDeprecated('UIBar.update()');
+
+				if (!$uiBar) {
+					return;
+				}
+
+				UI.update();
+
+				return UIBar;
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

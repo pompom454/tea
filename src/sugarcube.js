@@ -2,14 +2,14 @@
 
 	sugarcube.js
 
-	Copyright © 2013–2024 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
+	Copyright © 2013–2025 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
 	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar,
-	       Util, Visibility, Wikifier, WikifierUtil, triggerEvent
+	       Util, Visibility, Wikifier, WikifierUtil, triggerEvent, warnDeprecated
 */
 /* eslint-disable no-var */
 
@@ -21,10 +21,6 @@ var version = (() => { // eslint-disable-line no-unused-vars, no-var
 	const semVerRE = /^[Vv]?(\d+)(?:\.(\d+)(?:\.(\d+)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)?)?$/;
 
 	return Object.preventExtensions(Object.create(null, {
-		/* legacy */
-		title : { value : name },
-		/* /legacy */
-
 		name       : { value : name },
 		major      : { value : '{{BUILD_VERSION_MAJOR}}' },
 		minor      : { value : '{{BUILD_VERSION_MINOR}}' },
@@ -85,6 +81,17 @@ var version = (() => { // eslint-disable-line no-unused-vars, no-var
 				return `${this.major}.${this.minor}.${this.patch}${prerelease}+${this.build}`;
 			}
 		}
+
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, title : {
+			get : () => {
+				warnDeprecated('version.title', 'version.name');
+				return name;
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();
 
@@ -109,7 +116,7 @@ var storage = null; // eslint-disable-line no-unused-vars
 /*
 	Legacy variables.
 */
-/* legacy */
+/* [DEPRECATED] */
 /* eslint-disable no-unused-vars */
 var macros      = {};
 var postdisplay = {};
@@ -118,7 +125,7 @@ var predisplay  = {};
 var prehistory  = {};
 var prerender   = {};
 /* eslint-enable no-unused-vars */
-/* /legacy */
+/* [/DEPRECATED] */
 
 /*
 	Global `SugarCube` object.  Allows scripts to detect if they're running in SugarCube by

@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Macro, Wikifier */
+/* global Config, Macro, Wikifier, warnDeprecated */
 
 /*
 	<<silent>>
@@ -16,7 +16,7 @@ Macro.add('silent', {
 	tags     : null,
 
 	handler() {
-		if (this.name === 'silently') { console.warn(`[DEPRECATED] <<${this.name}>> macro is deprecated.`); }
+		if (this.name === 'silently') { warnDeprecated(`<<${this.name}>> macro`); }
 
 		const contents = this.payload[0].contents.trim();
 

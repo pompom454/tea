@@ -196,7 +196,7 @@ Macro.add('type', {
 
 					// …we've visited the passage before.
 					|| !Config.macros.typeVisitedPassages
-					&& State.passages.slice(0, -1).some(title => title === passage)
+					&& State.passages.slice(0, -1).some(name => name === passage)
 
 					// …there were any content errors.
 					|| $wrapper.find('.error').length > 0

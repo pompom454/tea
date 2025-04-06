@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Has, L10n, Story, getActiveElement, getTypeOf, triggerEvent */
+/* global L10n, Story, getActiveElement, getTypeOf, triggerEvent, warnDeprecated */
 
 var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Default top position.
@@ -133,40 +133,40 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Calculate the dialog's new inset values based on its current dimensions.
 		//
-		// NOTE: Subtract `1` from both space values to address a Firefox issue.
+		// NOTE: Subtract `1` from both position values to address a Firefox issue.
 		// QUESTION: Is this still necessary?
-		let horzSpace = $window.width() - $dialog.outerWidth(true) - 1;
-		let vertSpace = $window.height() - $dialog.outerHeight(true) - 1;
+		let hWidth = $window.width() - $dialog.outerWidth(true) - 1;
+		let vWidth = $window.height() - $dialog.outerHeight(true) - 1;
 
-		if (horzSpace <= minPos * 2 + scrollbarWidth) {
-			vertSpace -= scrollbarWidth;
+		if (hWidth <= minPos * 2 + scrollbarWidth) {
+			vWidth -= scrollbarWidth;
 		}
 
-		if (vertSpace <= minPos * 2 + scrollbarWidth) {
-			horzSpace -= scrollbarWidth;
+		if (vWidth <= minPos * 2 + scrollbarWidth) {
+			hWidth -= scrollbarWidth;
 		}
 
 		/* eslint-disable prefer-template */
 		// Calculate the horizontal inset values in pixels.
-		if (horzSpace <= minPos * 2) {
+		if (hWidth <= minPos * 2) {
 			inset.left = inset.right = minPos + 'px';
 		}
 		else {
-			inset.left = inset.right = (horzSpace / 2 >> 0) + 'px';
+			inset.left = inset.right = (hWidth / 2 >> 0) + 'px';
 		}
 
 		// Calculate the vertical inset values in pixels.
-		if (vertSpace <= minPos * 2) {
+		if (vWidth <= minPos * 2) {
 			inset.top = inset.bottom = minPos + 'px';
 		}
 		else {
-			const vertPos = vertSpace / 2 >> 0;
+			const vPos = vWidth / 2 >> 0;
 
-			if (vertPos > top) {
+			if (vPos > top) {
 				inset.top = top + 'px';
 			}
 			else {
-				inset.top = inset.bottom = vertPos + 'px';
+				inset.top = inset.bottom = vPos + 'px';
 			}
 		}
 		/* eslint-enable prefer-template */
@@ -211,9 +211,6 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		if (observer) {
 			observer.disconnect();
 			observer = null;
-		}
-		else {
-			$body.off('.dialog-resize');
 		}
 
 		jQuery(window)
@@ -264,9 +261,6 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		// Trigger a `:dialogclosed` event on the dialog body.
-		/* legacy */
-		triggerEvent(':dialogclose', $body);
-		/* /legacy */
 		triggerEvent(':dialogclosed', $body);
 
 		return Dialog;
@@ -385,32 +379,19 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 			.on('resize.dialog-resize', resizeHandler);
 
 		// Add the dialog mutation resize handler.
-		if (Has.mutationObserver) {
-			observer = new MutationObserver(mutations => {
-				for (let i = 0; i < mutations.length; ++i) {
-					if (mutations[i].type === 'childList') {
-						$body.imagesLoaded().always(resizeHandler);
-						resizeHandler();
-						break;
-					}
+		observer = new MutationObserver(mutations => {
+			for (let i = 0; i < mutations.length; ++i) {
+				if (mutations[i].type === 'childList') {
+					$body.imagesLoaded().always(resizeHandler);
+					resizeHandler();
+					break;
 				}
-			});
-			observer.observe(getBody(), {
-				childList : true,
-				subtree   : true
-			});
-		}
-		else {
-			$body
-				.off('.dialog-resize')
-				.on(
-					'DOMNodeInserted.dialog-resize DOMNodeRemoved.dialog-resize',
-					() => {
-						$body.imagesLoaded().always(resizeHandler);
-						resizeHandler();
-					}
-				);
-		}
+			}
+		});
+		observer.observe(getBody(), {
+			childList : true,
+			subtree   : true
+		});
 
 		// Set up the close handlers.
 		jQuery(document)
@@ -429,9 +410,6 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 			});
 
 		// Trigger a `:dialogopened` event on the dialog body.
-		/* legacy */
-		triggerEvent(':dialogopen', $body);
-		/* /legacy */
 		triggerEvent(':dialogopened', $body);
 
 		return Dialog;
@@ -463,22 +441,6 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	/*
-		[DEPRECATED] Prepares the dialog for use.
-		Returns the dialog's body container.
-	*/
-	function setup(title, classNames) {
-		console.warn('[DEPRECATED] Dialog.setup() is deprecated.');
-
-		create(title, classNames);
-		return getBody();
-	}
-
-
-	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
@@ -493,9 +455,19 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		open        : { value : open },
 		resize      : { value : resize },
 		wiki        : { value : wiki },
-		wikiPassage : { value : wikiPassage },
+		wikiPassage : { value : wikiPassage }
 
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
 		// Deprecated Functions.
-		setup : { value : setup }
+		, setup : {
+			value(title, classNames) {
+				warnDeprecated('Dialog.setup()');
+				create(title, classNames);
+				return getBody();
+			}
+		 }
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

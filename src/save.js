@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Engine, L10n, Serial, State, createFilename, enumFrom, getTypeOf, storage */
+/* global Config, Engine, L10n, Serial, State, createFilename, enumFrom, getTypeOf, storage, warnDeprecated */
 
 /*
 	Save API (v3) static object.
@@ -20,14 +20,14 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		Disk    : 3,
 		Base64  : 4
 
-		/* legacy */
+		/* [DEPRECATED] */
 		/* eslint-disable comma-style */
 		// Duplicate `Auto` for v2 `'autosave'` compatibility.
 		, Autosave : 1
 		// Duplicate `Base64` for v2 `'serialize'` compatibility.
 		, Serialize : 4
 		/* eslint-enable comma-style */
-		/* /legacy */
+		/* [/DEPRECATED] */
 	});
 
 	// Browser index maximum value constant (`0`-based).
@@ -896,7 +896,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		Marshaling Functions.
 	*******************************************************************************/
 
-	/* legacy */
+	/* [DEPRECATED] */
 	function migrateLegacyV2SaveDetail(save) {
 		switch (save.type) {
 			case SaveType.Auto:   return { type : 'autosave' };
@@ -905,9 +905,9 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 			case SaveType.Base64: return { type : 'serialize' };
 		}
 
-		throw new Error(`save.type must be an integer number (received: ${getTypeOf(save.type)})`);
+		throw new Error(`save.type must be of Save.Type (received: ${getTypeOf(save.type)})`);
 	}
-	/* /legacy */
+	/* [/DEPRECATED] */
 
 	function marshal(details) {
 		if (BUILD_DEBUG) { console.log(`[Save/marshal({ type : "${details.type}" })]`); }
@@ -925,9 +925,10 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Call any `onSave` handlers.
 		onSaveHandlers.forEach(fn => fn(
 			save
-			/* legacy */
+
+			/* [DEPRECATED] */
 			, migrateLegacyV2SaveDetail(save)
-			/* /legacy */
+			/* [/DEPRECATED] */
 		));
 
 		// Delta encode the state history and delete the non-encoded property.
@@ -966,8 +967,8 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		delete save.state.delta;
 		/* eslint-enable no-param-reassign */
 
-		/* legacy */
-		// TODO: Delete this in July 2025.
+		/* [DEPRECATED] */
+		// TODO: Delete this in January 2026.
 		//
 		// Replace a string `save.type` with an integer.
 		if (typeof save.type === 'string') {
@@ -1001,7 +1002,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 				throw new Error('save.type is unknown');
 			}
 		}
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		// Call any `onLoad` handlers.
 		onLoadHandlers.forEach(fn => fn(save));
@@ -1152,157 +1153,160 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 				delete : { value : onSaveDelete },
 				size   : { get : onSaveSize }
 			}))
-		},
+		}
 
-		/*
-			Legacy API.
-		*/
-		get : {
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		// Deprecated Functions.
+		, get : {
 			value() {
+				console.warn('[REMOVED] Save.get() has been removed.');
 				throw new Error('[REMOVED] Save.get() has been removed.');
 			}
-		},
-		clear : {
+		}
+		, clear : {
 			value() {
-				console.warn('[DEPRECATED] Save.clear() is deprecated.');
+				warnDeprecated('Save.clear()');
 				return browserClear();
 			}
-		},
-		ok : {
+		}
+		, ok : {
 			value() {
-				console.warn('[DEPRECATED] Save.ok() is deprecated.');
+				warnDeprecated('Save.ok()');
 				return browserIsEnabled();
 			}
-		},
+		}
 
 		// Autosave Functions.
-		autosave : {
+		, autosave : {
 			value : Object.preventExtensions(Object.create(null, {
 				ok : {
 					value() {
-						console.warn('[DEPRECATED] Save.autosave.ok() is deprecated.');
+						warnDeprecated('Save.autosave.ok()');
 						return autoIsEnabled();
 					}
 				},
 				has : {
 					value() {
-						console.warn('[DEPRECATED] Save.autosave.has() is deprecated.');
+						warnDeprecated('Save.autosave.has()');
 						return autoHas(0);
 					}
 				},
 				get : {
 					value() {
-						console.warn('[DEPRECATED] Save.autosave.get() is deprecated.');
+						warnDeprecated('Save.autosave.get()');
 						return autoGet(0);
 					}
 				},
 				load : {
 					value() {
-						console.warn('[DEPRECATED] Save.autosave.load() is deprecated.');
+						warnDeprecated('Save.autosave.load()');
 						return autoLoad(0);
 					}
 				},
 				save : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.autosave.save() is deprecated.');
+						warnDeprecated('Save.autosave.save()');
 						return autoSave(...args);
 					}
 				},
 				delete : {
 					value() {
-						console.warn('[DEPRECATED] Save.autosave.delete() is deprecated.');
+						warnDeprecated('Save.autosave.delete()');
 						return autoDelete(0);
 					}
 				}
 			}))
-		},
+		}
 
 		// Slots Functions.
-		slots : {
+		, slots : {
 			value : Object.preventExtensions(Object.create(null, {
 				ok : {
 					value() {
-						console.warn('[DEPRECATED] Save.slots.ok() is deprecated.');
+						warnDeprecated('Save.slots.ok()');
 						return slotIsEnabled();
 					}
 				},
 				length : {
 					get() {
-						console.warn('[DEPRECATED] Save.slots.length is deprecated.');
+						warnDeprecated('Save.slots.length');
 						return Config.saves.maxSlotSaves;
 					}
 				},
 				isEmpty : {
 					value() {
-						console.warn('[DEPRECATED] Save.slots.isEmpty() is deprecated.');
+						warnDeprecated('Save.slots.isEmpty()');
 						return slotSize() === 0;
 					}
 				},
 				count : {
 					value() {
-						console.warn('[DEPRECATED] Save.slots.count() is deprecated.');
+						warnDeprecated('Save.slots.count()');
 						return slotSize();
 					}
 				},
 				has : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.has() is deprecated.');
+						warnDeprecated('Save.slots.has()');
 						return slotHas(...args);
 					}
 				},
 				get : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.get() is deprecated.');
+						warnDeprecated('Save.slots.get()');
 						return slotGet(...args);
 					}
 				},
 				load : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.load() is deprecated.');
+						warnDeprecated('Save.slots.load()');
 						return slotLoad(...args);
 					}
 				},
 				save : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.save() is deprecated.');
+						warnDeprecated('Save.slots.save()');
 						return slotSave(...args);
 					}
 				},
 				delete : {
 					value(...args) {
-						console.warn('[DEPRECATED] Save.slots.delete() is deprecated.');
+						warnDeprecated('Save.slots.delete()');
 						return slotDelete(...args);
 					}
 				}
 			}))
-		},
+		}
 
 		// Disk Import/Export Functions.
-		export : {
+		, export : {
 			value(...args) {
-				console.warn('[DEPRECATED] Save.export() is deprecated.');
+				warnDeprecated('Save.export()');
 				return diskSave(...args);
 			}
-		},
-		import : {
+		}
+		, import : {
 			value(...args) {
-				console.warn('[DEPRECATED] Save.import() is deprecated.');
+				warnDeprecated('Save.import()');
 				return diskLoad(...args);
 			}
-		},
+		}
 
 		// Serialization Saves Functions.
-		serialize : {
+		, serialize : {
 			value(...args) {
-				console.warn('[DEPRECATED] Save.serialize() is deprecated.');
+				warnDeprecated('Save.serialize()');
 				return base64Save(...args);
 			}
-		},
-		deserialize : {
+		}
+		, deserialize : {
 			value(...args) {
-				console.warn('[DEPRECATED] Save.deserialize() is deprecated.');
+				warnDeprecated('Save.deserialize()');
 				return base64Load(...args);
 			}
 		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

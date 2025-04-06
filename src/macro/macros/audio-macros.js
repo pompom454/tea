@@ -175,7 +175,7 @@
 
 						case 'goto': {
 							if (args.length === 0) {
-								return this.error('goto missing required passage title');
+								return this.error('goto missing required passage name');
 							}
 
 							raw = args.shift();

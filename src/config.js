@@ -6,68 +6,54 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Save, State, Story, getTypeOf */
+/* global Save, State, Story, getTypeOf, warnDeprecated */
 
 var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	// General settings.
-	let _addVisitedLinkClass     = false;
-	let _cleanupWikifierOutput   = false;
-	let _debug                   = false;
-	let _enableOptionalDebugging = false;
-	let _loadDelay               = 0;
+	let cfgAddVisitedLinkClass     = false;
+	let cfgCleanupWikifierOutput   = false;
+	let cfgDebug                   = false;
+	let cfgEnableOptionalDebugging = false;
+	let cfgLoadDelay               = 0;
 
 	// Audio settings.
-	let _audioPauseOnFadeToZero = true;
-	let _audioPreloadMetadata   = true;
+	let cfgAudioPauseOnFadeToZero = true;
+	let cfgAudioPreloadMetadata   = true;
 
 	// State history settings.
-	let _historyControls  = true;
-	let _historyMaxStates = 40;
+	let cfgHistoryControls  = true;
+	let cfgHistoryMaxStates = 40;
 
 	// Macros settings.
-	let _macrosMaxLoopIterations   = 1000;
-	let _macrosTypeSkipKey         = '\x20'; // Space
-	let _macrosTypeVisitedPassages = true;
+	let cfgMacrosMaxLoopIterations   = 1000;
+	let cfgMacrosTypeSkipKey         = '\x20'; // Space
+	let cfgMacrosTypeVisitedPassages = true;
 
 	// Navigation settings.
-	let _navigationOverride;
+	let cfgNavigationOverride;
 
 	// Passages settings.
-	let _passagesDisplayTitles = false;
-	let _passagesNobr          = false;
-	let _passagesStart; // Set by `Story.init()`
-	let _passagesOnProcess;
-	let _passagesTransitionOut;
+	let cfgPassagesDisplayTitles = false;
+	let cfgPassagesNobr          = false;
+	let cfgPassagesStart; // Set by `Story.init()`
+	let cfgPassagesOnProcess;
+	let cfgPassagesTransitionOut;
 
 	// Saves settings.
-	let _savesDescriptions;
-	let _savesId; // NOTE: Initially set by `Story.init()`.
-	let _savesIsAllowed;
-	let _savesMaxAuto      = 0;
-	let _savesMaxSlot      = 8;
-	let _savesMetadata;
-	let _savesVersion;
-	/* legacy */
-	let _savesAutoload; // [DEPRECATED]
-	/* /legacy */
+	let cfgSavesDescriptions;
+	let cfgSavesId; // NOTE: Initially set by `Story.init()`.
+	let cfgSavesIsAllowed;
+	let cfgSavesMaxAuto      = 0;
+	let cfgSavesMaxSlot      = 8;
+	let cfgSavesMetadata;
+	let cfgSavesVersion;
+	/* [DEPRECATED] */
+	let cfgSavesAutoload;
+	/* [/DEPRECATED] */
 
 	// UI settings.
-	let _uiStowBarInitially    = 800;
-	let _uiUpdateStoryElements = true;
-
-
-	/*******************************************************************************
-		Error Constants.
-	*******************************************************************************/
-
-	const errMacrosIfAssignmentErrorDeprecated = '[DEPRECATED] Config.macros.ifAssignmentError has been deprecated, see Config.enableOptionalDebugging instead';
-	const errPassagesDescriptionsDeprecated    = '[DEPRECATED] Config.passages.descriptions has been deprecated, see Config.saves.descriptions instead';
-	const errSavesAutoloadDeprecated           = '[DEPRECATED] Config.saves.autoload has been deprecated, see the Save.browser.continue API instead';
-	const _baseSavesAutosaveDeprecated         = '[DEPRECATED] Config.saves.autosave has been deprecated';
-	const errSavesOnLoadDeprecated             = '[DEPRECATED] Config.saves.onLoad has been deprecated, see the Save.onLoad API instead';
-	const errSavesOnSaveDeprecated             = '[DEPRECATED] Config.saves.onSave has been deprecated, see the Save.onSave API instead';
-	const errSavesSlotsDeprecated              = '[DEPRECATED] Config.saves.slots has been deprecated, see Config.saves.maxSlotSaves instead';
-	const errSavesTryDiskOnMobileDeprecated    = '[DEPRECATED] Config.saves.tryDiskOnMobile has been deprecated';
+	let cfgUiStowBarInitially    = 800;
+	let cfgUiUpdateStoryElements = true;
 
 
 	/*******************************************************************************
@@ -78,36 +64,36 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 		/*
 			General settings.
 		*/
-		get addVisitedLinkClass() { return _addVisitedLinkClass; },
-		set addVisitedLinkClass(value) { _addVisitedLinkClass = Boolean(value); },
+		get addVisitedLinkClass() { return cfgAddVisitedLinkClass; },
+		set addVisitedLinkClass(value) { cfgAddVisitedLinkClass = Boolean(value); },
 
-		get cleanupWikifierOutput() { return _cleanupWikifierOutput; },
-		set cleanupWikifierOutput(value) { _cleanupWikifierOutput = Boolean(value); },
+		get cleanupWikifierOutput() { return cfgCleanupWikifierOutput; },
+		set cleanupWikifierOutput(value) { cfgCleanupWikifierOutput = Boolean(value); },
 
-		get debug() { return _debug; },
-		set debug(value) { _debug = Boolean(value); },
+		get debug() { return cfgDebug; },
+		set debug(value) { cfgDebug = Boolean(value); },
 
-		get enableOptionalDebugging() { return _enableOptionalDebugging; },
-		set enableOptionalDebugging(value) { _enableOptionalDebugging = Boolean(value); },
+		get enableOptionalDebugging() { return cfgEnableOptionalDebugging; },
+		set enableOptionalDebugging(value) { cfgEnableOptionalDebugging = Boolean(value); },
 
-		get loadDelay() { return _loadDelay; },
+		get loadDelay() { return cfgLoadDelay; },
 		set loadDelay(value) {
 			if (!Number.isSafeInteger(value) || value < 0) {
 				throw new RangeError('Config.loadDelay must be a non-negative integer number');
 			}
 
-			_loadDelay = value;
+			cfgLoadDelay = value;
 		},
 
 		/*
 			Audio settings.
 		*/
 		audio : Object.freeze({
-			get pauseOnFadeToZero() { return _audioPauseOnFadeToZero; },
-			set pauseOnFadeToZero(value) { _audioPauseOnFadeToZero = Boolean(value); },
+			get pauseOnFadeToZero() { return cfgAudioPauseOnFadeToZero; },
+			set pauseOnFadeToZero(value) { cfgAudioPauseOnFadeToZero = Boolean(value); },
 
-			get preloadMetadata() { return _audioPreloadMetadata; },
-			set preloadMetadata(value) { _audioPreloadMetadata = Boolean(value); }
+			get preloadMetadata() { return cfgAudioPreloadMetadata; },
+			set preloadMetadata(value) { cfgAudioPreloadMetadata = Boolean(value); }
 		}),
 
 		/*
@@ -115,28 +101,28 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 		*/
 		history : Object.freeze({
 			// TODO: (v3) This should be under UI settings → `Config.ui.historyControls`.
-			get controls() { return _historyControls; },
+			get controls() { return cfgHistoryControls; },
 			set controls(value) {
 				const controls = Boolean(value);
 
-				if (_historyMaxStates === 1 && controls) {
+				if (cfgHistoryMaxStates === 1 && controls) {
 					throw new Error('Config.history.controls must be false when Config.history.maxStates is 1');
 				}
 
-				_historyControls = controls;
+				cfgHistoryControls = controls;
 			},
 
-			get maxStates() { return _historyMaxStates; },
+			get maxStates() { return cfgHistoryMaxStates; },
 			set maxStates(value) {
 				if (!Number.isSafeInteger(value) || value < 1) {
 					throw new RangeError('Config.history.maxStates must be a positive integer number');
 				}
 
-				_historyMaxStates = value;
+				cfgHistoryMaxStates = value;
 
 				// Force `Config.history.controls` to `false`, when limited to `1` moment.
-				if (_historyControls && value === 1) {
-					_historyControls = false;
+				if (cfgHistoryControls && value === 1) {
+					cfgHistoryControls = false;
 				}
 			}
 		}),
@@ -145,44 +131,55 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 			Macros settings.
 		*/
 		macros : Object.freeze({
-			get maxLoopIterations() { return _macrosMaxLoopIterations; },
+			get maxLoopIterations() { return cfgMacrosMaxLoopIterations; },
 			set maxLoopIterations(value) {
 				if (!Number.isSafeInteger(value) || value < 1) {
 					throw new RangeError('Config.macros.maxLoopIterations must be a positive integer number');
 				}
 
-				_macrosMaxLoopIterations = value;
+				cfgMacrosMaxLoopIterations = value;
 			},
 
-			get typeSkipKey() { return _macrosTypeSkipKey; },
-			set typeSkipKey(value) { _macrosTypeSkipKey = String(value); },
+			get typeSkipKey() { return cfgMacrosTypeSkipKey; },
+			set typeSkipKey(value) { cfgMacrosTypeSkipKey = String(value); },
 
-			get typeVisitedPassages() { return _macrosTypeVisitedPassages; },
-			set typeVisitedPassages(value) { _macrosTypeVisitedPassages = Boolean(value); },
+			get typeVisitedPassages() { return cfgMacrosTypeVisitedPassages; },
+			set typeVisitedPassages(value) { cfgMacrosTypeVisitedPassages = Boolean(value); }
 
-			/* legacy */
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
 			// Die if the deprecated macros if assignment error getter is accessed.
-			get ifAssignmentError() { throw new Error(errMacrosIfAssignmentErrorDeprecated); },
+			, get ifAssignmentError() {
+				warnDeprecated(
+					'Config.macros.ifAssignmentError',
+					'Config.enableOptionalDebugging',
+					true
+				);
+			}
 			// Warn if the deprecated macros if assignment error setter is assigned to,
 			// while also setting `Config.enableOptionalDebugging` for compatibilities sake.
-			set ifAssignmentError(value) {
-				console.warn(errMacrosIfAssignmentErrorDeprecated);
+			, set ifAssignmentError(value) {
+				warnDeprecated(
+					'Config.macros.ifAssignmentError',
+					'Config.enableOptionalDebugging'
+				);
 				Config.enableOptionalDebugging = value;
 			}
-			/* /legacy */
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		}),
 
 		/*
 			Navigation settings.
 		*/
 		navigation : Object.freeze({
-			get override() { return _navigationOverride; },
+			get override() { return cfgNavigationOverride; },
 			set override(value) {
 				if (!(value == null || value instanceof Function)) { // nullish test
 					throw new TypeError(`Config.navigation.override must be a function, null, or undefined (received: ${getTypeOf(value)})`);
 				}
 
-				_navigationOverride = value;
+				cfgNavigationOverride = value;
 			}
 		}),
 
@@ -191,13 +188,13 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 		*/
 		passages : Object.freeze({
 			// TODO: (v3) This should be under Navigation settings → `Config.navigation.updateTitle`.
-			get displayTitles() { return _passagesDisplayTitles; },
-			set displayTitles(value) { _passagesDisplayTitles = Boolean(value); },
+			get displayTitles() { return cfgPassagesDisplayTitles; },
+			set displayTitles(value) { cfgPassagesDisplayTitles = Boolean(value); },
 
-			get nobr() { return _passagesNobr; },
-			set nobr(value) { _passagesNobr = Boolean(value); },
+			get nobr() { return cfgPassagesNobr; },
+			set nobr(value) { cfgPassagesNobr = Boolean(value); },
 
-			get onProcess() { return _passagesOnProcess; },
+			get onProcess() { return cfgPassagesOnProcess; },
 			set onProcess(value) {
 				if (value != null) { // nullish test
 					const valueType = getTypeOf(value);
@@ -207,11 +204,11 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					}
 				}
 
-				_passagesOnProcess = value;
+				cfgPassagesOnProcess = value;
 			},
 
 			// TODO: (v3) This should be under Navigation settings → `Config.navigation.startPassageName`.
-			get start() { return _passagesStart; },
+			get start() { return cfgPassagesStart; },
 			set start(value) {
 				if (value != null) { // nullish test
 					const valueType = getTypeOf(value);
@@ -221,11 +218,11 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					}
 				}
 
-				_passagesStart = value;
+				cfgPassagesStart = value;
 			},
 
 			// TODO: (v3) This should be under Navigation settings → `Config.navigation.transitionOut`.
-			get transitionOut() { return _passagesTransitionOut; },
+			get transitionOut() { return cfgPassagesTransitionOut; },
 			set transitionOut(value) {
 				if (value != null) { // nullish test
 					const valueType = getTypeOf(value);
@@ -238,17 +235,27 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					}
 				}
 
-				_passagesTransitionOut = value;
-			},
+				cfgPassagesTransitionOut = value;
+			}
 
-			/* legacy */
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
 			// Die if the deprecated passages descriptions getter is accessed.
-			get descriptions() { throw new Error(errPassagesDescriptionsDeprecated); },
+			, get descriptions() {
+				warnDeprecated(
+					'Config.passages.descriptions',
+					'Config.saves.descriptions',
+					true
+				);
+			}
 			// Warn if deprecated passages descriptions setter is assigned to,
 			// then pass the value to the `Config.saves.descriptions` for
 			// compatibilities sake.
-			set descriptions(value) {
-				console.warn(errPassagesDescriptionsDeprecated);
+			, set descriptions(value) {
+				warnDeprecated(
+					'Config.passages.descriptions',
+					'Config.saves.descriptions'
+				);
 
 				switch (typeof value) {
 					case 'boolean': {
@@ -285,41 +292,42 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 						throw new TypeError(`Config.passages.descriptions must be a boolean, object, function, null, or undefined (received: ${getTypeOf(value)})`);
 				}
 			}
-			/* /legacy */
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		}),
 
 		/*
 			Saves settings.
 		*/
 		saves : Object.freeze({
-			get descriptions() { return _savesDescriptions; },
+			get descriptions() { return cfgSavesDescriptions; },
 			set descriptions(value) {
 				if (!(value == null || value instanceof Function)) { // nullish test
 					throw new TypeError(`Config.saves.descriptions must be a function, null, or undefined (received: ${getTypeOf(value)})`);
 				}
 
-				_savesDescriptions = value;
+				cfgSavesDescriptions = value;
 			},
 
-			get id() { return _savesId; },
+			get id() { return cfgSavesId; },
 			set id(value) {
 				if (typeof value !== 'string' || value === '') {
 					throw new TypeError(`Config.saves.id must be a non-empty string (received: ${getTypeOf(value)})`);
 				}
 
-				_savesId = value;
+				cfgSavesId = value;
 			},
 
-			get isAllowed() { return _savesIsAllowed; },
+			get isAllowed() { return cfgSavesIsAllowed; },
 			set isAllowed(value) {
 				if (!(value == null || value instanceof Function)) { // nullish test
 					throw new TypeError(`Config.saves.isAllowed must be a function, null, or undefined (received: ${getTypeOf(value)})`);
 				}
 
-				_savesIsAllowed = value;
+				cfgSavesIsAllowed = value;
 			},
 
-			get maxAutoSaves() { return _savesMaxAuto; },
+			get maxAutoSaves() { return cfgSavesMaxAuto; },
 			set maxAutoSaves(value) {
 				if (!Number.isSafeInteger(value)) {
 					throw new TypeError('Config.saves.maxAutoSaves must be an integer number');
@@ -328,10 +336,10 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					throw new RangeError(`Config.saves.maxAutoSaves out-of-bounds (range: 0–${Save.MAX_INDEX + 1}; received: ${value})`);
 				}
 
-				_savesMaxAuto = value;
+				cfgSavesMaxAuto = value;
 			},
 
-			get maxSlotSaves() { return _savesMaxSlot; },
+			get maxSlotSaves() { return cfgSavesMaxSlot; },
 			set maxSlotSaves(value) {
 				if (!Number.isSafeInteger(value)) {
 					throw new TypeError('Config.saves.maxSlotSaves must be an integer number');
@@ -340,33 +348,41 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					throw new RangeError(`Config.saves.maxSlotSaves out-of-bounds (range: 0–${Save.MAX_INDEX + 1}; received: ${value})`);
 				}
 
-				_savesMaxSlot = value;
+				cfgSavesMaxSlot = value;
 			},
 
-			get metadata() { return _savesMetadata; },
+			get metadata() { return cfgSavesMetadata; },
 			set metadata(value) {
 				if (!(value == null || value instanceof Function)) { // nullish test
 					throw new TypeError(`Config.saves.metadata must be a function, null, or undefined (received: ${getTypeOf(value)})`);
 				}
 
-				_savesMetadata = value;
+				cfgSavesMetadata = value;
 			},
 
-			get version() { return _savesVersion; },
-			set version(value) { _savesVersion = value; },
+			get version() { return cfgSavesVersion; },
+			set version(value) { cfgSavesVersion = value; }
 
-			/* legacy */
-			get _internal_autoload_() { // eslint-disable-line camelcase
-				return _savesAutoload;
-			},
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			// Internal only getter.
+			, get _internal_autoload_() { // eslint-disable-line camelcase
+				return cfgSavesAutoload;
+			}
 			// Warn if the deprecated autoload getter is accessed.
-			get autoload() {
-				console.warn(errSavesAutoloadDeprecated);
-				return _savesAutoload;
-			},
+			, get autoload() {
+				warnDeprecated(
+					'Config.saves.autoload',
+					'the Save.browser.continue API'
+				);
+				return cfgSavesAutoload;
+			}
 			// Warn if the deprecated autoload setter is assigned to.
-			set autoload(value) {
-				console.warn(errSavesAutoloadDeprecated);
+			, set autoload(value) {
+				warnDeprecated(
+					'Config.saves.autoload',
+					'the Save.browser.continue API'
+				);
 
 				if (value != null) { // nullish test
 					const valueType = getTypeOf(value);
@@ -380,24 +396,34 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					}
 				}
 
-				_savesAutoload = value;
-			},
+				cfgSavesAutoload = value;
+			}
 
 			// Die if the deprecated saves autosave getter is accessed.
-			get autosave() {
-				throw new Error(`${_baseSavesAutosaveDeprecated}, see Config.saves.maxAutoSaves and Config.saves.isAllowed instead`);
-			},
+			, get autosave() {
+				warnDeprecated(
+					'Config.saves.autosave',
+					'Config.saves.maxAutoSaves and Config.saves.isAllowed',
+					true
+				);
+			}
 			// Die or warn if the deprecated saves autosave setter is assigned to,
 			// while also setting `Config.saves.maxAutoSaves` and, possibly,
 			// `Config.saves.isAllowed` for compatibilities sake.
-			set autosave(value) {
+			, set autosave(value) {
 				switch (typeof value) {
 					case 'boolean':
-						console.warn(`${_baseSavesAutosaveDeprecated}, for boolean usage see Config.saves.maxAutoSaves instead`);
+						warnDeprecated(
+							'Config.saves.autosave',
+							'Config.saves.maxAutoSaves'
+						);
 						break;
 
 					case 'function': {
-						console.warn(`${_baseSavesAutosaveDeprecated}, for function usage see Config.saves.isAllowed instead`);
+						warnDeprecated(
+							'Config.saves.autosave',
+							'Config.saves.isAllowed'
+						);
 
 						if (!Config.saves.isAllowed) {
 							const callback = value;
@@ -411,7 +437,10 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					}
 
 					default: {
-						console.warn(`${_baseSavesAutosaveDeprecated}, for tag usage see Config.saves.isAllowed instead`);
+						warnDeprecated(
+							'Config.saves.autosave',
+							'Config.saves.isAllowed'
+						);
 
 						if (
 							!(value instanceof Array)
@@ -440,52 +469,86 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 				if (Config.saves.maxAutoSaves === 0) {
 					Config.saves.maxAutoSaves = 1;
 				}
-			},
+			}
 
 			// Die if the deprecated saves onLoad handler getter is accessed.
-			get onLoad() { throw new Error(errSavesOnLoadDeprecated); },
+			, get onLoad() {
+				warnDeprecated(
+					'Config.saves.onLoad',
+					'the Save.onLoad API',
+					true
+				);
+			}
 			// Warn if the deprecated saves onLoad handler setter is assigned to, then
 			// pass the handler to the `Save.onLoad` API for compatibilities sake.
-			set onLoad(value) {
-				console.warn(errSavesOnLoadDeprecated);
+			, set onLoad(value) {
+				warnDeprecated(
+					'Config.saves.onLoad',
+					'the Save.onLoad API'
+				);
 				Save.onLoad.add(value);
-			},
+			}
 
 			// Die if the deprecated saves onSave handler getter is accessed.
-			get onSave() { throw new Error(errSavesOnSaveDeprecated); },
+			, get onSave() {
+				warnDeprecated(
+					'Config.saves.onSave',
+					'the Save.onSave API',
+					true
+				);
+			}
 			// Warn if the deprecated saves onSave handler setter is assigned to, then
 			// pass the handler to the `Save.onSave` API for compatibilities sake.
-			set onSave(value) {
-				console.warn(errSavesOnSaveDeprecated);
+			, set onSave(value) {
+				warnDeprecated(
+					'Config.saves.onSave',
+					'the Save.onSave API'
+				);
 				Save.onSave.add(value);
-			},
+			}
 
 			// Die if the deprecated saves slots getter is accessed.
-			get slots() { throw new Error(errSavesSlotsDeprecated); },
+			, get slots() {
+				warnDeprecated(
+					'Config.saves.slots',
+					'Config.saves.maxSlotSaves',
+					true
+				);
+			}
 			// Warn if the deprecated saves slots setter is assigned to, then pass
 			// the value to the `Config.saves.maxSlotSaves` for compatibilities
 			// sake.
-			set slots(value) {
-				console.warn(errSavesSlotsDeprecated);
+			, set slots(value) {
+				warnDeprecated(
+					'Config.saves.slots',
+					'Config.saves.maxSlotSaves'
+				);
 				Config.saves.maxSlotSaves = value;
-			},
+			}
 
 			// Warn if the deprecated saves tryDiskOnMobile getter is accessed, then
 			// return `true`.
-			get tryDiskOnMobile() {
-				console.warn(errSavesTryDiskOnMobileDeprecated);
+			, get tryDiskOnMobile() {
+				warnDeprecated(
+					'Config.saves.tryDiskOnMobile'
+				);
 				return true;
-			},
+			}
 			// Warn if the deprecated saves tryDiskOnMobile setter is assigned to.
-			set tryDiskOnMobile(value) { console.warn(errSavesTryDiskOnMobileDeprecated); }
-			/* /legacy */
+			, set tryDiskOnMobile(value) {
+				warnDeprecated(
+					'Config.saves.tryDiskOnMobile'
+				);
+			}
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		}),
 
 		/*
 			UI settings.
 		*/
 		ui : Object.freeze({
-			get stowBarInitially() { return _uiStowBarInitially; },
+			get stowBarInitially() { return cfgUiStowBarInitially; },
 			set stowBarInitially(value) {
 				const valueType = getTypeOf(value);
 
@@ -496,11 +559,11 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 					throw new TypeError(`Config.ui.stowBarInitially must be a boolean or non-negative integer number (received: ${valueType})`);
 				}
 
-				_uiStowBarInitially = value;
+				cfgUiStowBarInitially = value;
 			},
 
-			get updateStoryElements() { return _uiUpdateStoryElements; },
-			set updateStoryElements(value) { _uiUpdateStoryElements = Boolean(value); }
+			get updateStoryElements() { return cfgUiUpdateStoryElements; },
+			set updateStoryElements(value) { cfgUiUpdateStoryElements = Boolean(value); }
 		})
 	});
 })();

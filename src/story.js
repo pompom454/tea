@@ -6,7 +6,10 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Passage, Wikifier, charAndPosAt, createSlug, decodeEntities, getTypeOf, sameValueZero */
+/*
+	global Config, Passage, Wikifier, charAndPosAt, createSlug, decodeEntities, getTypeOf, sameValueZero,
+	       warnDeprecated
+*/
 
 var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Story IFID.
@@ -520,44 +523,6 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	function lookup(key, value  /* legacy */, sortKey = 'name'/* /legacy */) {
-		console.warn('[DEPRECATED] Story.lookup() is deprecated.');
-
-		/* eslint-disable eqeqeq, no-nested-ternary, max-len */
-		return filter(passage => {
-			// Objects (sans `null`).
-			if (typeof passage[key] === 'object' && passage[key] !== null) {
-				// The only object type currently supported is `Array`, since the
-				// non-method `Passage` object properties currently yield only either
-				// primitives or arrays.
-				return passage[key] instanceof Array && passage[key].some(m => sameValueZero(m, value));
-			}
-
-			// All other types (incl. `null`).
-			return sameValueZero(passage[key], value);
-		})
-			.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // nullish test
-		/* eslint-enable eqeqeq, no-nested-ternary, max-len */
-	}
-
-	function lookupWith(predicate /* legacy */, sortKey = 'name'/* /legacy */) {
-		console.warn('[DEPRECATED] Story.lookupWith() is deprecated.');
-
-		if (typeof predicate !== 'function') {
-			throw new TypeError('predicate parameter must be a function');
-		}
-
-		/* eslint-disable eqeqeq, no-nested-ternary, max-len */
-		return filter(predicate)
-			.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // nullish test
-		/* eslint-enable eqeqeq, no-nested-ternary, max-len */
-	}
-
-
-	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
@@ -581,23 +546,70 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		getScripts : { value : getScripts },
 		getStyles  : { value : getStyles },
 		getWidgets : { value : getWidgets },
-		has        : { value : has },
+		has        : { value : has }
 
-		/* legacy */
-		domId : {
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, domId : {
 			get() {
-				console.warn('[DEPRECATED] Story.domId is deprecated.');
+				warnDeprecated(
+					'Story.domId',
+					'Story.id'
+				);
 				return getId();
 			}
-		},
-		title : {
+		}
+		, title : {
 			get() {
-				console.warn('[DEPRECATED] Story.title is deprecated.');
+				warnDeprecated(
+					'Story.title',
+					'Story.name'
+				);
 				return getName();
 			}
-		},
-		lookup     : { value : lookup },
-		lookupWith : { value : lookupWith }
-		/* /legacy */
+		}
+		, lookup : {
+			value(key, value, sortKey = 'name') {
+				warnDeprecated(
+					'Story.lookup()',
+					'Story.filter() or Story.find()'
+				);
+
+				/* eslint-disable eqeqeq, no-nested-ternary, max-len */
+				return filter(passage => {
+					// Objects (sans `null`).
+					if (typeof passage[key] === 'object' && passage[key] !== null) {
+						// The only object type currently supported is `Array`, since the
+						// non-method `Passage` object properties currently yield only either
+						// primitives or arrays.
+						return passage[key] instanceof Array && passage[key].some(m => sameValueZero(m, value));
+					}
+
+					// All other types (incl. `null`).
+					return sameValueZero(passage[key], value);
+				})
+					.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // nullish test
+				/* eslint-enable eqeqeq, no-nested-ternary, max-len */
+			}
+		}
+		, lookupWith : {
+			value(predicate, sortKey = 'name') {
+				warnDeprecated(
+					'Story.lookupWith()',
+					'Story.filter() or Story.find()'
+				);
+
+				if (typeof predicate !== 'function') {
+					throw new TypeError('predicate parameter must be a function');
+				}
+
+				/* eslint-disable eqeqeq, no-nested-ternary, max-len */
+				return filter(predicate)
+					.sort((a, b) => a[sortKey] == b[sortKey] ? 0 : a[sortKey] < b[sortKey] ? -1 : +1); // nullish test
+				/* eslint-enable eqeqeq, no-nested-ternary, max-len */
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

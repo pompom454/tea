@@ -20,10 +20,10 @@ var createSlug = (() => { // eslint-disable-line no-unused-vars, no-var
 	// line, right brace, tilde, delete, C1 controls.
 	const illegalCharsRE = /[\x00-\x20!-/:-@[-^`{-\x9f]+/g; // eslint-disable-line no-control-regex
 
-	/* legacy */
+	/* [DEPRECATED] */
 	// Matches the empty string or one comprised solely of hyphens.
 	const isInvalidSlugRE = /^-*$/;
-	/* /legacy */
+	/* [/DEPRECATED] */
 
 	// Special cases for story and temporary variables.
 	const storySigilRE = /^\$/;
@@ -32,7 +32,7 @@ var createSlug = (() => { // eslint-disable-line no-unused-vars, no-var
 	function createSlug(str) {
 		const base = String(str).trim();
 
-		/* legacy */
+		/* [DEPRECATED] */
 		const legacy = base
 			.replace(/[^\w\s\u2013\u2014-]+/g, '')
 			.replace(/[_\s\u2013\u2014-]+/g, '-')
@@ -41,7 +41,7 @@ var createSlug = (() => { // eslint-disable-line no-unused-vars, no-var
 		if (!isInvalidSlugRE.test(legacy)) {
 			return legacy;
 		}
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		return base
 			.replace(storySigilRE, '')

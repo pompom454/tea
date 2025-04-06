@@ -58,6 +58,6 @@ function appendError(output, message, source) { // eslint-disable-line no-unused
 	return false;
 }
 
-/* legacy */
+/* [DEPRECATED] */
 var throwError = appendError; // eslint-disable-line no-unused-vars, no-var
-/* /legacy */
+/* [/DEPRECATED] */

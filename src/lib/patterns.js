@@ -146,9 +146,9 @@ var Patterns = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	// Inline CSS pattern.
 	const inlineCss = (() => {
-		/* legacy */
+		/* [DEPRECATED] */
 		const twStyle   = `(${anyLetter}+)\\(([^\\)\\|\\n]+)\\):`;
-		/* /legacy */
+		/* [/DEPRECATED] */
 		const cssStyle  = `${spaceNoTerminator}*(${anyLetter}+)${spaceNoTerminator}*:([^;\\|\\n]+);`;
 		const idOrClass = `${spaceNoTerminator}*((?:${cssIdOrClassSigil}${anyLetter}+${spaceNoTerminator}*)+);`;
 

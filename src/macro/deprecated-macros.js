@@ -6,28 +6,20 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Macro, State, Wikifier */
+/* global Macro, State, Wikifier, warnDeprecated */
 
-/*******************************************************************************
-	Display Macros.
-*******************************************************************************/
-
+/* [DEPRECATED] */
 /*
-	[DEPRECATED] <<silently>> — Alias of <<silent>>
+	<<silently>> — Alias of <<silent>>
 */
 Macro.add('silently', 'silent');
 
-
-/*******************************************************************************
-	Links Macros.
-*******************************************************************************/
-
 /*
-	[DEPRECATED] <<actions>>
+	<<actions>>
 */
 Macro.add('actions', {
 	handler() {
-		console.warn(`[DEPRECATED] <<${this.name}>> macro is deprecated.`);
+		warnDeprecated(`<<${this.name}>> macro`);
 
 		const $list = jQuery(document.createElement('ul'))
 			.addClass(this.name)
@@ -49,8 +41,8 @@ Macro.add('actions', {
 						$image.attr('data-passage', this.args[i].passage);
 					}
 
-					if (Object.hasOwn(this.args[i], 'title')) {
-						$image.attr('title', this.args[i].title);
+					if (Object.hasOwn(this.args[i], 'text')) {
+						$image.attr('alt', this.args[i].text);
 					}
 
 					if (Object.hasOwn(this.args[i], 'align')) {
@@ -107,11 +99,11 @@ Macro.add('actions', {
 });
 
 /*
-	[DEPRECATED] <<choice>>
+	<<choice>>
 */
 Macro.add('choice', {
 	handler() {
-		console.warn(`[DEPRECATED] <<${this.name}>> macro is deprecated.`);
+		warnDeprecated(`<<${this.name}>> macro`);
 
 		if (this.args.length === 0) {
 			return this.error('no passage specified');
@@ -134,8 +126,8 @@ Macro.add('choice', {
 						$image.attr('data-passage', this.args[0].passage);
 					}
 
-					if (Object.hasOwn(this.args[0], 'title')) {
-						$image.attr('title', this.args[0].title);
+					if (Object.hasOwn(this.args[0], 'text')) {
+						$image.attr('alt', this.args[0].text);
 					}
 
 					if (Object.hasOwn(this.args[0], 'align')) {
@@ -202,3 +194,4 @@ Macro.add('choice', {
 		}
 	}
 });
+/* [/DEPRECATED] */

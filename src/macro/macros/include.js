@@ -6,14 +6,14 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Macro, Story */
+/* global Config, Macro, Story, warnDeprecated */
 
 /*
 	<<include>>
 */
 Macro.add('include', {
 	handler() {
-		if (this.name === 'display') { console.warn(`[DEPRECATED] <<${this.name}>> macro is deprecated.`); }
+		if (this.name === 'display') { warnDeprecated(`<<${this.name}>> macro`); }
 
 		if (this.args.length === 0) {
 			return this.error('no passage specified');

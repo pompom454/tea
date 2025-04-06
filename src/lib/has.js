@@ -50,17 +50,6 @@ var Has = (() => { // eslint-disable-line no-unused-vars, no-var
 		return false;
 	})();
 
-	// Is the `MutationObserver` API available?
-	const hasMutationObserver = (() => {
-		try {
-			return 'MutationObserver' in window
-				&& typeof window.MutationObserver === 'function';
-		}
-		catch (ex) { /* no-op */ }
-
-		return false;
-	})();
-
 	// Is the `performance` API available?
 	const hasPerformance = (() => {
 		try {
@@ -117,7 +106,6 @@ var Has = (() => { // eslint-disable-line no-unused-vars, no-var
 		audio              : hasAudioElement,
 		fileAPI            : hasFile,
 		geolocation        : hasGeolocation,
-		mutationObserver   : hasMutationObserver,
 		performance        : hasPerformance,
 		touch              : hasTouch,
 		transitionEndEvent : hasTransitionEndEvent

@@ -6,11 +6,11 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global enumFrom, settings:true, storage */
+/* global enumFrom, settings:true, storage, warnDeprecated */
 
 var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Setting control types object.
-	const Types = enumFrom({
+	const SettingType = enumFrom({
 		Header : 0,
 		Toggle : 1,
 		List   : 2,
@@ -94,7 +94,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Load the defaults.
 		definitions
-			.filter(def => def.type !== Types.Header)
+			.filter(def => def.type !== SettingType.Header)
 			.forEach(def => defaultSettings[def.name] = def.default);
 
 		// Assign to the `settings` object while overwriting the defaults with the loaded settings.
@@ -113,7 +113,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 			const def = get(name);
 
-			if (def.type !== Types.Header) {
+			if (def.type !== SettingType.Header) {
 				settings[name] = def.default;
 			}
 		}
@@ -126,7 +126,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		if (Object.keys(settings).length > 0) {
 			definitions
-				.filter(def => def.type !== Types.Header && settings[def.name] !== def.default)
+				.filter(def => def.type !== SettingType.Header && settings[def.name] !== def.default)
 				.forEach(def => savedSettings[def.name] = settings[def.name]);
 		}
 
@@ -191,7 +191,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 			name
 		};
 
-		if (type !== Types.Value) {
+		if (type !== SettingType.Value) {
 			definition.label = typeof def.label === 'string' ? def.label.trim() : '';
 		}
 
@@ -204,10 +204,10 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		switch (type) {
-			case Types.Header:
+			case SettingType.Header:
 				break;
 
-			case Types.List: {
+			case SettingType.List: {
 				if (!Object.hasOwn(def, 'list')) {
 					throw new Error('no list specified');
 				}
@@ -235,7 +235,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 				break;
 			}
 
-			case Types.Range: {
+			case SettingType.Range: {
 				if (!Object.hasOwn(def, 'min')) {
 					throw new Error('no min specified');
 				}
@@ -323,12 +323,12 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 				break;
 			}
 
-			case Types.Toggle: {
+			case SettingType.Toggle: {
 				definition.default = Boolean(def.default);
 				break;
 			}
 
-			case Types.Value: {
+			case SettingType.Value: {
 				definition.default = def.default;
 				break;
 			}
@@ -349,23 +349,23 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	function addHeader(name, desc) {
-		add(Types.Header, name, { desc });
+		add(SettingType.Header, name, { desc });
 	}
 
 	function addList(...args) {
-		add(Types.List, ...args);
+		add(SettingType.List, ...args);
 	}
 
 	function addRange(...args) {
-		add(Types.Range, ...args);
+		add(SettingType.Range, ...args);
 	}
 
 	function addToggle(...args) {
-		add(Types.Toggle, ...args);
+		add(SettingType.Toggle, ...args);
 	}
 
 	function addValue(...args) {
-		add(Types.Value, ...args);
+		add(SettingType.Value, ...args);
 	}
 
 	function forEach(callback, thisArg) {
@@ -432,8 +432,8 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 	*******************************************************************************/
 
 	return Object.preventExtensions(Object.create(null, {
-		// Enumerations.
-		Types : { value : Types },
+		// Constants.
+		Type : { get : () => SettingType },
 
 		// Initialization Functions.
 		init : { value : init },
@@ -461,5 +461,19 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Values Functions.
 		getValue : { value : getValue },
 		setValue : { value : setValue }
+
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, Types : {
+			get : () => {
+				warnDeprecated(
+					'Setting.Types',
+					'Setting.Type'
+				);
+				return SettingType;
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

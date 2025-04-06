@@ -9,7 +9,7 @@
 /*
 	global Alert, Config, DebugView, Dialog, Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper, UI,
 	       UIBar, Wikifier, enumFrom, getErrorMessage, now, postdisplay, postrender, predisplay, prehistory,
-	       prerender, triggerEvent
+	       prerender, triggerEvent, warnDeprecated
 */
 
 var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -297,7 +297,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			engineShow();
 		}
 		else {
-			/* legacy */
+			/* [DEPRECATED] */
 			const autoloadValue = Config.saves._internal_autoload_;
 			const autoloadType  = typeof autoloadValue;
 
@@ -331,7 +331,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 						enginePlay(Config.passages.start);
 					});
 			}
-			/* /legacy */
+			/* [/DEPRECATED] */
 		}
 	}
 
@@ -496,22 +496,24 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		//
 		// TODO: Replace this with `triggerEvent()` once the legacy code is removed.
 		jQuery.event.trigger({
-			/* legacy */
-			passage,
-			/* /legacy */
-
 			type   : ':passageinit',
 			detail : {
 				passage
 			}
+
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			, passage
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		});
-		/* legacy */
+		/* [DEPRECATED] */
 		Object.keys(prehistory).forEach(task => {
 			if (typeof prehistory[task] === 'function') {
 				prehistory[task].call(passage, task);
 			}
 		});
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		// Create a new entry in the history.
 		if (!noHistory) {
@@ -531,13 +533,13 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		lastEnginePlay = now();
 
 		// Execute pre-display tasks and the `PassageReady` special passage.
-		/* legacy */
+		/* [DEPRECATED] */
 		Object.keys(predisplay).forEach(task => {
 			if (typeof predisplay[task] === 'function') {
 				predisplay[task].call(passage, task);
 			}
 		});
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		if (Story.has('PassageReady')) {
 			try {
@@ -578,24 +580,26 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		//
 		// TODO: Replace this with `triggerEvent()` once the legacy code is removed.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagestart',
 			detail : {
 				content : passageEl,
 				passage
 			}
+
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			, content : passageEl
+			, passage
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		});
-		/* legacy */
+		/* [DEPRECATED] */
 		Object.keys(prerender).forEach(task => {
 			if (typeof prerender[task] === 'function') {
 				prerender[task].call(passage, passageEl, task);
 			}
 		});
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		// Render the `PassageHeader` passage, if it exists, into the passage element.
 		if (Story.has('PassageHeader')) {
@@ -614,24 +618,26 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		//
 		// TODO: Replace this with `triggerEvent()` once the legacy code is removed.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagerender',
 			detail : {
 				content : passageEl,
 				passage
 			}
+
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			, content : passageEl
+			, passage
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		});
-		/* legacy */
+		/* [DEPRECATED] */
 		Object.keys(postrender).forEach(task => {
 			if (typeof postrender[task] === 'function') {
 				postrender[task].call(passage, passageEl, task);
 			}
 		});
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		// Cache the passage container.
 		const containerEl = document.getElementById('passages');
@@ -708,24 +714,26 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// TODO: Replace this with `triggerEvent()` once the legacy code is removed.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passagedisplay',
 			detail : {
 				content : passageEl,
 				passage
 			}
+
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			, content : passageEl
+			, passage
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		});
-		/* legacy */
+		/* [DEPRECATED] */
 		Object.keys(postdisplay).forEach(task => {
 			if (typeof postdisplay[task] === 'function') {
 				postdisplay[task].call(passage, task);
 			}
 		});
-		/* /legacy */
+		/* [/DEPRECATED] */
 
 		// Execute UI update events.
 		UI.update();
@@ -783,16 +791,18 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		//
 		// TODO: Replace this with `triggerEvent()` once the legacy code is removed.
 		jQuery.event.trigger({
-			/* legacy */
-			content : passageEl,
-			passage,
-			/* /legacy */
-
 			type   : ':passageend',
 			detail : {
 				content : passageEl,
 				passage
 			}
+
+			/* [DEPRECATED] */
+			/* eslint-disable comma-style */
+			, content : passageEl
+			, passage
+			/* eslint-enable comma-style */
+			/* [/DEPRECATED] */
 		});
 
 		// Reset the engine state.
@@ -806,46 +816,13 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	/*
-		[DEPRECATED] Play the given passage, optionally without altering the history.
-	*/
-	function engineDisplay(name, link, option) {
-		if (BUILD_DEBUG) { console.log('[Engine/engineDisplay()]'); }
-
-		console.warn('[DEPRECATED] Engine.display() is deprecated.');
-
-		let noHistory = false;
-
-		// Process the option parameter.
-		switch (option) {
-			case undefined:
-				/* no-op */
-				break;
-
-			case 'replace':
-			case 'back':
-				noHistory = true;
-				break;
-
-			default:
-				throw new Error(`Engine.display option parameter called with obsolete value "${option}"; please notify the developer`);
-		}
-
-		enginePlay(name, noHistory);
-	}
-
-
-	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
 	return Object.preventExtensions(Object.create(null, {
 		// Constants.
-		State     : { get : () => EngineState },
 		DOM_DELAY : { get : () => DOM_DELAY },
+		State     : { get : () => EngineState },
 
 		// Core Functions.
 		init           : { value : engineInit },
@@ -863,11 +840,57 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		backward       : { value : engineBackward },
 		forward        : { value : engineForward },
 		show           : { value : engineShow },
-		play           : { value : enginePlay },
+		play           : { value : enginePlay }
 
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
 		// Deprecated Functions.
-		States            : { get : () => EngineState },
-		display           : { value : engineDisplay },
-		minDomActionDelay : { get : () => DOM_DELAY }
+		, minDomActionDelay : {
+			get : () => {
+				warnDeprecated(
+					'Engine.minDomActionDelay',
+					'Engine.DOM_DELAY'
+				);
+				return DOM_DELAY;
+			}
+		}
+		, States : {
+			get : () => {
+				warnDeprecated(
+					'Engine.States',
+					'Engine.State'
+				);
+				return EngineState;
+			}
+		}
+		, display : {
+			value(name, link, option) {
+				warnDeprecated(
+					'Engine.display()',
+					'Engine.play()'
+				);
+
+				let noHistory = false;
+
+				// Process the option parameter.
+				switch (option) {
+					case undefined:
+						/* no-op */
+						break;
+
+					case 'replace':
+					case 'back':
+						noHistory = true;
+						break;
+
+					default:
+						throw new Error(`Engine.display option parameter called with obsolete value "${option}"; please notify the developer`);
+				}
+
+				enginePlay(name, noHistory);
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

@@ -205,7 +205,7 @@ forget('achievements');
 
 <!-- *********************************************************************** -->
 
-### `hasVisited(passages…)` → `boolean` {#functions-function-hasvisited}
+### `hasVisited(passageNames…)` → `boolean` {#functions-function-hasvisited}
 
 Returns whether the passage with the given name occurred within the story history.  If multiple passage names are given, returns the logical-AND aggregate of the set—i.e., `true` if all were found, `false` if any were not found.
 
@@ -215,7 +215,7 @@ Returns whether the passage with the given name occurred within the story histor
 
 #### Parameters:
 
-* **`passages`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a list or an array of passages.
+* **`passageNames`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a list or an array of passage names.
 
 #### Returns:
 
@@ -269,9 +269,9 @@ if (!hasVisited('Bar', 'Café')) {
 
 <!-- *********************************************************************** -->
 
-### `lastVisited(passages…)` → *integer* `number` {#functions-function-lastvisited}
+### `lastVisited(passageNames…)` → *integer* `number` {#functions-function-lastvisited}
 
-Returns the number of turns that have passed since the last instance of the passage with the given name occurred within the story history or `-1`, if it does not exist.  If multiple passage names are given, returns the lowest count (which can be `-1`).
+Returns the number of turns that have passed since the last instance of the passage with the given name occurred within the story history or `-1`, if it does not exist.  If multiple passage names are given, returns the lowest count among them, which can be `-1`.
 
 #### History:
 
@@ -279,7 +279,7 @@ Returns the number of turns that have passed since the last instance of the pass
 
 #### Parameters:
 
-* **`passages`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a list or an array of passages.
+* **`passageNames…`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a list or an array of passage names.
 
 #### Returns:
 
@@ -638,6 +638,10 @@ if (passage() === 'Café') {
 
 Returns the name of the most recent previous passage whose name does not match that of the active passage or an empty string, if there is no such passage.
 
+<p role="note" class="warning"><b>Warning:</b>
+If you need to go back multiple passages—e.g., if you have a menu and you want the player to return from any depth—then <code>previous()</code> may be insufficient for your needs.  In that case, you'll want to look at the <a href="#guide-tips-arbitrarily-long-return">arbitrarily long return</a>.
+</p>
+
 #### History:
 
 * `v2.0.0`: Introduced.
@@ -653,10 +657,6 @@ The name (`string`) of the passage, elsewise an empty string (`''`).
 #### Examples:
 
 ##### Basic usage as part of a link
-
-<p role="note" class="warning"><b>Warning:</b>
-If you need to go back multiple passages—e.g., if you have a menu and you want the player to return from any depth—then <code>previous()</code> may be insufficient for your needs.  In that case, you'll want to look at the <a href="#guide-tips-arbitrarily-long-return">arbitrarily long return</a>.
-</p>
 
 ```
 /* Link markup.*/
@@ -845,7 +845,7 @@ setup.ngplus = recall('ngplus');
 
 <!-- *********************************************************************** -->
 
-### `setPageElement(idOrElement , passages [, defaultText])` → `HTMLElement` | `null` {#functions-function-setpageelement}
+### `setPageElement(idOrElement , passageNames [, defaultText])` → `HTMLElement` | `null` {#functions-function-setpageelement}
 
 Renders the selected passage into the target element, replacing any existing content, and returns the element.  If no passages are found and default text is specified, it will be used instead.
 
@@ -856,7 +856,7 @@ Renders the selected passage into the target element, replacing any existing con
 #### Parameters:
 
 * **`idOrElement`:** (`string` | `HTMLElement`) The ID of the element or the element itself.
-* **`passages`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a single passage or an array of passages.  If an array of passage names is specified, the first passage to be found is used.
+* **`passageNames`:** (`string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a single passage name or an array of passage names.  If an array of passage names is specified, the first passage to be found is used.
 * **`defaultText`:** (optional, `string`) The default text to use if no passages are found.
 
 #### Returns:
@@ -893,9 +893,9 @@ setPageElement(myElement, 'MyPassage');
 
 <!-- *********************************************************************** -->
 
-### `tags([passages…])` → `Array<string>` {#functions-function-tags}
+### `tags([passageNames])` → `Array<string>` {#functions-function-tags}
 
-Returns a new array consisting of all of the tags of the given passages.
+Returns a new array consisting of all of the tags of the given passage names.
 
 #### History:
 
@@ -903,7 +903,7 @@ Returns a new array consisting of all of the tags of the given passages.
 
 #### Parameters:
 
-* **`passages`:** (optional, `string` | `Array<string>`) The passages from which to collect tags.  May be a list or an array of passages.  If omitted, will default to the active (present) passage—included passages do not count for this purpose; e.g., passages pulled in via `<<include>>`, `PassageHeader`, etc.
+* **`passageNames`:** (optional, `string` | `Array<string>`) The passage names from which to collect tags.  May be a list or an array of passage names.  If omitted, will default to the active (present) passage—included passages do not count for this purpose; e.g., passages pulled in via `<<include>>`, `PassageHeader`, etc.
 
 #### Returns:
 
@@ -1161,9 +1161,9 @@ if (variables().hasGoldenKey) {
 
 <!-- *********************************************************************** -->
 
-### `visited([passages…])` → *integer* `number` {#functions-function-visited}
+### `visited([passageNames])` → *integer* `number` {#functions-function-visited}
 
-Returns the number of times that the passage with the given title occurred within the story history.  If multiple passage titles are given, returns the lowest count.
+Returns the number of times that the passage with the given name occurred within the story history.  If multiple passage names are given, returns the lowest count among them.
 
 #### History:
 
@@ -1171,7 +1171,7 @@ Returns the number of times that the passage with the given title occurred withi
 
 #### Parameters:
 
-* **`passages`:** (optional, `string` | `Array<string>`) The title(s) of the passage(s) to search for.  May be a list or an array of passages.  If omitted, will default to the current passage.
+* **`passageNames`:** (optional, `string` | `Array<string>`) The name(s) of the passage(s) to search for.  May be a list or an array of passage names.  If omitted, will default to the current passage.
 
 #### Returns:
 

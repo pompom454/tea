@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Engine, Patterns, State, Story, getTypeOf, now, parseURL, stringFrom */
+/* global Engine, Patterns, State, Story, getTypeOf, now, parseURL, stringFrom, warnDeprecated */
 
 var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	/* eslint-disable no-unused-vars */
@@ -15,17 +15,19 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 		Deprecated Legacy Functions.
 	*******************************************************************************/
 
+	/* [DEPRECATED] */
 	/*
-		[DEPRECATED] Returns the simple string representation of the passed value or,
+		Returns the simple string representation of the passed value or,
 		if there is none, the passed default value.
-
-		NOTE: Unused, included only for compatibility.
 	*/
-	function toStringOrDefault(value /* , defValue */) {
-		console.warn('[DEPRECATED] toStringOrDefault() is deprecated.');
-
+	function toStringOrDefault(value) {
+		warnDeprecated(
+			'toStringOrDefault()',
+			'stringFrom()'
+		);
 		return stringFrom(value);
 	}
+	/* [/DEPRECATED] */
 
 
 	/*******************************************************************************
@@ -55,9 +57,9 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns whether a passage with the given title exists within the story
-		history.  If multiple passage titles are given, returns the logical-AND
-		aggregate of the set.
+		Returns whether a passage with the given name exists within the story history.
+		If multiple passage names are given, returns the logical-AND aggregate of the
+		set.
 	*/
 	function hasVisited(/* variadic */) {
 		if (arguments.length === 0) {
@@ -81,9 +83,10 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the number of turns that have passed since the last instance of the given passage
-		occurred within the story history or `-1` if it does not exist.  If multiple passages are
-		given, returns the lowest count (which can be `-1`).
+		Returns the number of turns that have passed since the last instance of the
+		passage with the given name occurred within the story history or `-1`, if it
+		does not exist.  If multiple passage names are given, returns the lowest count
+		among them (which can be `-1`).
 	*/
 	function lastVisited(/* variadic */) {
 		if (arguments.length === 0) {
@@ -119,31 +122,18 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the title of the current passage.
+		Returns the name of the current passage.
 	*/
 	function passage() {
 		return State.passage;
 	}
 
 	/*
-		Returns the title of a previous passage, either the most recent one whose title does not
-		match that of the active passage or the one at the optional offset, or an empty string,
-		if there is no such passage.
+		Returns the name of the most recent passage whose name does not match that of
+		the active passage or an empty string, if there is no such passage.
 	*/
-	function previous(/* legacy: offset */) {
+	function previous() {
 		const passages = State.passages;
-
-		/* legacy: behavior with an offset */
-		if (arguments.length > 0) {
-			const offset = Number(arguments[0]);
-
-			if (!Number.isSafeInteger(offset) || offset < 1) {
-				throw new RangeError('previous offset parameter must be a positive integer number greater-than zero');
-			}
-
-			return passages.length > offset ? passages[passages.length - 1 - offset] : '';
-		}
-		/* /legacy */
 
 		for (let i = passages.length - 2; i >= 0; --i) {
 			if (passages[i] !== State.passage) {
@@ -155,7 +145,8 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns a pseudo-random whole number (integer) within the range of the given bounds.
+		Returns a pseudo-random whole number (integer) within the range of the given
+		bounds.
 	*/
 	function random(/* [min ,] max */) {
 		let min;
@@ -189,7 +180,8 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns a pseudo-random real number (floating-point) within the range of the given bounds.
+		Returns a pseudo-random real number (floating-point) within the range of the
+		given bounds.
 
 		NOTE: Unlike with its sibling function `random()`, the `max` parameter
 		is exclusive, not inclusive—i.e. the range goes to, but does not include,
@@ -227,8 +219,8 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the value of the given key from the story metadata store
-		or the given default value if the key does not exist.
+		Returns the value of the given key from the story metadata store or the given
+		default value, if the key does not exist.
 	*/
 	function recall(key, defaultValue) {
 		if (typeof key !== 'string') {
@@ -264,7 +256,8 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the number of milliseconds which have passed since the current passage was rendered.
+		Returns the number of milliseconds which have passed since the current passage
+		was rendered.
 	*/
 	function time() {
 		return Engine.lastPlay === null ? 0 : now() - Engine.lastPlay;
@@ -290,8 +283,9 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the number of times that the passage with the given title exists within the story
-		history.  If multiple passage titles are given, returns the lowest count.
+		Returns the number of times that the passage with the given name exists within
+		the story history.  If multiple passage names are given, returns the lowest
+		count among them.
 	*/
 	function visited(/* variadic */) {
 		if (State.isEmpty()) {
@@ -310,7 +304,8 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	/*
-		Returns the number of passages within the story history which are tagged with all of the given tags.
+		Returns the number of passages within the story history which are tagged with
+		all of the given tags.
 	*/
 	function visitedTags(/* variadic */) {
 		if (arguments.length === 0) {
@@ -328,15 +323,15 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 		let count = 0;
 
 		for (let i = 0; i < played.length; ++i) {
-			const title = played[i];
+			const name = played[i];
 
-			if (seen.has(title)) {
-				if (seen.get(title)) {
+			if (seen.has(name)) {
+				if (seen.get(name)) {
 					++count;
 				}
 			}
 			else {
-				const tags = Story.get(title).tags;
+				const tags = Story.get(name).tags;
 
 				if (tags.length > 0) {
 					let found = 0;
@@ -349,10 +344,10 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 					if (found === nLength) {
 						++count;
-						seen.set(title, true);
+						seen.set(name, true);
 					}
 					else {
-						seen.set(title, false);
+						seen.set(name, false);
 					}
 				}
 			}
@@ -681,15 +676,20 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 	return Object.preventExtensions(Object.create(null, {
 		desugar         : { value : desugar },
 		evalJavaScript  : { value : evalJavaScript },
-		evalTwineScript : { value : evalTwineScript },
+		evalTwineScript : { value : evalTwineScript }
 
-		/* legacy */
-		parse : {
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, parse : {
 			value(...args) {
-				console.warn('[DEPRECATED] Scripting.parse() is deprecated.');
+				warnDeprecated(
+					'Scripting.parse()',
+					'Scripting.desugar()'
+				);
 				return desugar(...args);
 			}
 		}
-		/* /legacy */
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

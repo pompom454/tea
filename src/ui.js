@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Config, Dialog, Engine, Has, L10n, Save, Setting, State, Story, Wikifier,
-	       createSlug, errorPrologRE, triggerEvent
+	       createSlug, errorPrologRE, triggerEvent, warnDeprecated
 */
 
 var UI = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -194,6 +194,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				const $tdDesc = jQuery(document.createElement('td'));
 				const $tdDele = jQuery(document.createElement('td'));
 
+				/* legacy */
 				// // Add the slot ID.
 				// $tdSlot
 				// 	.attr({
@@ -201,6 +202,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				// 		'aria-label' : `${L10n.get('savesTextBrowserAuto')} ${index + 1}`
 				// 	})
 				// 	.text(`A${index + 1}`);
+				/* /legacy */
 
 				// Add the description and details.
 				jQuery(document.createElement('div'))
@@ -279,6 +281,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				const $tdDesc = jQuery(document.createElement('td'));
 				const $tdDele = jQuery(document.createElement('td'));
 
+				/* legacy */
 				// // Add the slot ID.
 				// $tdSlot
 				// 	.attr({
@@ -286,6 +289,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 				// 		'aria-label' : `${L10n.get('savesTextBrowserSlot')} ${index + 1}`
 				// 	})
 				// 	.text(index + 1);
+				/* /legacy */
 
 				if (info) {
 					// Add the description and details.
@@ -735,132 +739,6 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Deprecated Functions.
-	*******************************************************************************/
-
-	// [DEPRECATED]
-	function buildAutoload() {
-		if (BUILD_DEBUG) { console.log('[UI/buildAutoload()]'); }
-
-		console.warn('[DEPRECATED] UI.buildAutoload() is deprecated.');
-
-		Dialog
-			.create(L10n.get('autoloadTitle'), 'autoload')
-			.append(
-				/* eslint-disable max-len */
-				  `<p>${L10n.get('autoloadMesgPrompt')}</p><ul class="buttons">`
-				+ `<li><button id="autoload-ok" class="ui-close">${L10n.get(['autoloadTextOk', 'textOk'])}</button></li>`
-				+ `<li><button id="autoload-cancel" class="ui-close">${L10n.get(['autoloadTextCancel', 'textCancel'])}</button></li>`
-				+ '</ul>'
-				/* eslint-enable max-len */
-			);
-
-		// Add an additional delegated click handler for the `.ui-close` elements to handle autoloading.
-		jQuery(document).one('click.autoload', '.ui-close', ev => {
-			const isAutoloadOk = ev.target.id === 'autoload-ok';
-			jQuery(document).one(':dialogclosed', () => {
-				new Promise((resolve, reject) => {
-					if (Save.browser.size === 0) {
-						return reject(new Error('no saves available'));
-					}
-
-					if (isAutoloadOk) {
-						resolve();
-					}
-					else {
-						reject(new Error('user cancellation'));
-					}
-				})
-					.then(() => {
-						if (BUILD_DEBUG) { console.log('\tattempting autoload of most recent browser save'); }
-
-						return Save.browser.continue().then(Engine.show);
-					})
-					.catch(() => {
-						if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
-
-						Engine.play(Config.passages.start);
-					});
-			});
-		});
-
-		return true;
-	}
-
-	// [DEPRECATED]
-	function buildJumpto() {
-		if (BUILD_DEBUG) { console.log('[UI/buildJumpto()]'); }
-
-		console.warn('[DEPRECATED] UI.buildJumpto() is deprecated.');
-
-		const list = document.createElement('ul');
-
-		Dialog
-			.create(L10n.get('jumptoTitle'), 'jumpto list')
-			.append(list);
-
-		const expired = State.expired.length;
-
-		for (let i = State.size - 1; i >= 0; --i) {
-			if (i === State.activeIndex) {
-				continue;
-			}
-
-			const passage = Story.get(State.history[i].title);
-
-			if (passage && passage.tags.includes('bookmark')) {
-				jQuery(document.createElement('li'))
-					.append(
-						jQuery(document.createElement('a'))
-							.ariaClick({ one : true }, (index => { // eslint-disable-line arrow-body-style
-								return () => jQuery(document).one(':dialogclosed', () => Engine.goTo(index));
-							})(i))
-							.addClass('ui-close')
-							.text(`${L10n.get('textTurn')} ${expired + i + 1}`)
-					)
-					.appendTo(list);
-			}
-		}
-
-		if (!list.hasChildNodes()) {
-			jQuery(list).append(`<li><a><em>${L10n.get('jumptoMesgUnavailable')}</em></a></li>`);
-		}
-	}
-
-	// [DEPRECATED]
-	function buildShare() {
-		if (BUILD_DEBUG) { console.log('[UI/buildShare()]'); }
-
-		console.warn('[DEPRECATED] UI.buildShare() is deprecated.');
-
-		try {
-			Dialog
-				.create(L10n.get('shareTitle'), 'share list')
-				.append(assembleLinkList('StoryShare'));
-		}
-		catch (ex) {
-			console.error(ex);
-			Alert.error('StoryShare', ex.message);
-			return false;
-		}
-
-		return true;
-	}
-
-	// [DEPRECATED]
-	function openJumpto(/* options, closeFn */ ...args) {
-		buildJumpto();
-		Dialog.open(...args);
-	}
-
-	// [DEPRECATED]
-	function openShare(/* options, closeFn */ ...args) {
-		buildShare();
-		Dialog.open(...args);
-	}
-
-
-	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
@@ -876,13 +754,130 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 		alert    : { value : openAlert },
 		restart  : { value : openRestart },
 		saves    : { value : openSaves },
-		settings : { value : openSettings },
+		settings : { value : openSettings }
 
-		// Deprecated Functions.
-		buildAutoload : { value : buildAutoload },
-		buildJumpto   : { value : buildJumpto },
-		buildShare    : { value : buildShare },
-		jumpto        : { value : openJumpto },
-		share         : { value : openShare }
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, buildAutoload : {
+			value() {
+				warnDeprecated('UI.buildAutoload()');
+
+				Dialog
+					.create(L10n.get('autoloadTitle'), 'autoload')
+					.append(
+						/* eslint-disable max-len */
+						  `<p>${L10n.get('autoloadMesgPrompt')}</p><ul class="buttons">`
+						+ `<li><button id="autoload-ok" class="ui-close">${L10n.get(['autoloadTextOk', 'textOk'])}</button></li>`
+						+ `<li><button id="autoload-cancel" class="ui-close">${L10n.get(['autoloadTextCancel', 'textCancel'])}</button></li>`
+						+ '</ul>'
+						/* eslint-enable max-len */
+					);
+
+				// Add an additional delegated click handler for the `.ui-close` elements to handle autoloading.
+				jQuery(document).one('click.autoload', '.ui-close', ev => {
+					const isAutoloadOk = ev.target.id === 'autoload-ok';
+					jQuery(document).one(':dialogclosed', () => {
+						new Promise((resolve, reject) => {
+							if (Save.browser.size === 0) {
+								return reject(new Error('no saves available'));
+							}
+
+							if (isAutoloadOk) {
+								resolve();
+							}
+							else {
+								reject(new Error('user cancellation'));
+							}
+						})
+							.then(() => {
+								if (BUILD_DEBUG) { console.log('\tattempting autoload of most recent browser save'); }
+
+								return Save.browser.continue().then(Engine.show);
+							})
+							.catch(() => {
+								if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
+
+								Engine.play(Config.passages.start);
+							});
+					});
+				});
+
+				return true;
+			}
+		}
+		, buildJumpto : {
+			value() {
+				warnDeprecated('UI.buildJumpto()');
+
+				const list = document.createElement('ul');
+
+				Dialog
+					.create(L10n.get('jumptoTitle'), 'jumpto list')
+					.append(list);
+
+				const expired = State.expired.length;
+
+				for (let i = State.size - 1; i >= 0; --i) {
+					if (i === State.activeIndex) {
+						continue;
+					}
+
+					const passage = Story.get(State.history[i].title);
+
+					if (passage && passage.tags.includes('bookmark')) {
+						jQuery(document.createElement('li'))
+							.append(
+								jQuery(document.createElement('a'))
+									.ariaClick({ one : true }, (index => { // eslint-disable-line arrow-body-style
+										return () => jQuery(document).one(':dialogclosed', () => Engine.goTo(index));
+									})(i))
+									.addClass('ui-close')
+									.text(`${L10n.get('textTurn')} ${expired + i + 1}`)
+							)
+							.appendTo(list);
+					}
+				}
+
+				if (!list.hasChildNodes()) {
+					jQuery(list).append(`<li><a><em>${L10n.get('jumptoMesgUnavailable')}</em></a></li>`);
+				}
+
+				return true;
+			}
+		}
+		, buildShare : {
+			value() {
+				warnDeprecated('UI.buildShare()');
+
+				try {
+					Dialog
+						.create(L10n.get('shareTitle'), 'share list')
+						.append(assembleLinkList('StoryShare'));
+				}
+				catch (ex) {
+					console.error(ex);
+					Alert.error('StoryShare', ex.message);
+					return false;
+				}
+
+				return true;
+			}
+		}
+		, jumpto : {
+			value(...args) {
+				warnDeprecated('UI.jumpto()');
+				UI.buildJumpto();
+				Dialog.open(...args);
+			}
+		}
+		, share : {
+			value(...args) {
+				warnDeprecated('UI.share()');
+				UI.buildShare();
+				Dialog.open(...args);
+			}
+		}
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}));
 })();

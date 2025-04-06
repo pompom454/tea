@@ -313,7 +313,6 @@ Macro.add('for', {
 					};
 				}
 				else if (collection instanceof Set) {
-					/* legacy */
 					// Convert the `Set` to an `Array` to provide indices.
 					//
 					// TODO: Check what the polyfill's `<Set>.values()` method returns.
@@ -336,7 +335,6 @@ Macro.add('for', {
 							return { done : true };
 						}
 					};
-					/* /legacy */
 				}
 				else if (collection instanceof Map) {
 					const keys = Array.from(collection.keys());

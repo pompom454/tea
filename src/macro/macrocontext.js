@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, DebugView, Patterns, State, Wikifier, appendError */
+/* global Config, DebugView, Patterns, State, Wikifier, appendError, warnDeprecated */
 
 /*******************************************************************************
 	MacroContext Class.
@@ -304,27 +304,39 @@ class MacroContext { // eslint-disable-line no-unused-vars
 	}
 
 
+	/* [DEPRECATED] */
 	// Deprecated methods.
 
-	/* legacy */
 	contextHas(...args) {
-		console.warn('[DEPRECATED] <MacroContext>.contextHas() is deprecated.');
+		warnDeprecated(
+			'<MacroContext>.contextHas()',
+			'<MacroContext>.contextSome()'
+		);
 		return MacroContext.prototype.contextSome.apply(this, args);
 	}
 
 	contextSelect(...args) {
-		console.warn('[DEPRECATED] <MacroContext>.contextSelect() is deprecated.');
+		warnDeprecated(
+			'<MacroContext>.contextSelect()',
+			'<MacroContext>.contextFind()'
+		);
 		return MacroContext.prototype.contextFind.apply(this, args);
 	}
 
 	contextSelectAll(...args) {
-		console.warn('[DEPRECATED] <MacroContext>.contextSelectAll() is deprecated.');
+		warnDeprecated(
+			'<MacroContext>.contextSelectAll()',
+			'<MacroContext>.contextFilter()'
+		);
 		return MacroContext.prototype.contextFilter.apply(this, args);
 	}
 
 	createShadowWrapper(...args) {
-		console.warn('[DEPRECATED] <MacroContext>.createShadowWrapper() is deprecated.');
+		warnDeprecated(
+			'<MacroContext>.createShadowWrapper()',
+			'<MacroContext>.shadowHandler()'
+		);
 		return MacroContext.prototype.shadowHandler.apply(this, args);
 	}
-	/* /legacy */
+	/* [/DEPRECATED] */
 }

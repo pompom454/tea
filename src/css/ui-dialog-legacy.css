@@ -7,7 +7,7 @@
 
 ***********************************************************************************************************************/
 
-/* legacy */
+/* [DEPRECATED] */
 /* List-based dialog styles (primarily for the Jumpto & Share dialogs). */
 #ui-dialog-body.list {
 	padding: 0;
@@ -38,4 +38,4 @@
 #ui-dialog-body.list a {
 	user-select: none;
 }
-/* /legacy */
+/* [/DEPRECATED] */

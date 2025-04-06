@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Config, DebugView, Engine, Lexer, Macro, MacroContext, Patterns, Scripting, State, Story,
-	       Template, Wikifier, WikifierUtil, appendError, enumFrom, hasBlockContext, stringFrom
+	       Template, Wikifier, WikifierUtil, appendError, enumFrom, hasBlockContext, stringFrom, warnDeprecated
 */
 /* eslint "no-param-reassign": [ 2, { "props" : false } ] */
 
@@ -199,7 +199,7 @@
 								[DEPRECATED] Old-style/legacy macros.
 							*/
 							else {
-								console.warn(`[DEPRECATED] The legacy macro API, used by <<${name}>>, is deprecated.`);
+								warnDeprecated(`The legacy macro API, used by <<${name}>>,`);
 
 								/*
 									Set up the raw arguments string.
@@ -398,11 +398,6 @@
 
 				return typeof sa === 'boolean' && sa || sa instanceof Array && sa.includes(tagName);
 			}
-			/* legacy */
-			else if (typeof macro.skipArg0 !== 'undefined') {
-				return macro.skipArg0 && macro.name === tagName;
-			}
-			/* /legacy */
 
 			return false;
 		},

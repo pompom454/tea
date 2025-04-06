@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, L10n, State, Wikifier, createSlug, decodeEntities, encodeMarkup */
+/* global Config, L10n, State, Wikifier, createSlug, decodeEntities, encodeMarkup, warnDeprecated */
 
 var Passage = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*
@@ -178,13 +178,15 @@ var Passage = (() => { // eslint-disable-line no-unused-vars, no-var
 			// Handle `Config.passages.onProcess`.
 			if (Config.passages.onProcess) {
 				processed = Config.passages.onProcess.call(null, {
-					/* legacy */
-					title : this.name,
-					/* /legacy */
-
 					name : this.name,
 					tags : this.tags,
 					text : processed
+
+					/* [DEPRECATED] */
+					/* eslint-disable comma-style */
+					, title : this.name
+					/* eslint-enable comma-style */
+					/* [/DEPRECATED] */
 				});
 			}
 
@@ -204,14 +206,21 @@ var Passage = (() => { // eslint-disable-line no-unused-vars, no-var
 			return frag;
 		}
 
-		/* legacy */
-		get domId() { return this.id; }
-		get title() { return this.name; }
+		/* [DEPRECATED] */
+		get domId() {
+			warnDeprecated('Passage.domId');
+			return this.id;
+		}
+		get title() {
+			warnDeprecated('Passage.title');
+			return this.name;
+		}
 
 		description() { // eslint-disable-line class-methods-use-this
+			warnDeprecated('Passage.description');
 			return `${L10n.get('textTurn')} ${State.turns}`;
 		}
-		/* /legacy */
+		/* [/DEPRECATED] */
 	}
 
 

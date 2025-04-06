@@ -12,7 +12,7 @@
 	Wikifies a passage into a DOM element corresponding to the given ID and
 	returns the element.
 */
-function setPageElement(idOrElement, titles, defaultText) { // eslint-disable-line no-unused-vars
+function setPageElement(idOrElement, names, defaultText) { // eslint-disable-line no-unused-vars
 	const el = typeof idOrElement === 'object'
 		? idOrElement
 		: document.getElementById(idOrElement);
@@ -21,7 +21,7 @@ function setPageElement(idOrElement, titles, defaultText) { // eslint-disable-li
 		return null;
 	}
 
-	const ids = titles instanceof Array ? titles : [titles];
+	const ids = names instanceof Array ? names : [names];
 
 	jQuery(el).empty();
 
