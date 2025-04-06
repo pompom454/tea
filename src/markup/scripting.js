@@ -683,9 +683,13 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 		evalJavaScript  : { value : evalJavaScript },
 		evalTwineScript : { value : evalTwineScript },
 
-		/*
-			Legacy Functions.
-		*/
-		parse : { value : desugar }
+		/* legacy */
+		parse : {
+			value(...args) {
+				console.warn('[DEPRECATED] Scripting.parse() is deprecated.');
+				return desugar(...args);
+			}
+		}
+		/* /legacy */
 	}));
 })();
