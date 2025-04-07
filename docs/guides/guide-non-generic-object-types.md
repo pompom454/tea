@@ -44,8 +44,8 @@ window.Character = class Character {
 		//
 		// NOTE: We use the SugarCube built-in `clone()` function to make deep
 		// copies of each of the properties' values.
-		Object.keys(config).forEach(prop => {
-			this[prop] = clone(config[prop]);
+		Object.keys(config).forEach((pn) => {
+			this[pn] = clone(config[pn]);
 		});
 	}
 
@@ -61,9 +61,9 @@ window.Character = class Character {
 		// NOTE: Supplying `this` directly as the `reviveData` parameter to the
 		// `Serial.createReviver()` call will trigger out of control recursion in
 		// the serializer, so we must pass it a clone of our own data instead.
-		var ownData = {};
-		Object.keys(this).forEach(prop => {
-			ownData[prop] = clone(this[prop]);
+		const ownData = {};
+		Object.keys(this).forEach((pn) => {
+			ownData[pn] = clone(this[pn]);
 		});
 		return Serial.createReviver(`new ${this.constructor.name}($ReviveData$)`, ownData);
 	}
@@ -177,8 +177,8 @@ window.Character = function Character(config) {
 	//
 	// NOTE: We use the SugarCube built-in `clone()` function to make deep
 	// copies of each of the properties' values.
-	Object.keys(config).forEach(function (prop) {
-		this[prop] = clone(config[prop]);
+	Object.keys(config).forEach(function (pn) {
+		this[pn] = clone(config[pn]);
 	}, this);
 };
 
@@ -195,8 +195,8 @@ Character.prototype.toJSON = function () {
 	// `Serial.createReviver()` call will trigger out of control recursion in
 	// the serializer, so we must pass it a clone of our own data instead.
 	var ownData = {};
-	Object.keys(this).forEach(function (prop) {
-		ownData[prop] = clone(this[prop]);
+	Object.keys(this).forEach(function (pn) {
+		ownData[pn] = clone(this[pn]);
 	}, this);
 	return Serial.createReviver('new Character($ReviveData$)', ownData);
 };

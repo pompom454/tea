@@ -1957,15 +1957,18 @@ The macro examples would be exactly the same as the JavaScript examples, just wr
 </p>
 
 ##### Basic usage (in JavaScript)
+
 ```javascript
 Serial.createReviver(/* JavaScript code string */);            // without data chunk
 Serial.createReviver(/* JavaScript code string */, myOwnData); // with data chunk
+```
 
+```javascript
 // Assume that you're attempting to revive an instance of a custom class named
 // `Character`, which is assigned to a story variable named `$pc`.  The call
 // to `Serial.createReviver()` might look something like the following.
-var ownData = {};
-Object.keys(this).forEach(pn => ownData[pn] = clone(this[pn]), this);
+const ownData = {};
+Object.keys(this).forEach((pn) => ownData[pn] = clone(this[pn]));
 return Serial.createReviver('new Character($ReviveData$)', ownData);
 ```
 

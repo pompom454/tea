@@ -193,7 +193,26 @@ The story menu only displays links—specifically, anything that creates an anch
 
 ```
 [[Inventory]]
-<<link "Schedule">>…<</link>>
+
+<<if not $inventory.isEmpty()>>
+	[[Inventory]]
+<</if>>
+```
+
+```
+<<link "Schedule">> … <</link>>
+
+<<if $scheduleEnabled>>
+	<<link "Schedule">> … <</link>>
+<</if>>
+```
+
+```
+<a data-passage="…">Equipment<a>
+
+<<if $equipped.length > 0>>
+	<a data-passage="…">Equipment<a>
+<</if>>
 ```
 
 <!-- *********************************************************************** -->
@@ -263,7 +282,7 @@ Some special passages are conditional and may not always be special passages.  T
 
 ### `Start` {#special-passage-start}
 
-**Twine&nbsp;2:**  *Not a special passage.*  Any passage may be chosen as the starting passage by selecting it via the *Start Story Here* passage context-menu item—n.b. older versions of Twine&nbsp;2 used a <i class="icon rocket" title="rocket ship" aria-label="rocket ship"></i> icon for the same purpose.
+**Twine&nbsp;2:**  *Not a special passage.*  Any passage may be chosen as the starting passage by selecting it via the *Start Story Here* passage context-menu item—n.b., older versions of Twine&nbsp;2 used a <i class="icon rocket" title="rocket ship" aria-label="rocket ship"></i> icon for the same purpose.
 
 **Twine&nbsp;1/Twee:**  *Required.*  The starting passage, the first passage displayed.  Configurable, see [`Config.passages.start`](#config-api-property-passages-start) for more information.
 
@@ -415,7 +434,11 @@ This special tag has been deprecated and should no longer be used.
 
 ### `$` {#special-variable-dollar}
 
-Alias for `jQuery`, by default.  **NOTE:** This should not be confused with [story variables](#twinescript-variables), which start with a `$`—e.g., `$foo`.
+Alias for `jQuery`, by default.
+
+<p role="note"><b>Note:</b>
+This should not be confused with <a href="#twinescript-variables">story variables</a>, which start with a <code>$</code>—e.g., <code>$foo</code>.
+</p>
 
 #### History:
 
