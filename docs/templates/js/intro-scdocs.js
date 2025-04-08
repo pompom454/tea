@@ -39,36 +39,42 @@
 					try {
 						const config = JSON.parse(json);
 
-						if (config !== null && typeof config === 'object' && config.hasOwnProperty(key)) {
+						if (
+							   config !== null
+							&& typeof config === 'object'
+							&& Object.hasOwn(config, key)
+						) {
 							return config[key];
 						}
 					}
 					catch (ex) { /* no-op */ }
 				}
-
-				return undefined;
 			}
 		},
 		setConfig : {
 			value(key, value) {
-				let config;
+				const json = localStorage.getItem(storageKey);
 
-				try {
-					config = JSON.parse(localStorage.getItem(storageKey));
+				if (json) {
+					let config;
+
+					try {
+						config = JSON.parse(json);
+					}
+					catch (ex) { /* no-op */ }
+
+					if (config === null || typeof config !== 'object') {
+						config = {};
+					}
+
+					config[key] = value;
+
+					try {
+						localStorage.setItem(storageKey, JSON.stringify(config));
+						return true;
+					}
+					catch (ex) { /* no-op */ }
 				}
-				catch (ex) { /* no-op */ }
-
-				if (config === null || typeof config !== 'object') {
-					config = {};
-				}
-
-				config[key] = value;
-
-				try {
-					localStorage.setItem(storageKey, JSON.stringify(config));
-					return true;
-				}
-				catch (ex) { /* no-op */ }
 
 				return false;
 			}
@@ -81,7 +87,11 @@
 					try {
 						const config = JSON.parse(json);
 
-						if (config !== null && typeof config === 'object' && config.hasOwnProperty(key)) {
+						if (
+							   config !== null
+							&& typeof config === 'object'
+							&& Object.hasOwn(config, key)
+						) {
 							delete config[key];
 
 							if (Object.keys(config).length > 0) {
@@ -104,11 +114,6 @@
 			value() {
 				localStorage.removeItem(storageKey);
 				return true;
-			}
-		},
-		arrayFrom : {
-			value(arrayLike) {
-				return Array.prototype.slice.call(arrayLike);
 			}
 		}
 	}));

@@ -11,26 +11,26 @@
 
 	const storageKey = 'navExpanded';
 	const expanded   = Object.freeze(Object.create(null, {
-		_ARRAY : {
+		array : {
 			value : SCDocs.getConfig(storageKey) || []
 		},
 		add : {
 			value(listId) {
-				if (this._ARRAY.indexOf(listId) === -1) {
-					this._ARRAY.push(listId);
-					SCDocs.setConfig(storageKey, this._ARRAY);
+				if (this.array.indexOf(listId) === -1) {
+					this.array.push(listId);
+					SCDocs.setConfig(storageKey, this.array);
 				}
 			}
 		},
 		delete : {
 			value(listId) {
-				const pos = this._ARRAY.indexOf(listId);
+				const pos = this.array.indexOf(listId);
 
 				if (pos !== -1) {
-					this._ARRAY.splice(pos, 1);
+					this.array.splice(pos, 1);
 
-					if (this._ARRAY.length > 0) {
-						SCDocs.setConfig(storageKey, this._ARRAY);
+					if (this.array.length > 0) {
+						SCDocs.setConfig(storageKey, this.array);
 					}
 					else {
 						SCDocs.removeConfig(storageKey);
@@ -40,7 +40,7 @@
 		},
 		has : {
 			value(listId) {
-				return this._ARRAY.indexOf(listId) !== -1;
+				return this.array.indexOf(listId) !== -1;
 			}
 		}
 	}));
@@ -92,7 +92,7 @@
 		return toggle;
 	};
 	const nav     = document.querySelector('nav');
-	const lists   = SCDocs.arrayFrom(nav.querySelectorAll('nav>ul'));
+	const lists   = Array.from(nav.querySelectorAll('nav>ul'));
 	const toggles = [];
 	lists.forEach(list => {
 		let heading = list.previousSibling;
@@ -168,20 +168,7 @@
 	};
 
 	const createListToggleAll = (toggles, name, predicate) => {
-		const createEvent = type => {
-			let event;
-
-			if (typeof Event === 'function') {
-				event = new Event(type);
-			}
-			else {
-				event = document.createEvent('Event');
-				event.initEvent(type);
-			}
-
-			return event;
-		};
-		const toggleFn = function (ev) {
+		const toggleFn = ev => {
 			if (
 				   ev.type === 'click'
 				|| ev.type === 'keydown' && (ev.key === 'Enter' || ev.key === ' ' /* space */)
@@ -190,7 +177,7 @@
 
 				toggles.forEach(toggle => {
 					if (predicate(toggle)) {
-						toggle.dispatchEvent(createEvent('click'));
+						toggle.dispatchEvent(new MouseEvent('click'));
 					}
 				});
 			}
@@ -205,12 +192,13 @@
 		toggle.addEventListener('keydown', toggleFn);
 		return toggle;
 	};
-	const header = nav.querySelector('nav>header');
-	const tray   = document.createElement('div');
+
+	const tray = document.createElement('div');
 	tray.setAttribute('id', 'controls');
 	tray.appendChild(createColorToggle());
 	tray.appendChild(createListToggleAll(toggles, 'Collapse', toggle => !toggle.classList.contains('collapsed')));
 	tray.appendChild(createListToggleAll(toggles, 'Expand', toggle => toggle.classList.contains('collapsed')));
-	header.appendChild(tray);
+	nav.querySelector('nav>header').appendChild(tray);
+
 	nav.classList.add('enhanced');
 })();

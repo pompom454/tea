@@ -17,37 +17,21 @@
 	}
 
 	// Outline patching.
-	const outlineStyle = (() => {
-		const style = document.createElement('style');
-		style.setAttribute('id', 'style-aria-outlines');
-		style.setAttribute('type', 'text/css');
-		document.head.appendChild(style);
-		return style;
-	})();
-	let lastOutlineEvent;
+	const outlineStyleEl = document.createElement('style');
+	outlineStyleEl.setAttribute('id', 'style-aria-outlines');
+	outlineStyleEl.setAttribute('type', 'text/css');
+	document.head.appendChild(outlineStyleEl);
+	outlineStyleEl.textContent = '*:focus{outline:none;}';
+	let outlineLastEvent = 'mousedown';
 	const outlineToggleFn = ev => {
-		if (ev.type !== lastOutlineEvent) {
-			lastOutlineEvent = ev.type;
-			// Clear styles for IE ≤10.
-			if (outlineStyle.styleSheet) {
-				outlineStyle.styleSheet.cssText = '';
+		if (ev.type !== outlineLastEvent) {
+			outlineLastEvent = ev.type;
+
+			if (ev.type === 'keydown') {
+				outlineStyleEl.textContent = '';
 			}
-			// Clear styles for all other browsers (incl. IE ≥11).
 			else {
-				while (outlineStyle.firstChild) {
-					outlineStyle.removeChild(outlineStyle.firstChild);
-				}
-			}
-			if (ev.type === 'mousedown') {
-				const rule = '*:focus{outline:none;}';
-				// For IE ≤ 10.
-				if (outlineStyle.styleSheet) {
-					outlineStyle.styleSheet.cssText += rule;
-				}
-				// For all other browsers (incl. IE ≥ 11).
-				else {
-					outlineStyle.appendChild(document.createTextNode(rule));
-				}
+				outlineStyleEl.textContent = '*:focus{outline:none;}';
 			}
 		}
 	};

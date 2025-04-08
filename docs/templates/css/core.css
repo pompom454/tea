@@ -820,23 +820,16 @@ nav {
 }
 
 nav > header {
-	border-bottom: 3px dotted light-dark(var(--light-separator-color), var(--dark-separator-color));
-	padding-bottom: 0.5em;
 	text-align: center;
 }
-nav > header > div:not(:last-child) {
-	font-size: 0.75rem;
-	opacity: 0.66;
-}
-nav #header-logo {
+nav > header > #header-logo {
 	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABLCAYAAAA4TnrqAAAAB3RJTUUH5AMQDQ4vazJd/wAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAAN1wAADdcBQiibeAAAAzdJREFUeNrt3M1rGkEUAHDb/jO9tce20B5bUKOiLpqIH/9Gbh4CvQQCnsV6r7d4rh9gY8EYjYk5qQcPBmM8iB6E7E7nyS5Yu36s7uzne/BYFnZ25v2cdZaFXYfDgHF0dPTWgbE5XC7XN6/XW6VYxOPxXNHtV1SRQfL5fH8A6fj4WEilUiQcDguwL+LZHu0VnT0cxbgHlFgsxufzeTKbzch8Pl9sYT8ajfIi2j0cD+0QSURaTQkNjrMT2gKJXm7tXZBsiZZMJl+73e7Yvkjb0OC8pkdTG2kXNOgP+kUkK6FpjWRKNI7j3iwjxeNxTZFMgSYh0VXpwQhI69BgXMtoMG7dkBKJhKGQtqHBuJmjycwkwchI69Dgx2WGZnakDTNNUA3NakjM0GjDTzTrcJJIJCLkcjkymUwsgbSaUBfUd3JyIqHVoX4lD9++Q8N0Ov1oVSQ5tGw2+wh1Q/2KsarVKmk0GrdPT091K0PRS7L+/Px8OxgMyEFYtVptkVZEk5BGoxGBVA1rBe3GSkjMsMyMRpFu5JCYY5kJbRuSZlhGRtsVSXMsI6EpRdINaxltOBw2zICkO5aUzWbzmhZwxxJpOp02DkEyDBZLNDqT7sbj8fWhSIbDUhNNbSTDYh2CxgrJ8FhK0FgjmQZrE5pWSKbDEpNvtVq/KVCVwl3RAnitoMyItch2u13UEgmxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEAuxEMsaWOVy2VZYvV5POZbH4zmFRhzHvVxcXJBKpWJprH6/TzKZDAmFQi/iZxJOFb044Ha7P9KGl9DY7/fzZ2dnpFQqWQqr2+0S+CxCIBDgxRl1CXXv/VqKHmissVRH0hONFRZzJD3Q1MbSHElLNLWwOp3Of0g0P+j2+i90TleP/DJasVjUFWsVSRyffkgs0fbFMjwSCzSlWCtIguGRNqAJStF2xTI9khpo27AkpGAwKCH9dDqd7y3zAR8oBoraBW0dlhwSXZXfOawaUNw2tFUs2yEpQZOwbI8k84TjC4UowOoJf9Tn5+ekUChU0+k0PPWQbgF+wXEOjH/QiuKdNpGQXC7XZ9TZjPYDkTDsE38BhSF0jgiMpUIAAAAASUVORK5CYII=");
 	background-repeat: no-repeat;
 	height: 75px;
 	margin: 0 auto;
 	width: 75px;
 }
-
-nav h1 {
+nav > header > h1 {
 	background-color: transparent;
 	border: none;
 	border-radius: 0;
@@ -845,12 +838,28 @@ nav h1 {
 	margin: 10px 0 5px;
 	padding: 0;
 }
+nav > header > div:not(:last-child) {
+	font-size: 0.75rem;
+	opacity: 0.66;
+}
+
+nav > h1 {
+	background-color: light-dark(var(--light-h1-back-color), var(--dark-h1-back-color));
+	border-radius: 3px;
+	font-size: 1.2em;
+	margin: 1em -0.4em 0.5em;
+	padding: 0.4em;
+	position: relative;
+}
+nav > h1:first-of-type {
+	margin-top: 0.75em;
+}
 
 nav h2 {
 	border: none;
 	border-bottom: 1px solid light-dark(var(--light-separator-color), var(--dark-separator-color));
 	font-size: 1em;
-	margin: 1em 0 0.5em;
+	margin: 0.75em 0 0.5em;
 	padding-top: 0;
 }
 

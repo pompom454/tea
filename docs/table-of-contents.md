@@ -9,6 +9,8 @@
 <div>Find in page: <kbd>CTRL</kbd>+<kbd>F</kbd>, <kbd>CMD</kbd>+<kbd>F</kbd>, <kbd>F3</kbd></div>
 </header>
 
+# Core
+
 ## [Introduction](#introduction)
 
 ## [Markup](#markup)
@@ -276,7 +278,7 @@
 	* [`:typingstart`](#events-type-macro-event-typingstart)
 	* [`:typingstop`](#events-type-macro-event-typingstop)
 
-----
+# APIs
 
 ## [`Config` API](#config-api)
 
@@ -651,7 +653,7 @@
 * [`UIBar.stow()`](#uibar-api-method-stow)
 * [`UIBar.unstow()`](#uibar-api-method-unstow)
 
-----
+# Guides
 
 ## [Guide: State, Sessions, and Saving](#guide-state-sessions-and-saving)
 
