@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /***********************************************************************************************************************
 
-	build.js (v1.9.5, 2025-04-06)
+	build.js (v1.9.6, 2025-04-08)
 		A Node.js-hosted build script for SugarCube.
 
 	Copyright © 2013–2025 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
@@ -29,9 +29,9 @@ const CONFIG = {
 			'src/extensions/jquery/',
 			'src/lib/browser.js',
 			'src/lib/has.js',
-			'src/lib/fullscreen.js',
-			'src/lib/outliner.js',
+			'src/lib/outlines.js',
 			'src/lib/serial.js',
+			'src/lib/fullscreen.js',
 			'src/lib/visibility.js',
 			'src/util/',
 			'src/storage/simplestore.js',
