@@ -6,7 +6,10 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Engine, L10n, Serial, State, createFilename, enumFrom, getTypeOf, storage, warnDeprecated */
+/*
+	global Config, L10n, Serial, State, apiSafetyLock, createFilename, enumFrom, getTypeOf, storage,
+	       warnDeprecated
+*/
 
 /*
 	Save API (v3) static object.
@@ -445,7 +448,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 				throw new RangeError(`index parameter out of bounds (range: 0–${MAX_INDEX}; received: ${index})`);
 			}
 
-			if (Engine.state === Engine.States.Init) {
+			if (apiSafetyLock) {
 				throw new Error(L10n.get('saveErrorLoadTooEarly'));
 			}
 
@@ -559,7 +562,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 				throw new RangeError(`index parameter out of bounds (range: 0–${MAX_INDEX}; received: ${index})`);
 			}
 
-			if (Engine.state === Engine.States.Init) {
+			if (apiSafetyLock) {
 				throw new Error(L10n.get('saveErrorLoadTooEarly'));
 			}
 
@@ -722,7 +725,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 			// Add the handler that will capture the file data once the load is finished.
 			jQuery(reader).on('loadend', () => {
 				try {
-					if (Engine.state === Engine.States.Init) {
+					if (apiSafetyLock) {
 						throw new Error(L10n.get('saveErrorLoadTooEarly'));
 					}
 
@@ -858,7 +861,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	function base64Load(base64) {
 		return new Promise(resolve => {
-			if (Engine.state === Engine.States.Init) {
+			if (apiSafetyLock) {
 				throw new Error(L10n.get('saveErrorLoadTooEarly'));
 			}
 
@@ -968,7 +971,7 @@ var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 		/* eslint-enable no-param-reassign */
 
 		/* [DEPRECATED] */
-		// TODO: Delete this in January 2026.
+		// TODO: Delete this on January 2026.
 		//
 		// Replace a string `save.type` with an integer.
 		if (typeof save.type === 'string') {

@@ -8,8 +8,8 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Config, DebugView, Dialog, Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper, UI,
-	       UIBar, Wikifier, enumFrom, getErrorMessage, now, postdisplay, postrender, predisplay, prehistory,
-	       prerender, triggerEvent, warnDeprecated
+	       UIBar, Wikifier, apiSafetyLock:writable, enumFrom, getErrorMessage, now, postdisplay, postrender,
+	       predisplay, prehistory, prerender, triggerEvent, warnDeprecated
 */
 
 var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -288,6 +288,11 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Update the engine state.
 		currentEngineState = EngineState.Idle;
 
+		// Clear the safety lock gating various APIs.
+		apiSafetyLock = false;
+		// TODO: Remove this as soon as I figure out why ESLint is losing it's mind over the above.
+		apiSafetyLock;
+
 		// Attempt to restore the active session, if any.  Failing that, attempt
 		// to autoload the most recent browser save, if any and requested (legacy).
 		// Failing that, show the starting passage.
@@ -300,6 +305,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			// if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
 			//
 			// enginePlay(Config.passages.start);
+
 			/* [DEPRECATED] */
 			const autoloadValue = Config.saves._internal_autoload_;
 			const autoloadType  = typeof autoloadValue;
