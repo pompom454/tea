@@ -8,15 +8,48 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
-	       Outliner, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar,
+	       Outlines, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar,
 	       Util, Visibility, Wikifier, WikifierUtil, triggerEvent, warnDeprecated
 */
 /* eslint-disable no-var */
 
-/*
-	Version object.
-*/
-var version = (() => { // eslint-disable-line no-unused-vars, no-var
+/*******************************************************************************
+	Internal variables.
+*******************************************************************************/
+/* eslint-disable no-unused-vars */
+
+/* [DEPRECATED] */
+// Legacy objects.
+//
+// TODO: Delete these on January 2026.
+var macros      = {}; // Since v2.0.0 (2015-11-27)
+var postdisplay = {}; // Since v2.20.0 (2017-09-03)
+var postrender  = {}; // (ditto)
+var predisplay  = {}; // (ditto)
+var prehistory  = {}; // (ditto)
+var prerender   = {}; // (ditto)
+/* [/DEPRECATED] */
+
+// Temporary state object.
+var TempState = {};
+
+// Safety lock gating various APIs.
+var apiSafetyLock = true;
+
+// Session storage manager object.
+var session = null;
+
+// Settings object.
+var settings = Setting.create();
+
+// Setup object.
+var setup = {};
+
+// Persistent storage manager object.
+var storage = null;
+
+// SugarCube version object.
+var version = (() => {
 	const name     = 'SugarCube';
 	const semVerRE = /^[Vv]?(\d+)(?:\.(\d+)(?:\.(\d+)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)?)?$/;
 
@@ -32,19 +65,19 @@ var version = (() => { // eslint-disable-line no-unused-vars, no-var
 		isOk : {
 			value(semver) {
 				if (typeof semver !== 'string') {
-					throw new Error(`version.isOk semver parameter must be a string (received: ${typeof semver})`);
+					throw new Error(`semver parameter must be a string (received: ${typeof semver})`);
 				}
 
 				const trimmed = semver.trim();
 
 				if (trimmed === '') {
-					throw new Error('version.isOk semver parameter must not be empty');
+					throw new Error('semver parameter must not be empty');
 				}
 
 				const match = semVerRE.exec(trimmed);
 
 				if (!match) {
-					throw new Error(`version.isOk semver parameter is invalid (format: [v]MAJOR[.MINOR[.PATCH[-PRERELEASE][+BUILD]]]; received: ${trimmed}`);
+					throw new Error(`semver parameter is invalid (format: [v]MAJOR[.MINOR[.PATCH[-PRERELEASE][+BUILD]]]; received: ${trimmed}`);
 				}
 
 				const major = Number(match[1]);
@@ -94,43 +127,16 @@ var version = (() => { // eslint-disable-line no-unused-vars, no-var
 		/* [/DEPRECATED] */
 	}));
 })();
-
-/*
-	Internal variables.
-*/
-// Temporary state object.
-var TempState = {}; // eslint-disable-line no-unused-vars
-
-// Session storage manager object.
-var session = null; // eslint-disable-line no-unused-vars
-
-// Settings object.
-var settings = Setting.create(); // eslint-disable-line no-unused-vars
-
-// Setup object.
-var setup = {}; // eslint-disable-line no-unused-vars
-
-// Persistent storage manager object.
-var storage = null; // eslint-disable-line no-unused-vars
-
-/*
-	Legacy variables.
-*/
-/* [DEPRECATED] */
-/* eslint-disable no-unused-vars */
-var macros      = {};
-var postdisplay = {};
-var postrender  = {};
-var predisplay  = {};
-var prehistory  = {};
-var prerender   = {};
 /* eslint-enable no-unused-vars */
-/* [/DEPRECATED] */
+
+
+/*******************************************************************************
+	`SugarCube` object.
+*******************************************************************************/
 
 /*
-	Global `SugarCube` object.  Allows scripts to detect if they're running in SugarCube by
-	testing for the object—e.g., `"SugarCube" in window`—and contains exported identifiers
-	for debugging purposes.
+	Contains exported identifiers for debugging purposes and allows scripts to
+	detect if they're running in SugarCube.
 */
 Object.defineProperty(window, 'SugarCube', {
 	// WARNING: We need to assign new values at points, so seal it, do not freeze it.
@@ -153,7 +159,6 @@ Object.defineProperty(window, 'SugarCube', {
 		UI,
 		UIBar,
 		DebugBar,
-		Util,
 		Visibility,
 		Wikifier,
 		WikifierUtil,
@@ -162,12 +167,20 @@ Object.defineProperty(window, 'SugarCube', {
 		setup,
 		storage,
 		version
+
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, Util
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
 	}))
 });
 
-/*
-	Main function, entry point for the story.
-*/
+
+/*******************************************************************************
+	Main function.  Entry point for the story.
+*******************************************************************************/
+
 jQuery(() => {
 	if (BUILD_DEBUG) { console.log('[SugarCube/main()] Document loaded; beginning startup.'); }
 
@@ -207,7 +220,7 @@ jQuery(() => {
 		Dialog.init();
 		UIBar.init();
 		Engine.init();
-		Outliner.init();
+		Outlines.init();
 
 		// Run user scripts (user stylesheet, JavaScript, and widgets).
 		Engine.runUserScripts();
