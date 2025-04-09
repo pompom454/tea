@@ -285,6 +285,9 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Focus the document element initially.
 		document.documentElement.focus();
 
+		// Update the engine state.
+		currentEngineState = EngineState.Idle;
+
 		// Attempt to restore the active session, if any.  Failing that, attempt
 		// to autoload the most recent browser save, if any and requested (legacy).
 		// Failing that, show the starting passage.
@@ -333,9 +336,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 			/* [/DEPRECATED] */
 		}
-
-		// Update the engine state.
-		currentEngineState = EngineState.Idle;
 	}
 
 	/*
