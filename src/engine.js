@@ -282,9 +282,6 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			throw new Error(`starting passage ("${Config.passages.start}") not found`);
 		}
 
-		// Update the engine state.
-		currentEngineState = EngineState.Idle;
-
 		// Focus the document element initially.
 		document.documentElement.focus();
 
@@ -297,6 +294,9 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			engineShow();
 		}
 		else {
+			// if (BUILD_DEBUG) { console.log(`\tstarting passage: "${Config.passages.start}"`); }
+			//
+			// enginePlay(Config.passages.start);
 			/* [DEPRECATED] */
 			const autoloadValue = Config.saves._internal_autoload_;
 			const autoloadType  = typeof autoloadValue;
@@ -333,6 +333,9 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 			/* [/DEPRECATED] */
 		}
+
+		// Update the engine state.
+		currentEngineState = EngineState.Idle;
 	}
 
 	/*
