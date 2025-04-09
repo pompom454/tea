@@ -6,11 +6,11 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
+/* eslint-disable max-len */
+
 /*
 	TODO: Move all markup patterns into here.
 */
-
-/* eslint-disable max-len */
 var Patterns = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*******************************************************************************
 		Patterns.

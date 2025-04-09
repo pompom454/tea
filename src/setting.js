@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global enumFrom, settings:true, storage, warnDeprecated */
+/* global enumFrom, settings:writable, storage, warnDeprecated */
 
 var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Setting control types object.

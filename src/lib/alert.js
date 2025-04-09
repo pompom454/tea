@@ -8,8 +8,6 @@
 ***********************************************************************************************************************/
 
 /*
-	TODO: This regular expression should be elsewhere.
-
 	Error prologs by engine/browser: (ca. 2018)
 		Chrome, Opera, & Vivaldi → `Uncaught \w*Error: …`
 		Edge & IE                → `…`
@@ -17,7 +15,7 @@
 		Opera (Presto)           → `Uncaught exception: \w*(?:Error|Exception): …`
 		Safari (ca. v5.1)        → `\w*(?:Error|_ERR): …`
 */
-var errorPrologRE = /^(?:(?:uncaught\s+(?:exception:\s+)?)?\w*(?:error|exception|_err):\s+)+/i; // eslint-disable-line no-unused-vars, no-var
+var errorPrologRE = /^(?:(?:uncaught\s+(?:exception:\s+)?)?\w*(?:error|exception|_err):\s+)+/i; // eslint-disable-line no-var
 
 var Alert = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*******************************************************************************
@@ -74,7 +72,7 @@ var Alert = (() => { // eslint-disable-line no-unused-vars, no-var
 
 
 	/*******************************************************************************
-		Error Event.
+		`window.onerror` Event.
 	*******************************************************************************/
 
 	/*
