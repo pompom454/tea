@@ -67,7 +67,7 @@ mark, time {
 	--dark-box-border-color: #414141;
 	--dark-pre-border-left-color: #88f;
 	--dark-note-border-left-color: #ca0;
-	--dark-tip-border-left-color: #0d0;
+	--dark-tip-border-left-color: #0b0;
 	--dark-warn-border-left-color: #f44;
 	--dark-code-color: gold;
 	--dark-nav-toggle-on: #0d0;
@@ -268,7 +268,7 @@ a.permalink {
 	opacity: 0.25;
 }
 a.permalink::before {
-	content: "\e852";
+	content: "\f0c1";
 }
 h1 > a.permalink {
 	opacity: 0.1;
@@ -363,11 +363,11 @@ dl.keys dd, dl.params dd {
 =============================================================================*/
 
 /*
-	sc-doc-icons (Unicode PUA), Info Boxes
-		\e80a → Note (icon-info-circled)
-		\e80d → Warning (icon-attention)
-		\e811 → Tip (icon-lightbulb)
-		\e84f → See (icon-eye)
+	sc-icons (Unicode PUA), Info Boxes
+		\f05a → Note (circle-info)
+		\f071 → Warning (triangle-exclamation)
+		\f0eb → Tip (lightbulb)
+		\f06e → See (eye)
 */
 [role="note"] {
 	background-color: light-dark(var(--light-box-back-color), var(--dark-box-back-color));
@@ -379,45 +379,42 @@ dl.keys dd, dl.params dd {
 	position: relative;
 }
 [role="note"]::before {
-	content: "\e80a";
-	display: block;
-	left: -1.6em;
-	font-family: sc-doc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+	content: "\f05a";
+	cursor: pointer;
+	display: inline-block;
+	font-family: sc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
 	font-size: 1.25em;
 	font-style: normal;
 	font-variant: normal;
-	font-weight: normal;
-	line-height: 1.3em;
+	font-weight: 900;
+	left: -1.6em;
+	line-height: 1.3;
 	position: absolute;
-	speak: none;
+	speak: never;
 	text-align: center;
-	text-decoration: inherit;
+	text-decoration: none;
 	text-rendering: auto;
 	text-transform: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 	width: 1.6em;
-
-	/* For macOS. */
-	-webkit-font-smoothing: antialiased;
+	/* vendor-prefixed properties */
 	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
 }
 [role="note"].tip, [role="note"].see {
 	border-left-color: light-dark(var(--light-tip-border-left-color), var(--dark-tip-border-left-color));
 }
 [role="note"].tip::before {
-	content: "\e811";
+	content: "\f0eb";
 }
 [role="note"].see::before {
-	content: "\e84f";
+	content: "\f06e";
 }
 [role="note"].warning {
 	border-left-color: light-dark(var(--light-warn-border-left-color), var(--dark-warn-border-left-color));
 }
 [role="note"].warning::before {
-	content: "\e80d";
+	content: "\f071";
 }
 
 [role="note"] > b:first-child {
@@ -635,74 +632,73 @@ i.key, i.param, i.return,
 =============================================================================*/
 
 a.permalink,
-nav.enhanced > h2 > .child-heading::before,
 nav.enhanced > header > #controls > button::after,
 nav.enhanced > header > #controls > a::before,
+nav.enhanced > h2 > .child-heading::before,
+nav.enhanced > h2 > a.list-toggle::before,
 .icon {
+	cursor: pointer;
 	display: inline-block;
-	font-family: sc-doc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+	font-family: sc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
+	font-size: 1em;
 	font-style: normal;
 	font-variant: normal;
-	font-weight: normal;
-	line-height: 1em;
-	speak: none;
+	font-weight: 900;
+	line-height: 1;
+	speak: never;
 	text-align: center;
 	text-decoration: inherit;
 	text-rendering: auto;
 	text-transform: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
-
-	/* For macOS. */
-	-webkit-font-smoothing: antialiased;
+	/* vendor-prefixed properties */
 	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
 }
 .icon.margin-left { margin-left: 0.25em; }
 .icon.margin-right { margin-right: 0.25em; }
 /*
-	sc-doc-icons (Unicode PUA), Guide: Test Mode
-		\e804 → Cancel (icon-cancel)
-		\e805 → Plus (icon-plus)
-		\e827 → Trash (icon-trash)
-		\e830 → Toggle-off (icon-toggle-off)
-		\e838 → Bug (icon-bug)
-		\e83a → Wand (icon-magic)
-		\e842 → Play (icon-play)
-		\e852 → Link (icon-link)
-		\e853 → Rocket (icon-rocket)
-		\e854 → List (icon-list)
+	sc-icons (Unicode PUA), Guide: Test Mode
+		\f1f8 → Trash (trash)
+		\002b → Plus (plus)
+		\f2ed → Trash-can (trash-can)
+		\f204 → Toggle-off (toggle-off)
+		\f188 → Bug (bug)
+		\e2ca → Magic (magic-sparkles)
+		\f04b → Play (play)
+		\f0c1 → Link (link)
+		\f135 → Rocket (rocket)
+		\f03a → List (list)
 */
-.icon.cancel::before {
-	content: "\e804";
+.icon.trash::before {
+	content: "\f1f8";
 }
 .icon.plus::before {
-	content: "\e805";
+	content: "\002b";
 }
-.icon.trash::before {
-	content: "\e827";
+.icon.trash-can::before {
+	content: "\f2ed";
 }
 .icon.toggle-off::before {
-	content: "\e830";
+	content: "\f204";
 }
 .icon.bug::before {
-	content: "\e838";
+	content: "\f188";
 }
 .icon.magic::before {
-	content: "\e83a";
+	content: "\e2ca";
 }
 .icon.play::before {
-	content: "\e842";
+	content: "\f04b";
 }
 .icon.link::before {
-	content: "\e852";
+	content: "\f0c1";
 }
 .icon.rocket::before {
-	content: "\e853";
+	content: "\f135";
 }
 .icon.list::before {
-	content: "\e854";
+	content: "\f03a";
 }
 
 /* CLASS MODIFIERS, ICONS
@@ -728,16 +724,17 @@ nav.enhanced > header > #controls > a::before,
 	font-family: sc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
 	font-size: 4rem;
 	font-style: normal;
-	font-weight: normal;
 	font-variant: normal;
+	font-weight: 900;
 	line-height: 1;
 	speak: never;
+	text-decoration: none;
 	text-rendering: auto;
 	text-transform: none;
-
-	/* For macOS. */
-	-webkit-font-smoothing: antialiased;
+	user-select: none;
+	/* vendor-prefixed properties */
 	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
 }
 #icon-font-view > div > *:last-child {
 	margin-top: 0.5rem;
@@ -881,8 +878,7 @@ nav > hr {
 nav > div:last-child { height: 5em; }
 
 /* Enhancement */
-/* nav.enhanced > header {
-} */
+/* nav.enhanced > header { } */
 nav.enhanced > header > #controls {
 	text-align: right;
 }
@@ -904,11 +900,11 @@ nav.enhanced > header > #controls > button {
 }
 nav.enhanced > header > #controls > button#color-toggle::after {
 	color: light-dark(var(--light-nav-toggle-on), var(--dark-nav-toggle-on));
-	content: "\00a0\e831";
+	content: "\00a0\f205";
 }
 nav.enhanced > header > #controls > button#color-toggle.disabled::after {
 	color: light-dark(var(--light-nav-toggle-off), var(--dark-nav-toggle-off));
-	content: "\00a0\e830";
+	content: "\00a0\f204";
 }
 nav.enhanced > header > #controls > a::before {
 	cursor: pointer;
@@ -917,10 +913,10 @@ nav.enhanced > header > #controls > a::before {
 	width: 2em;
 }
 nav.enhanced > header > #controls > a#lists-collapse::before {
-	content: "\e806";
+	content: "\f068";
 }
 nav.enhanced > header > #controls > a#lists-expand::before {
-	content: "\e805";
+	content: "\002b";
 }
 nav.enhanced > h2 {
 	display: flex;
@@ -933,48 +929,28 @@ nav.enhanced > h2 > .child-heading {
 }
 nav.enhanced > h2 > .child-heading::before {
 	color: light-dark(var(--light-nav-subhead-mark), var(--dark-nav-subhead-mark));
-	content: "\e81a";
+	content: "\f148";
+	transform: rotate(90deg);
+	vertical-align: middle;
 }
 nav.enhanced > h2 > a:first-of-type {
 	flex: 1 1 auto;
 }
 nav.enhanced > h2 > a.list-toggle {
-	cursor: pointer;
 	flex: 0 0 auto;
-	font-family: sc-doc-icons !important; /* stylelint-disable-line font-family-no-missing-generic-family-keyword */
-	font-style: normal;
-	font-variant: normal;
-	font-weight: bold;
-	height: auto;
-	speak: none;
-	text-align: center;
-	text-decoration: none;
-	text-rendering: auto;
-	text-transform: none;
-	transition: transform 62.5ms linear;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	width: 2em;
-
-	/* For macOS. */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-nav.enhanced > h2 > a.list-toggle:hover {
 	text-decoration: none;
 }
 /*
-	sc-doc-icons (Unicode PUA), Table-of-Contents
-		\e805 → Collapsed (icon-plus)
-		\e806 → Expanded (icon-minus)
+	sc-icons (Unicode PUA), Table-of-Contents
+		\002b → Collapsed (plus)
+		\f068 → Expanded (minus)
 */
 nav.enhanced > h2 > a.list-toggle::before {
-	content: "\e806";
+	content: "\f068";
+	width: 2em;
 }
 nav.enhanced > h2 > a.list-toggle.collapsed::before {
-	content: "\e805";
+	content: "\002b";
 }
 nav.enhanced > ul.collapsed {
 	display: none;
