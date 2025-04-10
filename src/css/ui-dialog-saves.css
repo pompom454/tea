@@ -111,7 +111,7 @@
 	margin-right: 0.35em;
 }
 #ui-dialog-body.saves button.delete::before {
-	content: "\f2ed";
+	content: "\f1f8";
 }
 #ui-dialog-body.saves button.delete:disabled::before {
 	content: "\f1f8";
@@ -132,7 +132,7 @@
 	content: "\f2ed";
 }
 #ui-dialog-body.saves button[id="saves-clear"]:disabled::before {
-	content: "\f1f8";
+	content: "\f2ed";
 }
 #ui-dialog-body.saves button[id="saves-disk-save"]::before {
 	/* content: "\f019"; */
