@@ -660,7 +660,7 @@ nav.enhanced > h2 > a.list-toggle::before,
 /*
 	sc-icons (Unicode PUA), Guide: Test Mode
 		\f1f8 → Trash (trash)
-		\002b → Plus (plus)
+		\f067 → Plus (plus)
 		\f2ed → Trash-can (trash-can)
 		\f204 → Toggle-off (toggle-off)
 		\f188 → Bug (bug)
@@ -674,7 +674,7 @@ nav.enhanced > h2 > a.list-toggle::before,
 	content: "\f1f8";
 }
 .icon.plus::before {
-	content: "\002b";
+	content: "\f067";
 }
 .icon.trash-can::before {
 	content: "\f2ed";
@@ -916,7 +916,7 @@ nav.enhanced > header > #controls > a#lists-collapse::before {
 	content: "\f068";
 }
 nav.enhanced > header > #controls > a#lists-expand::before {
-	content: "\002b";
+	content: "\f067";
 }
 nav.enhanced > h2 {
 	display: flex;
@@ -942,7 +942,7 @@ nav.enhanced > h2 > a.list-toggle {
 }
 /*
 	sc-icons (Unicode PUA), Table-of-Contents
-		\002b → Collapsed (plus)
+		\f067 → Collapsed (plus)
 		\f068 → Expanded (minus)
 */
 nav.enhanced > h2 > a.list-toggle::before {
@@ -950,7 +950,7 @@ nav.enhanced > h2 > a.list-toggle::before {
 	width: 2em;
 }
 nav.enhanced > h2 > a.list-toggle.collapsed::before {
-	content: "\002b";
+	content: "\f067";
 }
 nav.enhanced > ul.collapsed {
 	display: none;
