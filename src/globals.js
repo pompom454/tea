@@ -1,0 +1,59 @@
+/***********************************************************************************************************************
+
+	globals.js
+
+	Copyright © 2013–2025 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
+	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
+
+***********************************************************************************************************************/
+/* eslint-disable prefer-const, no-unused-vars */
+
+/*******************************************************************************
+	Global variables.
+*******************************************************************************/
+
+/* [DEPRECATED] */
+// Legacy objects.
+//
+// TODO: Delete these on January 2026.
+let macros      = {}; // Since v2.0.0 (2015-11-27)
+let postdisplay = {}; // Since v2.20.0 (2017-09-03)
+let postrender  = {}; // (ditto)
+let predisplay  = {}; // (ditto)
+let prehistory  = {}; // (ditto)
+let prerender   = {}; // (ditto)
+/* [/DEPRECATED] */
+
+// Temporary state object.
+let TempState = {};
+
+// Safety lock gating various APIs.
+let apiSafetyLock = true;
+
+// Session storage manager object.
+let session = null;
+
+// Settings object.
+let settings = null;
+
+// Setup object.
+let setup = {};
+
+// Persistent storage manager object.
+let storage = null;
+
+
+/*******************************************************************************
+	Global functions.
+*******************************************************************************/
+
+/*
+	Log to the console, and optionally throw, a deprecation warning.
+*/
+function warnDeprecated(what, mesg, doThrow) { // eslint-disable-line no-unused-vars
+	console.warn(`[DEPRECATED] ${what} is deprecated${mesg ? `, see ${mesg} instead` : ''}.`);
+
+	if (doThrow) {
+		throw new Error(`[DEPRECATED] ${what} is deprecated${mesg ? `, see ${mesg} instead` : ''}`);
+	}
+}

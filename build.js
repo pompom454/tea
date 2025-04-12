@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /***********************************************************************************************************************
 
-	build.js (v1.9.6, 2025-04-08)
-		A Node.js-hosted build script for SugarCube.
+	build.js (v1.9.7, 2025-04-11)
+		A Node.js-hosted build script for SugarCube
 
 	Copyright © 2013–2025 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
@@ -21,7 +21,8 @@ const CONFIG = {
 	js : {
 		files : [
 			// The ordering herein is significant.
-			'src/lib/warndeprecated.js',
+			'src/globals.js',
+			'src/version.js',
 			'src/lib/alert.js',
 			'src/lib/patterns.js',
 			'src/extensions/ecmascript-polyfills.js',

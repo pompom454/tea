@@ -9,173 +9,9 @@
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro,
 	       Outlines, Passage, Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar,
-	       Util, Visibility, Wikifier, WikifierUtil, triggerEvent, warnDeprecated
+	       Util, Visibility, Wikifier, WikifierUtil, session:writeable, settings, setup, storage:writeable,
+	       triggerEvent, version
 */
-/* eslint-disable no-var */
-
-/*******************************************************************************
-	Internal variables.
-*******************************************************************************/
-/* eslint-disable no-unused-vars */
-
-/* [DEPRECATED] */
-// Legacy objects.
-//
-// TODO: Delete these on January 2026.
-var macros      = {}; // Since v2.0.0 (2015-11-27)
-var postdisplay = {}; // Since v2.20.0 (2017-09-03)
-var postrender  = {}; // (ditto)
-var predisplay  = {}; // (ditto)
-var prehistory  = {}; // (ditto)
-var prerender   = {}; // (ditto)
-/* [/DEPRECATED] */
-
-// Temporary state object.
-var TempState = {};
-
-// Safety lock gating various APIs.
-var apiSafetyLock = true;
-
-// Session storage manager object.
-var session = null;
-
-// Settings object.
-var settings = Setting.create();
-
-// Setup object.
-var setup = {};
-
-// Persistent storage manager object.
-var storage = null;
-
-// SugarCube version object.
-var version = (() => {
-	const name     = 'SugarCube';
-	const semVerRE = /^[Vv]?(\d+)(?:\.(\d+)(?:\.(\d+)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)?)?$/;
-
-	return Object.preventExtensions(Object.create(null, {
-		name       : { value : name },
-		major      : { value : '{{BUILD_VERSION_MAJOR}}' },
-		minor      : { value : '{{BUILD_VERSION_MINOR}}' },
-		patch      : { value : '{{BUILD_VERSION_PATCH}}' },
-		prerelease : { value : '{{BUILD_VERSION_PRERELEASE}}' },
-		build      : { value : '{{BUILD_VERSION_BUILD}}' },
-		date       : { value : new Date('{{BUILD_VERSION_DATE}}') },
-
-		isOk : {
-			value(semver) {
-				if (typeof semver !== 'string') {
-					throw new Error(`semver parameter must be a string (received: ${typeof semver})`);
-				}
-
-				const trimmed = semver.trim();
-
-				if (trimmed === '') {
-					throw new Error('semver parameter must not be empty');
-				}
-
-				const match = semVerRE.exec(trimmed);
-
-				if (!match) {
-					throw new Error(`semver parameter is invalid (format: [v]MAJOR[.MINOR[.PATCH[-PRERELEASE][+BUILD]]]; received: ${trimmed}`);
-				}
-
-				const major = Number(match[1]);
-				const minor = Number(match[2]) || 0;
-				const patch = Number(match[3]) || 0;
-
-				return (
-					major === this.major
-					&& (
-						minor < this.minor
-						|| minor === this.minor
-						&& patch <= this.patch
-					)
-				);
-			}
-		},
-
-		long : {
-			value() {
-				return `${this.name} v${this.toString()} (${this.date.toUTCString()})`;
-			}
-		},
-
-		short : {
-			value() {
-				const prerelease = this.prerelease ? `-${this.prerelease}` : '';
-				return `${this.name} (v${this.major}.${this.minor}.${this.patch}${prerelease})`;
-			}
-		},
-
-		toString : {
-			value() {
-				const prerelease = this.prerelease ? `-${this.prerelease}` : '';
-				return `${this.major}.${this.minor}.${this.patch}${prerelease}+${this.build}`;
-			}
-		}
-
-		/* [DEPRECATED] */
-		/* eslint-disable comma-style */
-		, title : {
-			get : () => {
-				warnDeprecated('version.title', 'version.name');
-				return name;
-			}
-		}
-		/* eslint-enable comma-style */
-		/* [/DEPRECATED] */
-	}));
-})();
-/* eslint-enable no-unused-vars */
-
-
-/*******************************************************************************
-	`SugarCube` object.
-*******************************************************************************/
-
-/*
-	Contains exported identifiers for debugging purposes and allows scripts to
-	detect if they're running in SugarCube.
-*/
-Object.defineProperty(window, 'SugarCube', {
-	// WARNING: We need to assign new values at points, so seal it, do not freeze it.
-	value : Object.seal(Object.assign(Object.create(null), {
-		Browser,
-		Config,
-		Dialog,
-		Engine,
-		Fullscreen,
-		Has,
-		L10n,
-		Macro,
-		Passage,
-		Save,
-		Scripting,
-		Setting,
-		SimpleAudio,
-		State,
-		Story,
-		UI,
-		UIBar,
-		DebugBar,
-		Visibility,
-		Wikifier,
-		WikifierUtil,
-		session,
-		settings,
-		setup,
-		storage,
-		version
-
-		/* [DEPRECATED] */
-		/* eslint-disable comma-style */
-		, Util
-		/* eslint-enable comma-style */
-		/* [/DEPRECATED] */
-	}))
-});
-
 
 /*******************************************************************************
 	Main function.  Entry point for the story.
@@ -285,4 +121,51 @@ jQuery(() => {
 			LoadScreen.clear();
 			return Alert.fatal(null, ex.message, ex);
 		});
+});
+
+
+/*******************************************************************************
+	`SugarCube` object.
+*******************************************************************************/
+
+/*
+	Contains exported identifiers for debugging purposes and allows scripts to
+	detect if they're running in SugarCube.
+*/
+Object.defineProperty(window, 'SugarCube', {
+	// WARNING: We need to assign new values at points, so seal it, do not freeze it.
+	value : Object.seal(Object.assign(Object.create(null), {
+		Browser,
+		Config,
+		Dialog,
+		Engine,
+		Fullscreen,
+		Has,
+		L10n,
+		Macro,
+		Passage,
+		Save,
+		Scripting,
+		Setting,
+		SimpleAudio,
+		State,
+		Story,
+		UI,
+		UIBar,
+		DebugBar,
+		Visibility,
+		Wikifier,
+		WikifierUtil,
+		session,
+		settings,
+		setup,
+		storage,
+		version
+
+		/* [DEPRECATED] */
+		/* eslint-disable comma-style */
+		, Util
+		/* eslint-enable comma-style */
+		/* [/DEPRECATED] */
+	}))
 });
