@@ -63,8 +63,7 @@
 	width: 2.237em;
 }
 #ui-dialog-body.saves #saves-list button:disabled {
-	color: #444;
-	border-color: #444;
+	color: #909090;
 }
 #ui-dialog-body.saves #saves-list button:not(:disabled):hover {
 	background-color: #222;

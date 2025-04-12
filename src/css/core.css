@@ -51,7 +51,8 @@ body::-ms-backdrop {
 *:focus {
 	outline: thin dotted;
 }
-*:disabled {
+*:disabled,
+[disabled] {
 	cursor: not-allowed !important;
 }
 html {
@@ -114,13 +115,10 @@ a.link-broken:hover {
 }
 a[disabled],
 span.link-disabled {
-	color: #aaa;
-	cursor: not-allowed !important;
+	color: #909090;
 	/*
-		NOTE: Do not use `pointer-events` here as it disables
-		the display of a cursor in some browsers.
-
-		pointer-events: none;
+		WARNING: Do not use `pointer-events` here as it disables the display
+		of cursors in certain browsers.
 	*/
 	text-decoration: none;
 }
@@ -146,8 +144,9 @@ button:hover {
 	border-color: #79e;
 }
 button:disabled {
-	background-color: #444;
-	border: 1px solid #666;
+	color: #909090;
+	background-color: #222;
+	border-color: #444;
 }
 code,
 kbd,
@@ -287,11 +286,10 @@ html[data-outlines] [contenteditable]:focus,
 }
 input:disabled,
 select:disabled,
-textarea:disabled,
-[contenteditable]:disabled {
-	color: #333;
+textarea:disabled {
+	color: #909090;
 	background-color: transparent;
-	border-color: #111;
+	border-color: #444;
 }
 hr {
 	display: block;
