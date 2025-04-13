@@ -1006,7 +1006,7 @@
 	Wikifier.Parser.add({
 		name     : 'horizontalRule',
 		profiles : ['core'],
-		match    : '^----+\\s*$',
+		match    : '^---+\\s*$|^***+\\s*$',
 
 		handler(w) {
 			jQuery(document.createElement('hr')).appendTo(w.output);

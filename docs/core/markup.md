@@ -624,7 +624,7 @@ A right angle bracket (`>`) that begins a line defines the blockquote markup.  I
 **************************************************************************** -->
 ## Horizontal Rule {#markup-horizontal-rule}
 
-A set of four hyphen/minus characters (`-`) that begins a line defines the horizontal rule markup.
+A set of three, or more, hyphen-minus (`-`) or asterisk (`*`) characters that begin a line, and are the only things on the line, defines the horizontal rule markup.
 
 <table>
 <thead>
@@ -638,7 +638,13 @@ A set of four hyphen/minus characters (`-`) that begins a line defines the horiz
 <tbody>
 	<tr>
 		<td>Horizontal rule</td>
-		<td><pre><code>----</code></pre></td>
+		<td><pre><code>---</code></pre></td>
+		<td><pre><code>&lt;hr&gt;</code></pre></td>
+		<td class="displays"><hr></td>
+	</tr>
+	<tr>
+		<td>Horizontal rule</td>
+		<td><pre><code>***</code></pre></td>
 		<td><pre><code>&lt;hr&gt;</code></pre></td>
 		<td class="displays"><hr></td>
 	</tr>
