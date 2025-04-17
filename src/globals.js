@@ -13,15 +13,15 @@
 *******************************************************************************/
 
 /* [DEPRECATED] */
-// Legacy objects.
+// Legacy objects (since v2.0.0, 2015-11-27).
 //
 // TODO: Delete these on January 2026.
-let macros      = {}; // Since v2.0.0 (2015-11-27)
-let postdisplay = {}; // Since v2.20.0 (2017-09-03)
-let postrender  = {}; // (ditto)
-let predisplay  = {}; // (ditto)
-let prehistory  = {}; // (ditto)
-let prerender   = {}; // (ditto)
+let macros      = {};
+let postdisplay = {};
+let postrender  = {};
+let predisplay  = {};
+let prehistory  = {};
+let prerender   = {};
 /* [/DEPRECATED] */
 
 // Temporary state object.
