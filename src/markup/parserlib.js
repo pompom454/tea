@@ -1304,8 +1304,8 @@
 	Wikifier.Parser.add({
 		name       : 'list',
 		profiles   : ['block'],
-		match      : '^(?:(?:\\*+)|(?:#+))',
-		lookahead  : /^(?:(\*+)|(#+))/gm,
+		match      : '^[\\t ]*(?:\\*|#)',
+		lookahead  : /^[\t ]*(?:(\*)|(#))\s*/gm,
 		terminator : '\\n',
 
 		handler(w) {
@@ -1313,6 +1313,24 @@
 				jQuery(w.output).append(document.createTextNode(w.matchText));
 				return;
 			}
+
+			const countLevels = source => {
+				let length = 0;
+
+				for (let i = 0; i < source.length; ++i) {
+					if (source[i] === '\t') {
+						length += 4;
+					}
+					else if (source[i] === ' ' /* space */) {
+						length += 1;
+					}
+					else {
+						break;
+					}
+				}
+
+				return 1 + Math.ceil(length / 4);
+			};
 
 			w.nextMatch = w.matchStart;
 
@@ -1331,7 +1349,7 @@
 
 				if (matched) {
 					const newType  = match[2] ? 'ol' : 'ul';
-					const newLevel = match[0].length;
+					const newLevel = countLevels(match[0]);
 
 					w.nextMatch += match[0].length;
 
