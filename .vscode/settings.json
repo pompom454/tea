@@ -1,5 +1,6 @@
 {
 	"editor.insertSpaces": false,
 	"css.validate": false,
-	"twee3LanguageTools.storyformat.current": "sugarcube-2"
+	"twee3LanguageTools.storyformat.current": "sugarcube-2",
+	"editor.unicodeHighlight.ambiguousCharacters": false
 }
