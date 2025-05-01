@@ -431,7 +431,7 @@
 	* [`Save.browser.slot.entries()`](#save-api-browser-slot-method-entries)
 	* [`Save.browser.slot.get()`](#save-api-browser-slot-method-get)
 	* [`Save.browser.slot.has()`](#save-api-browser-slot-method-has)
-	* [`Save.browser.slot.isEnabled()`](#save-api-browser-method-slots-isenabled)
+	* [`Save.browser.slot.isEnabled()`](#save-api-browser-method-slot-isenabled)
 	* [`Save.browser.slot.load()`](#save-api-browser-slot-method-load)
 	* [`Save.browser.slot.save()`](#save-api-browser-slot-method-save)
 * [Disk Saves](#save-api-disk)
