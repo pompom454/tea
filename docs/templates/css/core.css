@@ -5,7 +5,7 @@
 */
 /*
 	stylelint-disable comment-whitespace-inside, custom-property-empty-line-before,
-	    property-no-vendor-prefix, selector-list-comma-newline-after
+	    selector-list-comma-newline-after
 */
 
 /* RESET
@@ -68,7 +68,7 @@ mark, time {
 	--dark-pre-border-left-color: #88f;
 	--dark-note-border-left-color: #ca0;
 	--dark-tip-border-left-color: #0b0;
-	--dark-warn-border-left-color: #f44;
+	--dark-warn-border-left-color: #e44;
 	--dark-code-color: gold;
 	--dark-nav-toggle-on: #0d0;
 	--dark-nav-toggle-off: red;
@@ -401,7 +401,17 @@ dl.keys dd, dl.params dd {
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
 }
-[role="note"].tip, [role="note"].see {
+@media (prefers-color-scheme: dark) {
+	[role="note"]::before {
+		text-shadow:
+			-1px -1px 0 #666,
+			1px -1px 0 #666,
+			-1px 1px 0 #666,
+			1px 1px 0 #666;
+	}
+}
+[role="note"].tip,
+[role="note"].see {
 	border-left-color: light-dark(var(--light-tip-border-left-color), var(--dark-tip-border-left-color));
 }
 [role="note"].tip::before {
