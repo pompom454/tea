@@ -2,5 +2,7 @@
 	"editor.insertSpaces": false,
 	"css.validate": false,
 	"twee3LanguageTools.storyformat.current": "sugarcube-2",
-	"editor.unicodeHighlight.ambiguousCharacters": false
+	"editor.unicodeHighlight.ambiguousCharacters": false,
+	"files.trimTrailingWhitespace": true,
+	"files.trimFinalNewlines": true
 }
