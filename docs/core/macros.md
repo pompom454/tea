@@ -1036,6 +1036,7 @@ Creates a cycling link, used to modify the value of the variable with the given 
 
 * `v2.29.0`: Introduced.
 * `v2.36.0`: Fixed the `selected` keyword and added the `once` keyword.
+* `v2.38.0`: Changed to fire `change` events upon cycling through values.
 
 #### Arguments:
 
