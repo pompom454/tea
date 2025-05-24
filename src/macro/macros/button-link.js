@@ -90,7 +90,7 @@ Macro.add(['button', 'link'], {
 				switch (arg) {
 					case 'class': {
 						if (args.length === 0) {
-							return this.error('volume missing required level value');
+							return this.error('class missing required class names value');
 						}
 
 						options.classes.push(args.shift());
@@ -99,7 +99,7 @@ Macro.add(['button', 'link'], {
 
 					case 'id': {
 						if (args.length === 0) {
-							return this.error('volume missing required level value');
+							return this.error('id missing required identity value');
 						}
 
 						options.id = args.shift();
