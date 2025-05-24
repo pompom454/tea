@@ -20,11 +20,17 @@ Macro.add(['button', 'link'], {
 			return this.error(`no ${this.name === 'button' ? 'button' : 'link'} text specified`);
 		}
 
-		const $link = jQuery(document.createElement(this.name === 'button' ? 'button' : 'a'));
-		let passage;
+		const isObject = typeof this.args[0] === 'object';
+		const $link    = jQuery(document.createElement(this.name === 'button' ? 'button' : 'a'));
+		const options  = Object.create(null, {
+			classes : {
+				value      : [`macro-${this.name}`],
+				enumerable : true
+			}
+		});
 
 		// Argument is an object.
-		if (typeof this.args[0] === 'object') {
+		if (isObject) {
 			// Argument was in wiki image syntax.
 			if (this.args[0].isImage) {
 				const $image = jQuery(document.createElement('img'))
@@ -46,13 +52,13 @@ Macro.add(['button', 'link'], {
 				}
 
 				if (Object.hasOwn(this.args[0], 'link')) {
-					passage = this.args[0].link;
+					options.passage = this.args[0].link;
 				}
 			}
 			// Argument was in wiki link syntax.
 			else if (this.args[0].isLink) {
 				$link.append(document.createTextNode(this.args[0].text));
-				passage = this.args[0].link;
+				options.passage = this.args[0].link;
 			}
 			// Argument was some other kind of object.
 			else {
@@ -72,16 +78,52 @@ Macro.add(['button', 'link'], {
 			}
 
 			$link.append($frag);
-			passage = this.args.length > 1 ? this.args[1] : undefined;
 		}
 
-		if (passage != null) { // nullish test
-			$link.attr('data-passage', passage);
+		// Check for additional arguments.
+		if (this.args.length > 1) {
+			const args = this.args.slice(1);
 
-			if (Story.has(passage)) {
+			while (args.length > 0) {
+				const arg = args.shift();
+
+				switch (arg) {
+					case 'class': {
+						if (args.length === 0) {
+							return this.error('volume missing required level value');
+						}
+
+						options.classes.push(args.shift());
+						break;
+					}
+
+					case 'id': {
+						if (args.length === 0) {
+							return this.error('volume missing required level value');
+						}
+
+						options.id = args.shift();
+						break;
+					}
+
+					default: {
+						if (!isObject) {
+							options.passage = arg;
+						}
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (options?.passage != null) { // nullish test
+			$link.attr('data-passage', options.passage);
+
+			if (Story.has(options.passage)) {
 				$link.addClass('link-internal');
 
-				if (Config.addVisitedLinkClass && State.hasPlayed(passage)) {
+				if (Config.addVisitedLinkClass && State.hasPlayed(options.passage)) {
 					$link.addClass('link-visited');
 				}
 			}
@@ -93,18 +135,25 @@ Macro.add(['button', 'link'], {
 			$link.addClass('link-internal');
 		}
 
+		if (options.classes.length > 0) {
+			$link.addClass(options.classes);
+		}
+
+		if (options?.id != null) { // nullish test
+			$link.attr('id', options.id);
+		}
+
 		$link
-			.addClass(`macro-${this.name}`)
 			.ariaClick({
 				namespace : '.macros',
-				role      : passage != null ? 'link' : 'button', // nullish test
-				one       : passage != null // nullish test
+				role      : options?.passage != null ? 'link' : 'button', // nullish test
+				one       : options?.passage != null // nullish test
 			}, this.shadowHandler(
 				this.payload[0].contents !== ''
 					? () => Wikifier.wikifyEval(this.payload[0].contents.trim())
 					: null,
-				passage != null // nullish test
-					? () => Engine.play(passage)
+				options?.passage != null // nullish test
+					? () => Engine.play(options.passage)
 					: null
 			))
 			.appendTo(this.output);

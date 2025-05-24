@@ -916,7 +916,7 @@ Interactive macros are both asynchronous and require interaction from the player
 
 <!-- *********************************************************************** -->
 
-### `<<button linkText [passageName]>> … <</button>>`<br>`<<button linkMarkup>> … <</button>>`<br>`<<button imageMarkup>> … <</button>>` {#macros-macro-button}
+### `<<button linkText [passageName] [class classNames] [id identifier]>> … <</button>>`<br>`<<button linkMarkup [class classNames] [id identifier]>> … <</button>>`<br>`<<button imageMarkup [class classNames] [id identifier]>> … <</button>>` {#macros-macro-button}
 
 Creates a button that silently executes its contents when clicked, optionally forwarding the player to another passage.  May be called with either the link text and passage name as separate arguments, a link markup, or an image markup.
 
@@ -931,12 +931,13 @@ This macro is functionally identical to <a href="#macros-macro-link">&lt;&lt;lin
 #### History:
 
 * `v2.8.0`: Introduced.
+* `v2.38.0`: Added `class` and `id` arguments.
 
 #### Arguments:
 
 ##### Separate argument form
 
-* **`linkText`:** The text of the link.  May contain markup.
+* **`linkText`:** The text of the button.  May contain markup.
 * **`passageName`:** (optional) The name of the passage to go to.
 
 ##### Link markup form
@@ -947,18 +948,51 @@ This macro is functionally identical to <a href="#macros-macro-link">&lt;&lt;lin
 
 * **`imageMarkup`:** The image markup to use (regular syntax only, no setters).
 
+Additionally, all forms may include the following optional arguments:
+
+* **`class` *`classNames`*:** (optional) Sets the classes of the button.
+* **`id` *`identifier`*:** (optional) Sets the identifier of the button, which must be unique.
+
 #### Examples:
 
-```
-→ Without forwarding: a very basic statistic setting example
-Strength: <<set $pcStr to 10>><span id="stats-str"><<print $pcStr>></span> \
-( <<button "[+]">><<set $pcStr++>><<replace "#stats-str">><<print $pcStr>><</replace>><</button>> \
-| <<button "[-]">><<set $pcStr-->><<replace "#stats-str">><<print $pcStr>><</replace>><</button>> )
+##### Basic usage, without forwarding: a very basic statistic setting example
 
-→ With forwarding: execute a script, then go to the specified passage
-<<button "Onward, Reginald!" "On with the story">><<script>>/* (code) */<</script>><</button>>
-<<button [[Onward, Reginald!|On with the story]]>><<script>>/* (code) */<</script>><</button>>
-<<button [img[onward.jpg][On with the story]]>><<script>>/* (code) */<</script>><</button>>
+```
+Strength: <<set $pcStr to 10>><span id="stats-str">$pcStr</span> \
+( <<button "[+]">><<set $pcStr++>><<replace "#stats-str">>$pcStr<</replace>><</button>> \
+| <<button "[-]">><<set $pcStr-->><<replace "#stats-str">>$pcStr<</replace>><</button>> )
+```
+
+##### Basic usage, with forwarding: run some code, then go to the specified passage
+
+```
+<<button "Do the thing, Zhu Li!" "Does the thing">>
+	/* code to run… */
+<</button>>
+```
+
+```
+<<button [[Do the thing, Zhu Li!|Does the thing]]>>
+	/* code to run… */
+<</button>>
+```
+
+```
+<<button [img[doing-the-thing.jpg][Does the thing]]>>
+	/* code to run… */
+<</button>>
+```
+
+##### Usage with optional arguments
+
+```
+<<button "Poke the bear." "Pokes bear" class "bear-poke">><</button>>
+```
+
+```
+<<button "Menu" id "menu-button">>
+	/* open a menu… */
+<</button>>
 ```
 
 <!-- *********************************************************************** -->
@@ -1125,7 +1159,7 @@ You see a large red, candy-like button.
 
 <!-- *********************************************************************** -->
 
-### `<<link linkText [passageName]>> … <</link>>`<br>`<<link linkMarkup>> … <</link>>`<br>`<<link imageMarkup>> … <</link>>` {#macros-macro-link}
+### `<<link linkText [passageName] [class classNames] [id identifier]>> … <</link>>`<br>`<<link linkMarkup [class classNames] [id identifier]>> … <</link>>`<br>`<<link imageMarkup [class classNames] [id identifier]>> … <</link>>` {#macros-macro-link}
 
 Creates a link that silently executes its contents when clicked, optionally forwarding the player to another passage.  May be called with either the link text and passage name as separate arguments, a link markup, or an image markup.
 
@@ -1140,6 +1174,7 @@ If you simply need a passage link that modifies variables, both the <a href="#ma
 #### History:
 
 * `v2.8.0`: Introduced.
+* `v2.38.0`: Added `class` and `id` arguments.
 
 #### Arguments:
 
@@ -1156,18 +1191,51 @@ If you simply need a passage link that modifies variables, both the <a href="#ma
 
 * **`imageMarkup`:** The image markup to use (regular syntax only, no setters).
 
+Additionally, all forms may include the following optional arguments:
+
+* **`class` *`classNames`*:** (optional) Sets the classes of the link.
+* **`id` *`identifier`*:** (optional) Sets the identifier of the link, which must be unique.
+
 #### Examples:
 
-```
-→ Without forwarding: a very basic statistic setting example
-Strength: <<set $pcStr to 10>><span id="stats-str"><<print $pcStr>></span> \
-( <<link "[+]">><<set $pcStr++>><<replace "#stats-str">><<print $pcStr>><</replace>><</link>> \
-| <<link "[-]">><<set $pcStr-->><<replace "#stats-str">><<print $pcStr>><</replace>><</link>> )
+##### Basic usage, without forwarding: a very basic statistic setting example
 
-→ With forwarding: execute a script, then go to the specified passage
-<<link "Onward, Reginald!" "On with the story">><<script>>/* (code) */<</script>><</link>>
-<<link [[Onward, Reginald!|On with the story]]>><<script>>/* (code) */<</script>><</link>>
-<<link [img[onward.jpg][On with the story]]>><<script>>/* (code) */<</script>><</link>>
+```
+Strength: <<set $pcStr to 10>><span id="stats-str">$pcStr</span> \
+( <<link "[+]">><<set $pcStr++>><<replace "#stats-str">>$pcStr<</replace>><</link>> \
+| <<link "[-]">><<set $pcStr-->><<replace "#stats-str">>$pcStr<</replace>><</link>> )
+```
+
+##### Basic usage, with forwarding: run some code, then go to the specified passage
+
+```
+<<link "Do the thing, Zhu Li!" "Does the thing">>
+	/* code to run… */
+<</link>>
+```
+
+```
+<<link [[Do the thing, Zhu Li!|Does the thing]]>>
+	/* code to run… */
+<</link>>
+```
+
+```
+<<link [img[doing-the-thing.jpg][Does the thing]]>>
+	/* code to run… */
+<</link>>
+```
+
+##### Usage with optional arguments
+
+```
+<<link "Poke the bear." "Pokes bear" class "bear-poke">><</link>>
+```
+
+```
+<<link "Menu" id "menu-link">>
+	/* open a menu… */
+<</link>>
 ```
 
 <!-- *********************************************************************** -->
