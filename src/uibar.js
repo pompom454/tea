@@ -203,14 +203,11 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		// Create a few `:uiupdate` event helpers.
-		const addUiUpdateHandler = handler => jQuery(document)[
-			Config.ui.updateStoryElements ? 'on' : 'one'
-		](`:uiupdate${EVENT_NS}`, handler);
 		const addUpdaterOrRemove = (selector, passageName) => {
 			const $el = jQuery(selector);
 
 			if (Story.has(passageName)) {
-				addUiUpdateHandler(() => {
+				jQuery(document)[Config.ui.updateStoryElements ? 'on' : 'one'](`:uiupdate${EVENT_NS}`, () => {
 					if (!$uiBar) {
 						$el.off(`:uiupdate${EVENT_NS}`);
 						return;
