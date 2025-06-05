@@ -9,7 +9,7 @@
 /*
 	global Alert, Config, DebugView, Dialog, Has, LoadScreen, Save, Scripting, State, Story, StyleWrapper, UI,
 	       UIBar, Wikifier, apiSafetyLock:writable, enumFrom, getErrorMessage, now, postdisplay, postrender,
-	       predisplay, prehistory, prerender, triggerEvent, warnDeprecated
+	       predisplay, prehistory, prerender, setDisplayTitle, triggerEvent, warnDeprecated
 */
 
 var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -743,6 +743,22 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 		});
 		/* [/DEPRECATED] */
+
+		// Set up the story's title, both as the document title and as the UIBar title.
+		if (Story.has('StoryDisplayTitle')) {
+			setDisplayTitle(Story.get('StoryDisplayTitle').processText());
+		}
+		else {
+			// For Twine 1.
+			if (BUILD_TWINE1) { // for Twine 1
+				setDisplayTitle(Story.get('StoryTitle').processText());
+			}
+
+			// For Twine 2.
+			else {
+				setDisplayTitle(Story.name, true);
+			}
+		}
 
 		// Execute UI update events.
 		UI.update();

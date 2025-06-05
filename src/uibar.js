@@ -7,8 +7,7 @@
 
 ***********************************************************************************************************************/
 /*
-	global Alert, Config, Dialog, Engine, L10n, Save, Setting, State, Story, UI, Wikifier, setDisplayTitle,
-	       warnDeprecated
+	global Alert, Config, Dialog, Engine, L10n, Save, Setting, State, Story, UI, Wikifier, warnDeprecated
 */
 
 var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
@@ -132,6 +131,10 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 		return UIBar;
 	}
 
+	function isDestroyed() {
+		return $uiBar === null;
+	}
+
 	function isHidden() {
 		return $uiBar && $uiBar.css('display') === 'none';
 	}
@@ -223,29 +226,10 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 		};
 
-		// Set up the story display title.
-		{
-			let storyTitleHandler;
-
-			if (Story.has('StoryDisplayTitle')) {
-				storyTitleHandler = () => setDisplayTitle(Story.get('StoryDisplayTitle').processText());
-			}
-			else {
-				// For Twine 1.
-				if (BUILD_TWINE1) { // for Twine 1
-					storyTitleHandler = () => setDisplayTitle(Story.get('StoryTitle').processText());
-				}
-
-				// For Twine 2.
-				else {
-					storyTitleHandler = () => setDisplayTitle(Story.name, true);
-				}
-			}
-
-			addUiUpdateHandler(storyTitleHandler);
-		}
-
 		// Set up our dynamic elements.
+		//
+		// NOTE: The `#story-title` element, `StoryTitle` passage, and `StoryDisplayTitle`
+		// passage are handled in `engine.js`.
 		addUpdaterOrRemove('#story-banner', 'StoryBanner');
 		addUpdaterOrRemove('#story-subtitle', 'StorySubtitle');
 		addUpdaterOrRemove('#story-author', 'StoryAuthor');
@@ -422,14 +406,15 @@ var UIBar = (() => { // eslint-disable-line no-unused-vars, no-var
 		init : { value : init },
 
 		// Core Functions.
-		destroy  : { value : destroy },
-		hide     : { value : hide },
-		isHidden : { value : isHidden },
-		isStowed : { value : isStowed },
-		show     : { value : show },
-		start    : { value : start },
-		stow     : { value : stow },
-		unstow   : { value : unstow }
+		destroy     : { value : destroy },
+		hide        : { value : hide },
+		isDestroyed : { value : isDestroyed },
+		isHidden    : { value : isHidden },
+		isStowed    : { value : isStowed },
+		show        : { value : show },
+		start       : { value : start },
+		stow        : { value : stow },
+		unstow      : { value : unstow }
 
 		/* [DEPRECATED] */
 		/* eslint-disable comma-style */

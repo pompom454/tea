@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, State, Wikifier, getTypeOf */
+/* global Config, State, UIBar, Wikifier, getTypeOf */
 
 /*
 	Sets the display title.
@@ -58,9 +58,11 @@ var setDisplayTitle = (() => { // eslint-disable-line no-unused-vars, no-var
 			? `${State.passage} | ${text}`
 			: text;
 
-		jQuery('#story-title')
-			.empty()
-			.append(render);
+		if (!UIBar.isDestroyed()) {
+			jQuery('#story-title')
+				.empty()
+				.append(render);
+		}
 	}
 
 	return setDisplayTitle;
