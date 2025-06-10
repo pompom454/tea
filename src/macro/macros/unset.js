@@ -19,7 +19,7 @@ Macro.add('unset', {
 			return this.error('no story/temporary variable list specified');
 		}
 
-		const searchRe  = /[,;\s]*((?:State\.(?:variables|temporary)|setup)\.)/g;
+		const searchRe  = /(?<![[{+\s])[,;\s]*((?:State\.(?:variables|temporary)|setup)\.)/g;
 		const replacer  = (_, p1) => `; delete ${p1}`;
 		const cleanupRe = /^; /;
 
