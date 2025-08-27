@@ -143,16 +143,12 @@ var Patterns = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	// Inline CSS pattern.
 	const inlineCss = (() => {
-		/* [DEPRECATED] */
-		const twStyle   = `(${anyLetter}+)\\(([^\\)\\|\\n]+)\\):`;
-		/* [/DEPRECATED] */
 		const cssStyle  = `${spaceNoTerminator}*(${anyLetter}+)${spaceNoTerminator}*:([^;\\|\\n]+);`;
 		const idOrClass = `${spaceNoTerminator}*((?:${cssIdOrClassSigil}${anyLetter}+${spaceNoTerminator}*)+);`;
 
-		// [1,2] = cssPropertyName(value):
-		// [3,4] = cssPropertyName:value;
-		// [5]   = #id.className;
-		return `${twStyle}|${cssStyle}|${idOrClass}`;
+		// [1,2] = cssPropertyName:value;
+		// [3]   = #id.className;
+		return `${cssStyle}|${idOrClass}`;
 	})();
 
 	// URL pattern.

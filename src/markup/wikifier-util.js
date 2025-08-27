@@ -83,9 +83,6 @@ var WikifierUtil = (() => { // eslint-disable-line no-unused-vars, no-var
 						css.styles[cssPropToDOMProp(match[1])] = match[2].trim();
 					}
 					else if (match[3]) {
-						css.styles[cssPropToDOMProp(match[3])] = match[4].trim();
-					}
-					else if (match[5]) {
 						let subMatch;
 
 						idOrClassRe.lastIndex = 0;
