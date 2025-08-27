@@ -135,32 +135,36 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		//
 		// NOTE: Subtract `1` from both position values to address a Firefox issue.
 		// QUESTION: Is this still necessary?
-		let hWidth = $window.width() - $dialog.outerWidth(true) - 1;
-		let vWidth = $window.height() - $dialog.outerHeight(true) - 1;
+		let width  = $window.width() - $dialog.outerWidth(true) - 1;
+		let height = $window.height() - $dialog.outerHeight(true) - 1;
 
-		if (hWidth <= minPos * 2 + scrollbarWidth) {
-			vWidth -= scrollbarWidth;
+		// Subtract the scrollbar width from our height if we're too wide for the
+		// physical window dimensions.
+		if (width <= minPos * 2 + scrollbarWidth) {
+			height -= scrollbarWidth;
 		}
 
-		if (vWidth <= minPos * 2 + scrollbarWidth) {
-			hWidth -= scrollbarWidth;
+		// Subtract the scrollbar width from our width if we're too tall for the
+		// physical window dimensions.
+		if (height <= minPos * 2 + scrollbarWidth) {
+			width -= scrollbarWidth;
 		}
 
 		/* eslint-disable prefer-template */
 		// Calculate the horizontal inset values in pixels.
-		if (hWidth <= minPos * 2) {
+		if (width <= minPos * 2) {
 			inset.left = inset.right = minPos + 'px';
 		}
 		else {
-			inset.left = inset.right = (hWidth / 2 >> 0) + 'px';
+			inset.left = inset.right = (width / 2 >> 0) + 'px';
 		}
 
 		// Calculate the vertical inset values in pixels.
-		if (vWidth <= minPos * 2) {
+		if (height <= minPos * 2) {
 			inset.top = inset.bottom = minPos + 'px';
 		}
 		else {
-			const vPos = vWidth / 2 >> 0;
+			const vPos = height / 2 >> 0;
 
 			if (vPos > top) {
 				inset.top = top + 'px';
