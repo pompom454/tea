@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global L10n, Story, getActiveElement, getTypeOf, triggerEvent, warnDeprecated */
+/* global L10n, Story, getActiveElement, getTypeOf, scrubEventKey, triggerEvent, warnDeprecated */
 
 var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Default top position.
@@ -401,7 +401,7 @@ var Dialog = (() => { // eslint-disable-line no-unused-vars, no-var
 		jQuery(document)
 			.off('.dialog-close')
 			.on('keydown.dialog-close', ev => {
-				if (ev.key === 'Escape') {
+				if (scrubEventKey(ev.key) === 'Escape') {
 					ev.preventDefault();
 					close(ev);
 				}
