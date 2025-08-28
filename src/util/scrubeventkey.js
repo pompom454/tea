@@ -48,11 +48,7 @@ var scrubEventKey = (() => { // eslint-disable-line no-unused-vars, no-var
 				// Attempt to determine the player's 'Separator' and 'Decimal' key values
 				// based on their current locale.
 				if (typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
-					// NOTE: The current expression's use of the digit classes (`\d`, `\D`)
-					// does not handle all number forms.  Switching to Unicode property escapes
-					// for numbers (`/p{N}`, `/P{N}`) would resolve this, but requires the expression
-					// to be in a Unicode-aware mode—e.g., using the `u` flag.
-					const match = new Intl.NumberFormat().format(111111.5).match(/(\D*)\d+(\D*)\d$/);
+					const match = new Intl.NumberFormat().format(111111.5).match(/(\P{N}*)\p{N}+(\P{N}*)\p{N}$/u);
 
 					if (match) {
 						scrubbedKey = key === 'Separator' ? match[1] : match[2];
