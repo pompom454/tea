@@ -16,10 +16,10 @@
 	// `:redo-internal` events to `<<do>>` macros matching the given
 	// selector.
 	jQuery(document).on(':redo', ev => {
-		const evTags   = ev.detail && ev.detail.tags || [];
-		const selector = evTags.length === 0
+		const redoTags = ev.detail && ev.detail.tags || [];
+		const selector = redoTags.length === 0
 			? `.${eventClass}`
-			: evTags.map(tag => `.${eventClass}[data-do-tags~="${tag}"]`).join(', ');
+			: redoTags.map(tag => `.${eventClass}[data-do-tags~="${tag}"]`).join(', ');
 
 		triggerEvent(':redo-internal', jQuery(selector), {
 			bubbles : false,
@@ -92,7 +92,7 @@
 				this.debugView.modes({ block : elTag !== 'span' });
 			}
 
-			// Create a target to hold our contents.
+			// Create an element to hold our contents and append it to the output.
 			const $target = jQuery(document.createElement(elTag))
 				.addClass(`macro-${this.name} ${eventClass}`)
 				.attr('data-do-tags', tags.join(' '))
