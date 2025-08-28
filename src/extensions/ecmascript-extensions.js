@@ -8,9 +8,6 @@
 ***********************************************************************************************************************/
 /* global Serial, warnDeprecated */
 
-/*
-	ECMAScript Extensions.
-*/
 (() => {
 	// Cache the native `Math.random`, in case it's replaced later.
 	const nativeMathRandom = Math.random;
