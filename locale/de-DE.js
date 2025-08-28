@@ -1,8 +1,10 @@
 /***********************************************************************************************************************
 
-	locale/TEMPLATE.js – Localization Template
+	locale/de-DU.js – Deutsch
 
-	Copyright © 2019–2021 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
+	Localization by: webfischi.
+
+	Copyright © 2019–2025 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 	For more information about the guidelines used to create this localization, see:
@@ -12,40 +14,6 @@
 /* global l10nStrings */
 /* eslint-disable strict */
 
-/*
-	ATTENTION TRANSLATORS
-
-	The capitalization and punctuation used within the default replacement strings is
-	deliberate, especially within the error and warning strings.  You would do well
-	to keep your translations similar when possible.
-
-	Replacement patterns have the format `{NAME}` (e.g. {identity}), where NAME is the
-	name of a property within either the `l10nStrings` object or, in a few cases, an
-	object supplied locally where the string is used—these instances will be commented.
-
-	By convention, properties starting with an underscore (e.g. _warningIntroLacking)
-	are used as templates, only being included within other localized strings.  Feel
-	free to add your own if that makes localization easier—e.g. for gender, plurals,
-	and whatnot.  As an example, the default replacement strings make use of this to
-	handle various warning intros and outros.
-
-	In use, replacement patterns are replaced recursively, so replacement strings may
-	contain patterns whose replacements contain other patterns.  Because replacement is
-	recursive, care must be taken to ensure infinite loops are not created—the system
-	will detect an infinite loop and throw an error.
-
-	FOR MORE INFORMATION: http://www.motoslave.net/sugarcube/2/docs/#guide-localization
-
-	ALSO NOTE: There are two versions of this file within the repository.
-
-		* The development version, which is on the `develop` branch.
-			https://raw.githubusercontent.com/tmedwards/sugarcube-2/develop/locale/TEMPLATE.js
-
-		* The current release version, which is on the `master` branch.
-			https://raw.githubusercontent.com/tmedwards/sugarcube-2/master/locale/TEMPLATE.js
-
-	You will likely want to use the development version.
-*/
 (() => {
 	/*******************************************************************************
 		General.
