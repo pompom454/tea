@@ -42,7 +42,7 @@ Build Info:
 
 -->
 <script id="script-libraries" type="text/javascript">
-if(document.head&&document.addEventListener&&document.querySelector&&Object.create&&Object.freeze&&JSON){document.documentElement.setAttribute("data-init", "loading");
+if(Object.entries&&Object.fromEntries){document.documentElement.setAttribute("data-init", "loading");
 '{{BUILD_LIB_SOURCE}}'
 /* User Lib */
 "USER_LIB"
