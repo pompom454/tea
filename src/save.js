@@ -11,9 +11,6 @@
 	       warnDeprecated
 */
 
-/*
-	Save API (v3) static object.
-*/
 var Save = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Save type pseudo-enumeration.
 	const SaveType = enumFrom({
