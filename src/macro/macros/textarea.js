@@ -12,7 +12,8 @@
 	<<textarea>>
 */
 Macro.add('textarea', {
-	isAsync : true,
+	isAsync   : true,
+	receivers : [0], // NOTE: Only notional for now.
 
 	handler() {
 		if (this.args.length < 2) {

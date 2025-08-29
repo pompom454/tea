@@ -12,7 +12,8 @@
 	<<checkbox>>
 */
 Macro.add('checkbox', {
-	isAsync : true,
+	isAsync   : true,
+	receivers : [0], // NOTE: Only notional for now.
 
 	handler() {
 		if (this.args.length < 3) {

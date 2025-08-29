@@ -12,9 +12,10 @@
 	<<cycle>>, <<listbox>>, <<option>>, & <<optionsfrom>>
 */
 Macro.add(['cycle', 'listbox'], {
-	isAsync  : true,
-	skipArgs : ['optionsfrom'],
-	tags     : ['option', 'optionsfrom'],
+	isAsync   : true,
+	receivers : [0], // NOTE: Only notional for now.
+	skipArgs  : ['optionsfrom'],
+	tags      : ['option', 'optionsfrom'],
 
 	handler() {
 		if (this.args.length === 0) {
