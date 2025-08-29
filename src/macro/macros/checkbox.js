@@ -36,80 +36,62 @@ Macro.add('checkbox', {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		const options = Object.create(null, {
-			autocheck : {
-				value      : false,
-				enumerable : true,
-				writable   : true
-			},
-			checked : {
-				value      : false,
-				enumerable : true,
-				writable   : true
-			},
-			classes : {
-				value      : [`macro-${this.name}`],
-				enumerable : true
-			}
+		const optArgs = Object.assign(Object.create(null), {
+			classes   : [`macro-${this.name}`],
+			autocheck : false,
+			checked   : false
 		});
 
-		// Check for additional arguments.
-		if (this.args.length > 2) {
-			const args = this.args.slice(3);
+		// Process arguments.
+		for (let i = 3; i < this.args.length; ++i) {
+			switch (this.args[i]) {
+				case 'autocheck': {
+					optArgs.autocheck = true;
+					break;
+				}
 
-			while (args.length > 0) {
-				const arg = args.shift();
-				let raw;
+				case 'checked': {
+					optArgs.checked = true;
+					break;
+				}
 
-				switch (arg) {
-					case 'class': {
-						if (args.length === 0) {
-							return this.error('class option missing required class names value');
-						}
-
-						options.classes.push(args.shift());
-						break;
+				case 'class': {
+					if (++i >= this.args.length) {
+						return this.error('class option missing required class names value');
 					}
 
-					case 'id': {
-						if (args.length === 0) {
-							return this.error('id option missing required identity value');
-						}
+					optArgs.classes.push(this.args[i]);
+					break;
+				}
 
-						raw = args.shift();
-
-						if (typeof raw !== 'string') {
-							return this.error('id option value must be a string');
-						}
-
-						options.id = raw.trim();
-
-						if (options.id === '') {
-							return this.error('id option value cannot be an empty string');
-						}
-
-						break;
+				case 'id': {
+					if (++i >= this.args.length) {
+						return this.error('id option missing required identity value');
 					}
 
-					case 'autocheck': {
-						options.autocheck = true;
-						break;
+					const raw = this.args[i];
+
+					if (typeof raw !== 'string') {
+						return this.error('id option value must be a string');
 					}
 
-					case 'checked': {
-						options.checked = true;
-						break;
+					optArgs.id = raw.trim();
+
+					if (optArgs.id === '') {
+						return this.error('id option value cannot be an empty string');
 					}
 
-					default: {
-						return this.error(`unknown option: ${arg}`);
-					}
+					break;
+				}
+
+				default: {
+					return this.error(`unknown option: ${this.args[i]}`);
 				}
 			}
 		}
 
-		if (options.autocheck && options.checked) {
-			return this.error('options "autocheck" and "checked" are mutually exclusive');
+		if (optArgs.autocheck && optArgs.checked) {
+			return this.error('cannot specify both the "autocheck" and "checked" keywords');
 		}
 
 		const varId        = createSlug(varName);
@@ -120,19 +102,19 @@ Macro.add('checkbox', {
 		// Set up and append the input element to the output buffer.
 		jQuery(el)
 			.attr({
-				id       : options?.id ? options.id : `${this.name}-${varId}`,
+				id       : optArgs?.id ? optArgs.id : `${this.name}-${varId}`,
 				name     : `${this.name}-${varId}`,
 				type     : 'checkbox',
 				tabindex : 0 // for accessibility
 			})
-			.addClass(options.classes)
+			.addClass(optArgs.classes)
 			.on('change.macros', this.shadowHandler(function () {
 				State.setVar(varName, this.checked ? checkValue : uncheckValue);
 			}))
 			.appendTo(this.output);
 
 		// Set the variable and input element to the appropriate value and state, as requested.
-		if (options.autocheck) {
+		if (optArgs.autocheck) {
 			if (State.getVar(varName) === checkValue) {
 				el.checked = true;
 			}
@@ -140,7 +122,7 @@ Macro.add('checkbox', {
 				State.setVar(varName, uncheckValue);
 			}
 		}
-		else if (options.checked) {
+		else if (optArgs.checked) {
 			el.checked = true;
 			State.setVar(varName, checkValue);
 		}

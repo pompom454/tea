@@ -23,11 +23,8 @@ Macro.add(['button', 'link'], {
 		const isObject = typeof this.args[0] === 'object';
 		const $link    = jQuery(document.createElement(this.name === 'button' ? 'button' : 'a'));
 		const classes  = [`macro-${this.name}`];
-		const options  = Object.create(null, {
-			classes : {
-				value      : [],
-				enumerable : true
-			}
+		const optArgs  = Object.assign(Object.create(null), {
+			classes : []
 		});
 
 		// Argument is an object.
@@ -53,17 +50,17 @@ Macro.add(['button', 'link'], {
 				}
 
 				if (Object.hasOwn(this.args[0], 'link')) {
-					options.passage = this.args[0].link;
+					optArgs.passage = this.args[0].link;
 				}
 			}
 			// Argument was in wiki link syntax.
 			else if (this.args[0].isLink) {
 				$link.append(document.createTextNode(this.args[0].text));
-				options.passage = this.args[0].link;
+				optArgs.passage = this.args[0].link;
 			}
 			// Argument was some other kind of object.
 			else {
-				return this.error(`link argument was of an incompatible type: ${getTypeOf(this.args[0])}`);
+				return this.error(`link option was of an incompatible type: ${getTypeOf(this.args[0])}`);
 			}
 		}
 		// Argument was simply the link text.
@@ -75,68 +72,61 @@ Macro.add(['button', 'link'], {
 			const forbidden = $frag.getForbiddenInteractiveContentTagNames();
 
 			if (forbidden.length > 0) {
-				return this.error(`link argument contains restricted elements: <${forbidden.join('>, <')}>`);
+				return this.error(`link option contains restricted elements: <${forbidden.join('>, <')}>`);
 			}
 
 			$link.append($frag);
 		}
 
-		// Check for additional arguments.
-		if (this.args.length > 1) {
-			const args = this.args.slice(1);
-
-			while (args.length > 0) {
-				const arg = args.shift();
-				let raw;
-
-				switch (arg) {
-					case 'class': {
-						if (args.length === 0) {
-							return this.error('class option missing required class names value');
-						}
-
-						options.classes.push(args.shift());
-						break;
+		// Process arguments.
+		for (let i = 1; i < this.args.length; ++i) {
+			switch (this.args[i]) {
+				case 'class': {
+					if (++i >= this.args.length) {
+						return this.error('class option missing required class names value');
 					}
 
-					case 'id': {
-						if (args.length === 0) {
-							return this.error('id option missing required identity value');
-						}
+					optArgs.classes.push(this.args[i]);
+					break;
+				}
 
-						raw = args.shift();
-
-						if (typeof raw !== 'string') {
-							return this.error('id option value must be a string');
-						}
-
-						options.id = raw.trim();
-
-						if (options.id === '') {
-							return this.error('id option value cannot be an empty string');
-						}
-
-						break;
+				case 'id': {
+					if (++i >= this.args.length) {
+						return this.error('id option missing required identity value');
 					}
 
-					default: {
-						if (!isObject) {
-							options.passage = arg;
-						}
+					const raw = this.args[i];
 
-						break;
+					if (typeof raw !== 'string') {
+						return this.error('id option value must be a string');
 					}
+
+					optArgs.id = raw.trim();
+
+					if (optArgs.id === '') {
+						return this.error('id option value cannot be an empty string');
+					}
+
+					break;
+				}
+
+				default: {
+					if (!isObject) {
+						optArgs.passage = this.args[i];
+					}
+
+					break;
 				}
 			}
 		}
 
-		if (options?.passage != null) { // nullish test
-			$link.attr('data-passage', options.passage);
+		if (optArgs?.passage != null) { // nullish test
+			$link.attr('data-passage', optArgs.passage);
 
-			if (Story.has(options.passage)) {
+			if (Story.has(optArgs.passage)) {
 				classes.push('link-internal');
 
-				if (Config.addVisitedLinkClass && State.hasPlayed(options.passage)) {
+				if (Config.addVisitedLinkClass && State.hasPlayed(optArgs.passage)) {
 					classes.push('link-visited');
 				}
 			}
@@ -148,23 +138,23 @@ Macro.add(['button', 'link'], {
 			classes.push('link-internal');
 		}
 
-		if (options?.id != null) { // nullish test
-			$link.attr('id', options.id);
+		if (optArgs?.id != null) { // nullish test
+			$link.attr('id', optArgs.id);
 		}
 
 		$link
 			.addClass(classes)
-			.addClass(options.classes)
+			.addClass(optArgs.classes)
 			.ariaClick({
 				namespace : '.macros',
-				role      : options?.passage != null ? 'link' : 'button', // nullish test
-				one       : options?.passage != null // nullish test
+				role      : optArgs?.passage != null ? 'link' : 'button', // nullish test
+				one       : optArgs?.passage != null // nullish test
 			}, this.shadowHandler(
 				this.payload[0].contents !== ''
 					? () => Wikifier.wikifyEval(this.payload[0].contents.trim())
 					: null,
-				options?.passage != null // nullish test
-					? () => Engine.play(options.passage)
+				optArgs?.passage != null // nullish test
+					? () => Engine.play(optArgs.passage)
 					: null
 			))
 			.appendTo(this.output);
