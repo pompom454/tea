@@ -22,9 +22,10 @@ Macro.add(['button', 'link'], {
 
 		const isObject = typeof this.args[0] === 'object';
 		const $link    = jQuery(document.createElement(this.name === 'button' ? 'button' : 'a'));
+		const classes  = [`macro-${this.name}`];
 		const options  = Object.create(null, {
 			classes : {
-				value      : [`macro-${this.name}`],
+				value      : [],
 				enumerable : true
 			}
 		});
@@ -37,7 +38,7 @@ Macro.add(['button', 'link'], {
 					.attr('src', this.args[0].source)
 					.appendTo($link);
 
-				$link.addClass('link-image');
+				classes.push('link-image');
 
 				if (Object.hasOwn(this.args[0], 'passage')) {
 					$image.attr('data-passage', this.args[0].passage);
@@ -86,11 +87,12 @@ Macro.add(['button', 'link'], {
 
 			while (args.length > 0) {
 				const arg = args.shift();
+				let raw;
 
 				switch (arg) {
 					case 'class': {
 						if (args.length === 0) {
-							return this.error('class missing required class names value');
+							return this.error('class option missing required class names value');
 						}
 
 						options.classes.push(args.shift());
@@ -99,10 +101,21 @@ Macro.add(['button', 'link'], {
 
 					case 'id': {
 						if (args.length === 0) {
-							return this.error('id missing required identity value');
+							return this.error('id option missing required identity value');
 						}
 
-						options.id = args.shift();
+						raw = args.shift();
+
+						if (typeof raw !== 'string') {
+							return this.error('id option value must be a string');
+						}
+
+						options.id = raw.trim();
+
+						if (options.id === '') {
+							return this.error('id option value cannot be an empty string');
+						}
+
 						break;
 					}
 
@@ -121,22 +134,18 @@ Macro.add(['button', 'link'], {
 			$link.attr('data-passage', options.passage);
 
 			if (Story.has(options.passage)) {
-				$link.addClass('link-internal');
+				classes.push('link-internal');
 
 				if (Config.addVisitedLinkClass && State.hasPlayed(options.passage)) {
-					$link.addClass('link-visited');
+					classes.push('link-visited');
 				}
 			}
 			else {
-				$link.addClass('link-broken');
+				classes.push('link-broken');
 			}
 		}
 		else {
-			$link.addClass('link-internal');
-		}
-
-		if (options.classes.length > 0) {
-			$link.addClass(options.classes);
+			classes.push('link-internal');
 		}
 
 		if (options?.id != null) { // nullish test
@@ -144,6 +153,8 @@ Macro.add(['button', 'link'], {
 		}
 
 		$link
+			.addClass(classes)
+			.addClass(options.classes)
 			.ariaClick({
 				namespace : '.macros',
 				role      : options?.passage != null ? 'link' : 'button', // nullish test
