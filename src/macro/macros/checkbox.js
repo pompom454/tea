@@ -39,11 +39,13 @@ Macro.add('checkbox', {
 		const options = Object.create(null, {
 			autocheck : {
 				value      : false,
-				enumerable : true
+				enumerable : true,
+				writable   : true
 			},
 			checked : {
 				value      : false,
-				enumerable : true
+				enumerable : true,
+				writable   : true
 			},
 			classes : {
 				value      : [`macro-${this.name}`],
