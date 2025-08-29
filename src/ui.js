@@ -68,10 +68,10 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 		// then a race condition could occur, causing display shenanigans.
 		jQuery(Dialog.body())
 			.find('#restart-ok')
-				.ariaClick({ one : true }, () => {
-					jQuery(document).one(':dialogclosed', () => Engine.restart());
-					Dialog.close();
-				});
+			.ariaClick({ one : true }, () => {
+				jQuery(document).one(':dialogclosed', () => Engine.restart());
+				Dialog.close();
+			});
 
 		return true;
 	}
@@ -671,13 +671,13 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 			// `window.location.reload()` happens after the dialog has fully closed.  If
 			// we did not, then a race condition could occur, causing display shenanigans.
 			.find('#settings-reset')
-				.ariaClick({ one : true }, () => {
-					jQuery(document).one(':dialogclosed', () => {
-						Setting.reset();
-						window.location.reload();
-					});
-					Dialog.close();
+			.ariaClick({ one : true }, () => {
+				jQuery(document).one(':dialogclosed', () => {
+					Setting.reset();
+					window.location.reload();
 				});
+				Dialog.close();
+			});
 
 		return true;
 	}
