@@ -56,7 +56,7 @@ Macro.add('textbox', {
 
 				case 'class': {
 					if (++i >= this.args.length) {
-						return this.error('class option missing required class names value');
+						return this.error('class option missing required value');
 					}
 
 					optArgs.classes.push(this.args[i]);
@@ -65,16 +65,14 @@ Macro.add('textbox', {
 
 				case 'id': {
 					if (++i >= this.args.length) {
-						return this.error('id option missing required identity value');
+						return this.error('id option missing required value');
 					}
 
-					const raw = this.args[i];
-
-					if (typeof raw !== 'string') {
+					if (typeof this.args[i] !== 'string') {
 						return this.error('id option value must be a string');
 					}
 
-					optArgs.id = raw.trim();
+					optArgs.id = this.args[i].trim();
 
 					if (optArgs.id === '') {
 						return this.error('id option value cannot be an empty string');
@@ -85,7 +83,7 @@ Macro.add('textbox', {
 
 				case 'maxlength': {
 					if (++i >= this.args.length) {
-						return this.error('maxlength option missing required maximum value');
+						return this.error('maxlength option missing required value');
 					}
 
 					optArgs.maxlength = Number(this.args[i]);
@@ -99,7 +97,7 @@ Macro.add('textbox', {
 
 				case 'minlength': {
 					if (++i >= this.args.length) {
-						return this.error('minlength option missing required minimum value');
+						return this.error('minlength option missing required value');
 					}
 
 					optArgs.minlength = Number(this.args[i]);
@@ -111,9 +109,22 @@ Macro.add('textbox', {
 					break;
 				}
 
+				case 'placeholder': {
+					if (++i >= this.args.length) {
+						return this.error('placeholder option missing required value');
+					}
+
+					if (typeof this.args[i] !== 'string') {
+						return this.error('placeholder option value must be a string');
+					}
+
+					optArgs.placeholder = this.args[i].trim();
+					break;
+				}
+
 				case 'size': {
 					if (++i >= this.args.length) {
-						return this.error('size option missing required size value');
+						return this.error('size option missing required value');
 					}
 
 					optArgs.size = Number(this.args[i]);
@@ -203,6 +214,10 @@ Macro.add('textbox', {
 
 		if (optArgs?.maxlength) {
 			$textbox.attr('maxlength', optArgs.maxlength);
+		}
+
+		if (optArgs?.placeholder) {
+			$textbox.attr('placeholder', optArgs.placeholder);
 		}
 
 		if (optArgs?.size) {
