@@ -165,6 +165,18 @@ Macro.add('numberbox', {
 			return this.error('max option value must be greater-than or equal-to the min option value');
 		}
 
+		if (optArgs?.min != null && defaultValue < optArgs.min) { // nullish test
+			return this.error('default value must be greater-than or equal-to the min option value');
+		}
+
+		if (optArgs?.max != null && defaultValue > optArgs.max) { // nullish test
+			return this.error('default value must be less-than or equal-to the max option value');
+		}
+
+		if (optArgs?.step != null && (((defaultValue % optArgs.step) + optArgs.step) % optArgs.step) !== 0) { // nullish test
+			return this.error('default value must be a multiple of the step option value');
+		}
+
 		const varId = createSlug(varName);
 		const el    = document.createElement('input');
 
