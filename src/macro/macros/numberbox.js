@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Config, Engine, Macro, State, createSlug, getTypeOf */
+/* global Config, Engine, Macro, State, createSlug, enquote, getTypeOf */
 
 /*
 	<<numberbox>>
@@ -40,10 +40,19 @@ Macro.add('numberbox', {
 			this.debugView.modes({ block : true });
 		}
 
+		const defaultError = received => this.error(`default value must be a decimal number (received: ${received})`);
+		const defaultType  = typeof this.args[1];
+
+		if (defaultType === 'string') {
+			if (this.args[1].trim() === '') {
+				return defaultError(enquote(this.args[1]));
+			}
+		}
+
 		const defaultValue = Number(this.args[1]);
 
-		if (Number.isNaN(defaultValue)) {
-			return this.error(`default value must be a decimal number (received: ${this.args[1]})`);
+		if (Number.isNaN(defaultValue) || !Number.isFinite(defaultValue)) {
+			return defaultError(this.args[1]);
 		}
 
 		const optArgs = Object.assign(Object.create(null), {
