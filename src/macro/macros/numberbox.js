@@ -43,7 +43,7 @@ Macro.add('numberbox', {
 		const defaultValue = Number(this.args[1]);
 
 		if (Number.isNaN(defaultValue)) {
-			return this.error(`default value "${this.args[1]}" is neither a number nor can it be parsed into a number`);
+			return this.error(`default value must be a decimal number (received: ${this.args[1]})`);
 		}
 
 		const optArgs = Object.assign(Object.create(null), {
@@ -96,7 +96,7 @@ Macro.add('numberbox', {
 					optArgs.max = Number(this.args[i]);
 
 					if (Number.isNaN(optArgs.max)) {
-						return this.error(`max option value "${this.args[i]}" is neither a number nor can it be parsed into a number`);
+						return this.error(`max option value must be a decimal number (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -110,7 +110,7 @@ Macro.add('numberbox', {
 					optArgs.min = Number(this.args[i]);
 
 					if (Number.isNaN(optArgs.min)) {
-						return this.error(`min option value "${this.args[i]}" is neither a number nor can it be parsed into a number`);
+						return this.error(`min option value must be a decimal number (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -123,8 +123,8 @@ Macro.add('numberbox', {
 
 					optArgs.step = Number(this.args[i]);
 
-					if (Number.isNaN(optArgs.step)) {
-						return this.error(`step option value "${this.args[i]}" is neither a number nor can it be parsed into a number`);
+					if (Number.isNaN(optArgs.step) || optArgs.step <= 0) {
+						return this.error(`step option value must be a decimal number greater-than 0 (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -152,11 +152,7 @@ Macro.add('numberbox', {
 			}
 		}
 
-		if (
-			optArgs?.max != null // nullish test
-			&& optArgs?.min != null // nullish test
-			&& optArgs.max < optArgs.min
-		) {
+		if (optArgs?.max != null && optArgs?.min != null && optArgs.max < optArgs.min) { // nullish test
 			return this.error('max option value must be greater-than or equal-to the min option value');
 		}
 

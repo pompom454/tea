@@ -35,7 +35,8 @@ Macro.add('radiobutton', {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		const optArgs = Object.assign(Object.create(null), {
+		const checkValue = this.args[1];
+		const optArgs    = Object.assign(Object.create(null), {
 			classes   : [`macro-${this.name}`],
 			autocheck : false,
 			checked   : false
@@ -44,6 +45,16 @@ Macro.add('radiobutton', {
 		// Process arguments.
 		for (let i = 2; i < this.args.length; ++i) {
 			switch (this.args[i]) {
+				case 'autocheck': {
+					optArgs.autocheck = true;
+					break;
+				}
+
+				case 'checked': {
+					optArgs.checked = true;
+					break;
+				}
+
 				case 'class': {
 					if (++i >= this.args.length) {
 						return this.error('class option missing required class names value');
@@ -73,16 +84,6 @@ Macro.add('radiobutton', {
 					break;
 				}
 
-				case 'autocheck': {
-					optArgs.autocheck = true;
-					break;
-				}
-
-				case 'checked': {
-					optArgs.checked = true;
-					break;
-				}
-
 				default: {
 					return this.error(`unknown option: ${this.args[i]}`);
 				}
@@ -90,12 +91,11 @@ Macro.add('radiobutton', {
 		}
 
 		if (optArgs.autocheck && optArgs.checked) {
-			return this.error('cannot specify both the "autocheck" and "checked" keywords');
+			return this.error('cannot specify both the autocheck and checked keywords');
 		}
 
-		const varId      = createSlug(varName);
-		const checkValue = this.args[1];
-		const el         = document.createElement('input');
+		const varId = createSlug(varName);
+		const el    = document.createElement('input');
 
 		// Set up and initialize the group counter.
 		if (!Object.hasOwn(TempState, this.name)) {

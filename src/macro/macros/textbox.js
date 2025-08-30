@@ -90,8 +90,8 @@ Macro.add('textbox', {
 
 					optArgs.maxlength = Number(this.args[i]);
 
-					if (!Number.isSafeInteger(optArgs.maxlength) || optArgs.maxlength < 0) {
-						return this.error(`maxlength option value must be a positive integer (received: ${this.args[i]})`);
+					if (!Number.isSafeInteger(optArgs.maxlength) || optArgs.maxlength < 1) {
+						return this.error(`maxlength option value must be an integer number greater-than or equal-to 1 (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -104,8 +104,8 @@ Macro.add('textbox', {
 
 					optArgs.minlength = Number(this.args[i]);
 
-					if (!Number.isSafeInteger(optArgs.minlength) || optArgs.minlength < 0) {
-						return this.error(`minlength option value must be a positive integer (received: ${this.args[i]})`);
+					if (!Number.isSafeInteger(optArgs.minlength) || optArgs.minlength < 1) {
+						return this.error(`minlength option value must be an integer number greater-than or equal-to 1 (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -118,8 +118,8 @@ Macro.add('textbox', {
 
 					optArgs.size = Number(this.args[i]);
 
-					if (!Number.isSafeInteger(optArgs.size) || optArgs.size < 0) {
-						return this.error(`size option value must be a positive integer (received: ${this.args[i]})`);
+					if (!Number.isSafeInteger(optArgs.size) || optArgs.size < 1) {
+						return this.error(`size option value must be an integer number greater-than or equal-to 1 (received: ${this.args[i]})`);
 					}
 
 					break;
@@ -133,11 +133,8 @@ Macro.add('textbox', {
 					//
 					// optArgs.spellcheck = this.args[i];
 					//
-					// if (
-					// 	typeof optArgs.spellcheck !== 'boolean'
-					// 	&& (typeof optArgs.spellcheck !== 'string' || optArgs.spellcheck !== '')
-					// ) {
-					// 	return this.error(`spellcheck option value must be a boolean or the empty string (received: ${this.args[i]})`);
+					// if (typeof optArgs.spellcheck !== 'boolean') {
+					// 	return this.error(`spellcheck option value must be a boolean (received: ${this.args[i]})`);
 					// }
 					/* eslint-enable max-len */
 
@@ -167,11 +164,7 @@ Macro.add('textbox', {
 			}
 		}
 
-		if (
-			optArgs?.maxlength != null // nullish test
-			&& optArgs?.minlength != null // nullish test
-			&& optArgs.maxlength < optArgs.minlength
-		) {
+		if (optArgs?.maxlength && optArgs?.minlength && optArgs.maxlength < optArgs.minlength) {
 			return this.error('maxlength option value must be greater-than or equal-to the minlength option value');
 		}
 
@@ -204,19 +197,19 @@ Macro.add('textbox', {
 			}))
 			.appendTo(this.output);
 
-		if (optArgs?.minlength != null) { // nullish test
+		if (optArgs?.minlength) {
 			$textbox.attr('minlength', optArgs.minlength);
 		}
 
-		if (optArgs?.maxlength != null) { // nullish test
+		if (optArgs?.maxlength) {
 			$textbox.attr('maxlength', optArgs.maxlength);
 		}
 
-		if (optArgs?.size != null) { // nullish test
+		if (optArgs?.size) {
 			$textbox.attr('size', optArgs.size);
 		}
 
-		if (optArgs?.spellcheck != null) { // nullish test
+		if (optArgs?.spellcheck) {
 			$textbox.attr('spellcheck', optArgs.spellcheck);
 		}
 

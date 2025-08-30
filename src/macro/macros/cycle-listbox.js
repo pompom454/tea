@@ -34,8 +34,7 @@ Macro.add(['cycle', 'listbox'], {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		const varId = createSlug(varName);
-		const len   = this.payload.length;
+		const len = this.payload.length;
 
 		if (len === 1) {
 			return this.error('no options specified');
@@ -216,6 +215,8 @@ Macro.add(['cycle', 'listbox'], {
 				index = 0;
 			}
 		}
+
+		const varId = createSlug(varName);
 
 		// Set up and append the appropriate element to the output buffer.
 		if (this.name === 'cycle') {

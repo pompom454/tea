@@ -36,7 +36,9 @@ Macro.add('checkbox', {
 			return this.error(`variable name "${this.args[0]}" is missing its sigil ($ or _)`);
 		}
 
-		const optArgs = Object.assign(Object.create(null), {
+		const uncheckValue = this.args[1];
+		const checkValue   = this.args[2];
+		const optArgs      = Object.assign(Object.create(null), {
 			classes   : [`macro-${this.name}`],
 			autocheck : false,
 			checked   : false
@@ -91,13 +93,11 @@ Macro.add('checkbox', {
 		}
 
 		if (optArgs.autocheck && optArgs.checked) {
-			return this.error('cannot specify both the "autocheck" and "checked" keywords');
+			return this.error('cannot specify both the autocheck and checked keywords');
 		}
 
-		const varId        = createSlug(varName);
-		const uncheckValue = this.args[1];
-		const checkValue   = this.args[2];
-		const el           = document.createElement('input');
+		const varId = createSlug(varName);
+		const el    = document.createElement('input');
 
 		// Set up and append the input element to the output buffer.
 		jQuery(el)
