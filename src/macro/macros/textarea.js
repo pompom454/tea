@@ -48,7 +48,7 @@ Macro.add('textarea', {
 			rows      : 4
 		});
 
-		// Process arguments.
+		// Process optional arguments.
 		for (let i = 2; i < this.args.length; ++i) {
 			switch (this.args[i]) {
 				case 'autofocus': {
@@ -153,18 +153,6 @@ Macro.add('textarea', {
 				}
 
 				case 'spellcheck': {
-					/* eslint-disable max-len */
-					// if (++i >= this.args.length) {
-					// 	return this.error('spellcheck option missing required value');
-					// }
-					//
-					// optArgs.spellcheck = this.args[i];
-					//
-					// if (typeof optArgs.spellcheck !== 'boolean') {
-					// 	return this.error(`spellcheck option value must be a boolean (received: ${this.args[i]})`);
-					// }
-					/* eslint-enable max-len */
-
 					optArgs.spellcheck = true;
 					break;
 				}

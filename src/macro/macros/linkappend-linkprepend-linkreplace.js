@@ -27,12 +27,12 @@ Macro.add(['linkappend', 'linkprepend', 'linkreplace'], {
 			transition : false
 		});
 
-		// Process arguments.
+		// Process optional arguments.
 		for (let i = 1; i < this.args.length; ++i) {
 			switch (this.args[i]) {
 				case 'class': {
 					if (++i >= this.args.length) {
-						return this.error('class option missing required class names value');
+						return this.error('class option missing required value');
 					}
 
 					optArgs.classes.push(this.args[i]);
@@ -41,16 +41,14 @@ Macro.add(['linkappend', 'linkprepend', 'linkreplace'], {
 
 				case 'id': {
 					if (++i >= this.args.length) {
-						return this.error('id option missing required identity value');
+						return this.error('id option missing required value');
 					}
 
-					const raw = this.args[i];
-
-					if (typeof raw !== 'string') {
+					if (typeof this.args[i] !== 'string') {
 						return this.error('id option value must be a string');
 					}
 
-					optArgs.id = raw.trim();
+					optArgs.id = this.args[i].trim();
 
 					if (optArgs.id === '') {
 						return this.error('id option value cannot be an empty string');
