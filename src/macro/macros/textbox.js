@@ -109,6 +109,34 @@ Macro.add('textbox', {
 					break;
 				}
 
+				case 'passage': {
+					if (++i >= this.args.length) {
+						return this.error('passage option missing required value');
+					}
+
+					// Argument is an object.
+					if (typeof this.args[i] === 'object') {
+						// Argument was in wiki link syntax.
+						if (this.args[i].isLink) {
+							optArgs.passage = this.args[i].link;
+						}
+						// Argument was some other kind of object.
+						else {
+							return this.error(`passage option value was of an incompatible type: ${getTypeOf(this.args[i])}`);
+						}
+					}
+					// Argument was simply the passage name.
+					else {
+						optArgs.passage = String(this.args[i]).trim();
+					}
+
+					if (optArgs.passage === '') {
+						return this.error('passage option value cannot be an empty string');
+					}
+
+					break;
+				}
+
 				case 'placeholder': {
 					if (++i >= this.args.length) {
 						return this.error('placeholder option missing required value');
@@ -142,6 +170,7 @@ Macro.add('textbox', {
 				}
 
 				default: {
+					/* [DEPRECATED] */
 					// Argument is an object.
 					if (typeof this.args[i] === 'object') {
 						// Argument was in wiki link syntax.
@@ -150,13 +179,18 @@ Macro.add('textbox', {
 						}
 						// Argument was some other kind of object.
 						else {
-							return this.error(`passage option was of an incompatible type: ${getTypeOf(this.args[i])}`);
+							return this.error(`passage option value was of an incompatible type: ${getTypeOf(this.args[i])}`);
 						}
 					}
 					// Argument was simply the passage name.
 					else {
-						optArgs.passage = this.args[i];
+						optArgs.passage = String(this.args[i]).trim();
 					}
+
+					if (optArgs.passage === '') {
+						return this.error('passage option value cannot be an empty string');
+					}
+					/* [/DEPRECATED] */
 
 					break;
 				}
