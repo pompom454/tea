@@ -99,7 +99,7 @@
 
 					case 'class': {
 						if (++i >= this.args.length) {
-							return this.error('class option missing required class names value');
+							return this.error('class option missing required value');
 						}
 
 						optArgs.classes.push(this.args[i]);
@@ -108,7 +108,7 @@
 
 					case 'id': {
 						if (++i >= this.args.length) {
-							return this.error('id option missing required identity value');
+							return this.error('id option missing required value');
 						}
 
 						if (typeof this.args[i] !== 'string') {
@@ -126,7 +126,7 @@
 
 					case 'max': {
 						if (++i >= this.args.length) {
-							return this.error('max option missing required maximum value');
+							return this.error('max option missing required value');
 						}
 
 						optArgs.max = Number(this.args[i]);
@@ -140,7 +140,7 @@
 
 					case 'min': {
 						if (++i >= this.args.length) {
-							return this.error('min option missing required minimum value');
+							return this.error('min option missing required value');
 						}
 
 						optArgs.min = Number(this.args[i]);
@@ -182,7 +182,7 @@
 
 					case 'step': {
 						if (++i >= this.args.length) {
-							return this.error('step option missing required step value');
+							return this.error('step option missing required value');
 						}
 
 						optArgs.step = Number(this.args[i]);
