@@ -131,7 +131,7 @@
 
 						optArgs.max = Number(this.args[i]);
 
-						if (Number.isNaN(optArgs.max)) {
+						if (Number.isNaN(optArgs.max) || !Number.isFinite(optArgs.max)) {
 							return this.error(`max option value must be a decimal number (received: ${this.args[i]})`);
 						}
 
@@ -145,7 +145,7 @@
 
 						optArgs.min = Number(this.args[i]);
 
-						if (Number.isNaN(optArgs.min)) {
+						if (Number.isNaN(optArgs.min) || !Number.isFinite(optArgs.min)) {
 							return this.error(`min option value must be a decimal number (received: ${this.args[i]})`);
 						}
 
@@ -187,7 +187,7 @@
 
 						optArgs.step = Number(this.args[i]);
 
-						if (Number.isNaN(optArgs.step) || optArgs.step <= 0) {
+						if (Number.isNaN(optArgs.step) || !Number.isFinite(optArgs.step) || optArgs.step <= 0) {
 							return this.error(`step option value must be a decimal number greater-than 0 (received: ${this.args[i]})`);
 						}
 
