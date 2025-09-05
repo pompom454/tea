@@ -1335,7 +1335,7 @@ I'll have a <<linkreplace "cupcake">>slice of key lime pie<</linkreplace>>, plea
 
 <!-- *********************************************************************** -->
 
-### `<<listbox>> … <</listbox>>` {#macros-macro-listbox}
+### `<<listbox>>…<</listbox>>` {#macros-macro-listbox}
 
 Creates a listbox, used to modify the value of the variable with the given name.  The list options are populated via `<<option>>` and/or `<<optionsfrom>>`.
 
@@ -1370,10 +1370,7 @@ Creates a listbox, used to modify the value of the variable with the given name.
 ##### `<<listbox>>` arguments
 
 ```
-<<listbox
-	receiverName
-	[autoselect] [class value] [id value]
->> …
+receiverName	[autoselect] [class value] [id value]
 ```
 
 ###### Required:
@@ -1389,7 +1386,7 @@ Creates a listbox, used to modify the value of the variable with the given name.
 ##### `<<option>>` arguments
 
 ```
-	[<<option label [value [selected]]>> …]
+label [value [selected]]
 ```
 
 ###### Required:
@@ -1404,7 +1401,7 @@ Creates a listbox, used to modify the value of the variable with the given name.
 ##### `<<optionsfrom>>` arguments
 
 ```
-	[<<optionsfrom collection>> …]
+collection
 ```
 
 ###### Required:
