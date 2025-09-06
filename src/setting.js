@@ -164,7 +164,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		/*
 			Definition object properties and types:
-				type      →  (all)   → Setting.Types
+				type      →  (all)   → Setting.Type
 				name      →  (all)   → string
 				label     →  (all)   → string
 				desc      →  (all)   → string
@@ -183,6 +183,7 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 				min       →  Range   → number
 				max       →  Range   → number
 				step      →  Range   → number
+				enable    →  (all)   → function
 				onInit    →  (all)   → function
 				onChange  →  (all)   → function
 		*/
@@ -204,8 +205,9 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		switch (type) {
-			case SettingType.Header:
+			case SettingType.Header: {
 				break;
+			}
 
 			case SettingType.List: {
 				if (!Object.hasOwn(def, 'list')) {
@@ -333,8 +335,13 @@ var Setting = (() => { // eslint-disable-line no-unused-vars, no-var
 				break;
 			}
 
-			default:
+			default: {
 				throw new Error(`unknown Setting type: ${type}`);
+			}
+		}
+
+		if (typeof def.enable === 'function') {
+			definition.enable = Object.freeze(def.enable);
 		}
 
 		if (typeof def.onInit === 'function') {
