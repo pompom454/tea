@@ -500,7 +500,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		Setting.forEach(control => {
 			switch (control.type) {
-				case Setting.Types.Header: {
+				case Setting.Type.Header: {
 					const name     = control.name;
 					const id       = createSlug(name);
 					const $header  = jQuery(document.createElement('div'));
@@ -525,7 +525,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 					return;
 				}
 
-				case Setting.Types.Value: {
+				case Setting.Type.Value: {
 					// no-op
 					return;
 				}
@@ -566,7 +566,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 			}
 
 			switch (control.type) {
-				case Setting.Types.List: {
+				case Setting.Type.List: {
 					$control = jQuery(document.createElement('select'));
 
 					for (let i = 0; i < control.list.length; ++i) {
@@ -586,7 +586,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 					break;
 				}
 
-				case Setting.Types.Range: {
+				case Setting.Type.Range: {
 					$control = jQuery(document.createElement('input'));
 
 					// NOTE: Setting the value with `<jQuery>.val()` can cause odd behavior
@@ -614,7 +614,7 @@ var UI = (() => { // eslint-disable-line no-unused-vars, no-var
 					break;
 				}
 
-				case Setting.Types.Toggle: {
+				case Setting.Type.Toggle: {
 					$control = jQuery(document.createElement('button'));
 
 					if (Setting.getValue(name)) {
