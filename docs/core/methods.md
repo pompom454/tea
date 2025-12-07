@@ -2235,6 +2235,106 @@ let result = text.includes('pow');
 
 <!-- *********************************************************************** -->
 
+### `<String>.includesAll(needles…)` → `boolean` {#methods-string-prototype-method-includesall}
+
+Returns whether all of the given substrings were found within the string.  Substring searches are case-sensitive.
+
+<p role="note" class="see"><b>See:</b>
+<a href="#methods-string-notes">String methods notes</a>.
+</p>
+
+#### History:
+
+* `v2.38.0`: Introduced.
+
+#### Parameters:
+
+* **`needles`:** (`string`… | `Array<string>`) The substrings to find.  May be a list or an array of substrings.
+
+#### Returns:
+
+A `boolean` denoting whether all of the given substrings were found within the string.
+
+#### Examples:
+
+##### Basic usage (in macros)
+
+```
+/* Given the following: */
+<<set $text to 'How now, brown cow.'>>
+
+<<set $result to $text.includesAll('cow', 'row', 'now')>>
+/* Returns true */
+
+<<set $result to $text.includesAll('yowza', 'How')>>
+/* Returns false */
+```
+
+##### Basic usage (in JavaScript)
+
+```javascript
+// Given the following:
+let text = 'How now, brown cow.';
+
+let result = text.includesAll('cow', 'row', 'now');
+// Returns true
+
+let result = text.includesAll('yowza', 'How');
+// Returns false
+```
+
+<!-- *********************************************************************** -->
+
+### `<String>.includesAny(needles…)` → `boolean` {#methods-string-prototype-method-includesany}
+
+Returns whether any of the given substrings were found within the string.  Substring searches are case-sensitive.
+
+<p role="note" class="see"><b>See:</b>
+<a href="#methods-string-notes">String methods notes</a>.
+</p>
+
+#### History:
+
+* `v2.38.0`: Introduced.
+
+#### Parameters:
+
+* **`needles`:** (`string`… | `Array<string>`) The substrings to find.  May be a list or an array of substrings.
+
+#### Returns:
+
+A `boolean` denoting whether any of the given substrings were found within the string.
+
+#### Examples:
+
+##### Basic usage (in macros)
+
+```
+/* Given the following: */
+<<set $text to 'How now, brown cow.'>>
+
+<<set $result to $text.includesAny('bird', 'row', 'then')>>
+/* Returns true */
+
+<<set $result to $text.includesAny('yowza', 'how')>>
+/* Returns false */
+```
+
+##### Basic usage (in JavaScript)
+
+```javascript
+// Given the following:
+let text = 'How now, brown cow.';
+
+let result = text.includesAny('bird', 'row', 'then');
+// Returns true
+
+let result = text.includesAny('yowza', 'how');
+// Returns false
+```
+
+<!-- *********************************************************************** -->
+
 ### `<String>.last()` → `string` {#methods-string-prototype-method-last}
 
 Returns the last Unicode code point within the string.  Does not modify the original.

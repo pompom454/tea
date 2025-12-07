@@ -1114,6 +1114,58 @@
 	});
 
 	/*
+		Returns whether all of the given substrings were found within the base string.
+	*/
+	Object.defineProperty(String.prototype, 'includesAll', {
+		configurable : true,
+		writable     : true,
+
+		value(...searchTerms) {
+			if (this == null) { // nullish test
+				throw new TypeError('String.prototype.includesAll called on null or undefined');
+			}
+
+			const needles = searchTerms.length === 1 && searchTerms[0] instanceof Array
+				? searchTerms[0]
+				: searchTerms;
+
+			for (let i = 0; i < needles.length; ++i) {
+				if (!String.prototype.includes.call(this, needles[i])) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	});
+
+	/*
+		Returns whether any of the given substrings were found within the base string.
+	*/
+	Object.defineProperty(String.prototype, 'includesAny', {
+		configurable : true,
+		writable     : true,
+
+		value(...searchTerms) {
+			if (this == null) { // nullish test
+				throw new TypeError('String.prototype.includesAny called on null or undefined');
+			}
+
+			const needles = searchTerms.length === 1 && searchTerms[0] instanceof Array
+				? searchTerms[0]
+				: searchTerms;
+
+			for (let i = 0; i < needles.length; ++i) {
+				if (String.prototype.includes.call(this, needles[i])) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+	});
+
+	/*
 		Returns the last Unicode code point from the string.
 	*/
 	Object.defineProperty(String.prototype, 'last', {

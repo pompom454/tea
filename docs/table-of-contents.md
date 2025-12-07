@@ -185,6 +185,8 @@
 	* [`<String>.first()`](#methods-string-prototype-method-first)
 	* [`String.format()`](#methods-string-method-format)
 	* [`<String>.includes()`](#methods-string-prototype-method-includes)
+	* [`<String>.includesAll()`](#methods-string-prototype-method-includesall)
+	* [`<String>.includesAny()`](#methods-string-prototype-method-includesany)
 	* [`<String>.last()`](#methods-string-prototype-method-last)
 	* [`<String>.toLocaleUpperFirst()`](#methods-string-prototype-method-tolocaleupperfirst)
 	* [`<String>.toUpperFirst()`](#methods-string-prototype-method-toupperfirst)
