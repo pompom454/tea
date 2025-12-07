@@ -550,25 +550,17 @@
 		configurable : true,
 		writable     : true,
 
-		value(/* needles */) {
+		value(...searchTerms) {
 			if (this == null) { // nullish test
 				throw new TypeError('Array.prototype.includesAll called on null or undefined');
 			}
 
-			if (arguments.length === 1) {
-				if (Array.isArray(arguments[0])) {
-					return Array.prototype.includesAll.apply(this, arguments[0]);
-				}
+			const needles = searchTerms.length === 1 && searchTerms[0] instanceof Array
+				? searchTerms[0]
+				: searchTerms;
 
-				return Array.prototype.includes.apply(this, arguments);
-			}
-
-			for (let i = 0, iend = arguments.length; i < iend; ++i) {
-				if (
-					!Array.prototype.some.call(this, function (val) {
-						return val === this.val || val !== val && this.val !== this.val;
-					}, { val : arguments[i] })
-				) {
+			for (let i = 0; i < needles.length; ++i) {
+				if (!Array.prototype.includes.call(this, needles[i])) {
 					return false;
 				}
 			}
@@ -584,25 +576,17 @@
 		configurable : true,
 		writable     : true,
 
-		value(/* needles */) {
+		value(...searchTerms) {
 			if (this == null) { // nullish test
 				throw new TypeError('Array.prototype.includesAny called on null or undefined');
 			}
 
-			if (arguments.length === 1) {
-				if (Array.isArray(arguments[0])) {
-					return Array.prototype.includesAny.apply(this, arguments[0]);
-				}
+			const needles = searchTerms.length === 1 && searchTerms[0] instanceof Array
+				? searchTerms[0]
+				: searchTerms;
 
-				return Array.prototype.includes.apply(this, arguments);
-			}
-
-			for (let i = 0, iend = arguments.length; i < iend; ++i) {
-				if (
-					Array.prototype.some.call(this, function (val) {
-						return val === this.val || val !== val && this.val !== this.val;
-					}, { val : arguments[i] })
-				) {
+			for (let i = 0; i < needles.length; ++i) {
+				if (Array.prototype.includes.call(this, needles[i])) {
 					return true;
 				}
 			}
