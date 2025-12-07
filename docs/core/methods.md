@@ -1978,19 +1978,19 @@ return Serial.createReviver('new Character($ReviveData$)', ownData);
 **************************************************************************** -->
 ## String Methods {#methods-string}
 
-<span id="methods-string-note"></span>
-<p role="note"><b>Note:</b>
-Strings in TwineScript/JavaScript are Unicode, however, due to historic reasons they are comprised of, and indexed by, individual UTF-16 code units rather than code points.  This means that some code points may span multiple code units—e.g., the emoji 💩 is one code point, but two code units.
-</p>
+<span id="methods-string-notes"></span><!-- legacy --><span id="methods-string-note"></span><!-- /legacy -->
+Strings in TwineScript/JavaScript are Unicode, however, due to historic reasons they are comprised of, and sometimes indexed by, individual UTF-16 code *units* rather than code *points*.  This means that some code points may span multiple code units—e.g., the emoji 💩 is one code point (U+1F4A9), but two code units (U+D83D, U+DCA9).
+
+Newer JavaScript functionality does actually yield Unicode code points, rather than code units.  Anything using the [`String.prototype[Symbol.iterator]()` instance method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Symbol.iterator) will do so, for example: `for…of` loops and the spread syntax (`…variable`).  The range form of the [`<<for>>` macro](#macros-macro-for) also returns code points, like the aforementioned `for…of` loop.
 
 <!-- *********************************************************************** -->
 
 ### `<String>.count(needle [, position])` → *integer* `number` {#methods-string-prototype-method-count}
 
-Returns the number of times that the given substring was found within the string, starting the search at `position`.
+Returns the number of times that the given substring was found within the string, starting the search at `position`.  Substring searches are case-sensitive.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History:
@@ -2041,7 +2041,7 @@ let result = text.count('ow', 8);
 Returns the first Unicode code point within the string.  Does not modify the original.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History:
@@ -2176,17 +2176,17 @@ let result = String.format('{0,-6}', 'foo');
 
 ### `<String>.includes(needle [, position])` → `boolean` {#methods-string-prototype-method-includes}
 
-Returns whether the given substring was found within the string, starting the search at `position`.
+Returns whether the given substring was found within the string, starting the search at `position`.  Substring searches are case-sensitive.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History: *JavaScript built-in*
 
 #### Parameters:
 
-* **`needle`:** (`any`) The substring to find.
+* **`needle`:** (`string`) The substring to find.
 * **`position`:** (optional, *integer* `number`) The zero-based index at which to begin searching for `needle`.  If omitted, will default to `0`.
 
 #### Returns:
@@ -2240,7 +2240,7 @@ let result = text.includes('pow');
 Returns the last Unicode code point within the string.  Does not modify the original.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History:
@@ -2298,7 +2298,7 @@ let result = text.last();
 Returns the string with its first Unicode code point converted to upper case, according to any locale-specific rules.  Does not modify the original.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History:
@@ -2360,7 +2360,7 @@ let result = text.toLocaleUpperFirst();
 Returns the string with its first Unicode code point converted to upper case.  Does not modify the original.
 
 <p role="note" class="see"><b>See:</b>
-<a href="#methods-string-note">String methods note</a>.
+<a href="#methods-string-notes">String methods notes</a>.
 </p>
 
 #### History:
