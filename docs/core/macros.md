@@ -106,7 +106,9 @@ Sets story $variables and temporary \_variables based on the given expression.
 
 #### Arguments:
 
-* **`expression`:** A valid expression.  See [Variables](#twinescript-variables), [Expressions](#twinescript-expressions), [Operators](#twinescript-operators) for more information.
+For more information on what you can do in expressions, see the [Variables](#twinescript-variables), [Expressions](#twinescript-expressions), and [Operators](#twinescript-operators) sections.
+
+* **`expression`:** A valid expression.
 
 #### Examples:
 
@@ -724,15 +726,17 @@ Iterates through all enumerable entries of the given collection.  For each itera
 
 #### Arguments:
 
+For more information on what you can do in expressions, see the [Variables](#twinescript-variables), [Expressions](#twinescript-expressions), and [Operators](#twinescript-operators) sections.
+
 ##### Conditional forms
 
-* **`init`:** (optional) A valid expression, evaluated once at loop initialization.  Typically used to initialize counter variable(s).  See [`<<set>>`](#macros-macro-set) for more information.
-* **`conditional`:** (optional) A valid conditional expression, evaluated prior to each loop iteration.  As long as the expression evaluates to `true`, the loop is executed.  See [`<<if>>`](#macros-macro-if) for more information.
-* **`post`:** (optional) A valid expression, evaluated after each loop iteration.  Typically used to update counter variable(s).  See [`<<set>>`](#macros-macro-set) for more information.
+* **`init`:** (optional) A valid expression, evaluated once at loop initialization.  Typically used to initialize counter variable(s).
+* **`conditional`:** (optional) A valid conditional expression, evaluated prior to each loop iteration.  As long as the expression evaluates to `true`, the loop is executed.
+* **`post`:** (optional) A valid expression, evaluated after each loop iteration.  Typically used to update counter variable(s).
 
 ##### Range form
 
-* **`keyVariable`:** (optional) A story or temporary variable that will be set to the iteration key.
+* **`keyVariable`:** (optional) A story or temporary variable that will be set to the iteration key.  If specified, you must also specify the value variable.
 * **`valueVariable`:** (optional) A story or temporary variable that will be set to the iteration value.
 * **`range`:** Keyword, used to signify that the loop is using the range form syntax.
 * **`collection`:** An expression that yields a valid collection type (see below), evaluated once at loop initialization.
@@ -763,7 +767,7 @@ Iterates through all enumerable entries of the given collection.  For each itera
 </table>
 
 <p role="note"><b>Note:</b>
-Strings are iterated by Unicode code point, however, due to historic reasons they are comprised of, and indexed by, individual UTF-16 code units.  This means that some code points may span multiple code units—e.g., the character 💩 is one code point, but two code units.
+The range form iterates strings by Unicode code <em>point</em>, rather than code unit, like <code>for…of</code> loops. See the <a href="#methods-string-note">String methods notes</a> for more information.
 </p>
 
 #### Examples:

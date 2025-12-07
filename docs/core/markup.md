@@ -775,9 +775,7 @@ She was always willing to lend her ear to anyone.
 **************************************************************************** -->
 ## Comment {#markup-comment}
 
-<p role="note"><b>Note:</b>
-Comments used within passage markup are not rendered into the page output.
-</p>
+Notes within the passages and code of the story that are not displayed to players.  Also, C-style block comments used within passages are, generally, not rendered at all.  The sole exceptions to this are block comments within scripting contexts, which are left to the JavaScript engine to handle—e.g., <a href="#macros-macro-script"><code>&lt;&lt;script&gt;&gt;</code></a> and <a href="#macros-macro-set"><code>&lt;&lt;set&gt;&gt;</code></a> macros (not an exhaustive list).
 
 <table>
 <thead>
@@ -792,11 +790,6 @@ Comments used within passage markup are not rendered into the page output.
 		<td>C-style, Block</td>
 		<td><pre><code>/* This is a comment. */</code></pre></td>
 		<td>Passage markup, JavaScript, Stylesheets</td>
-	</tr>
-	<tr>
-		<td>TiddlyWiki, Block</td>
-		<td><pre><code>/% This is a comment. %/</code></pre></td>
-		<td>Passage markup</td>
 	</tr>
 	<tr>
 		<td>HTML, Block</td>

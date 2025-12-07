@@ -275,7 +275,7 @@ This special passage has been deprecated and should no longer be used.
 Passages that receive *some* kind of special treatment from the engine.
 
 <p role="note"><b>Note:</b>
-Some special passages are conditional and may not always be special passages.  The conditions will be noted within each such passsge's entry.
+Some special passages are conditional and may not always be special passages.  The conditions will be noted within each such passage's entry.
 </p>
 
 <!-- *********************************************************************** -->
@@ -309,7 +309,7 @@ Some code tags are conditional and may not always act as code tags.  The conditi
 Registers the passage as an initialization passage.  Used for pre-story-start initialization tasks, like variable initialization (happens at the beginning of story initialization).  Generates no output.
 
 <p role="note"><b>Note:</b>
-This is chiefly intended for use by add-ons/libraries.  For normal projects, authors are <strong>strongly</strong> encouraged to continue to use the <a href="#special-passage-storyinit"><code>StoryInit</code> special named passage</a>.
+This is chiefly intended for use by add-ons/libraries.  For normal projects, authors are <strong>strongly</strong> encouraged to continue to use the <a href="#special-passage-storyinit"><code>StoryInit</code> special named passage</a> combined with the <a href="#macros-macro-include"><code>&lt;&lt;include&gt;&gt;</code> macro</a>, if you need additional structure.
 </p>
 
 #### History:
