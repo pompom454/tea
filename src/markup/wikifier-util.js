@@ -87,7 +87,7 @@ var WikifierUtil = (() => { // eslint-disable-line no-unused-vars, no-var
 
 						idOrClassRe.lastIndex = 0;
 
-						while ((subMatch = idOrClassRe.exec(match[5])) !== null) {
+						while ((subMatch = idOrClassRe.exec(match[3])) !== null) {
 							if (subMatch[1] === '.') {
 								css.classes.push(subMatch[2]);
 							}
