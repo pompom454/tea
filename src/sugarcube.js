@@ -50,6 +50,9 @@ jQuery(() => {
 			throw new Error(L10n.get('warningNoStorage'));
 		}
 
+		// Initialize the story state.
+		State.init();
+
 		// Initialize the user interfaces.
 		//
 		// NOTE: Must be done before user scripts are loaded.
