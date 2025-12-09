@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
 
-    scripts/build-utils.js (v1.3.0, 2025-01-01)
+    scripts/build-utils.js (v1.2.2, 2021-10-07)
         Build utility functions for SugarCube.
 
     Copyright © 2020–2022 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
