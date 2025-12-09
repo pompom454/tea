@@ -1,134 +1,120 @@
 /***********************************************************************************************************************
 
-	scripts/build-utils.js (v1.2.2, 2021-10-07)
-		Build utility functions for SugarCube.
+    scripts/build-utils.js (v1.3.0, 2025-01-01)
+        Build utility functions for SugarCube.
 
-	Copyright © 2020–2022 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
-	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
+    Copyright © 2020–2022 Thomas Michael Edwards <thomasmedwards@gmail.com>. All rights reserved.
+    Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
 /* eslint-env node, es2021 */
 /* eslint-disable strict */
 'use strict';
 
-const _fs     = require('fs');
-const _path   = require('path');
-const _indent = ' -> ';
+const fs   = require('fs');
+const path = require('path');
 
+const DEFAULT_INDENT = ' -> ';
 
-function log(message, indent) {
-	console.log('%s%s', indent ? indent : _indent, message);
+function log(message, indent = DEFAULT_INDENT) {
+    console.log('%s%s', indent, message);
 }
 
 function die(message, error) {
-	if (error) {
-		console.error('error: %s\n[@: %d/%d] Trace:\n', message, error.line, error.col, error.stack);
-	}
-	else {
-		console.error('error: %s', message);
-	}
-
-	process.exit(1);
+    if (error) {
+        console.error(
+            'error: %s\n[@: %d/%d] Trace:\n%s',
+            message,
+            error.line,
+            error.col,
+            error.stack
+        );
+    } else {
+        console.error('error: %s', message);
+    }
+    process.exit(1);
 }
 
-function fileExists(pathname) {
-	return _fs.existsSync(pathname);
+function fileExists(p) {
+    try {
+        fs.accessSync(p, fs.constants.F_OK);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 function walkPaths(paths) {
-	return paths.reduce((acc, path) => {
-		const stats = _fs.statSync(path);
-
-		if (stats?.isDirectory()) {
-			acc.push(...walkPaths(
-				_fs.readdirSync(path)
-					// QUESTION: Do we actually need to defend against dot files?
-					.filter(fname => fname !== '.' && fname !== '..')
-					.map(fname => _path.join(path, fname))
-			));
-		}
-		else if (stats?.isFile()) {
-			acc.push(path);
-		}
-
-		return acc;
-	}, []);
+    const output = [];
+    for (const p of paths) {
+        const stats = fs.statSync(p);
+        if (stats.isDirectory()) {
+            for (const entry of fs.readdirSync(p)) {
+                if (entry === '.' || entry === '..') continue;
+                output.push(...walkPaths([path.join(p, entry)]));
+            }
+        } else if (stats.isFile()) {
+            output.push(p);
+        }
+    }
+    return output;
 }
 
-function makePath(pathname) {
-	const pathBits = _path.normalize(pathname).split(_path.sep);
-
-	for (let i = 0; i < pathBits.length; ++i) {
-		const dirPath = i === 0 ? pathBits[i] : pathBits.slice(0, i + 1).join(_path.sep);
-
-		if (!fileExists(dirPath)) {
-			_fs.mkdirSync(dirPath);
-		}
-	}
+function makePath(p) {
+    const target = path.normalize(p);
+    if (!fileExists(target)) {
+        fs.mkdirSync(target, { recursive: true });
+    }
 }
 
 function copyFile(srcFilename, destFilename) {
-	const srcPath  = _path.normalize(srcFilename);
-	const destPath = _path.normalize(destFilename);
-	let buf;
-
-	try {
-		buf = _fs.readFileSync(srcPath);
-	}
-	catch (ex) {
-		die(`cannot open file "${srcPath}" for reading (reason: ${ex.message})`);
-	}
-
-	try {
-		_fs.writeFileSync(destPath, buf);
-	}
-	catch (ex) {
-		die(`cannot open file "${destPath}" for writing (reason: ${ex.message})`);
-	}
-
-	return true;
+    const src  = path.normalize(srcFilename);
+    const dest = path.normalize(destFilename);
+    try {
+        fs.copyFileSync(src, dest);
+    } catch (ex) {
+        die(`file copy failed "${src}" → "${dest}" (reason: ${ex.message})`);
+    }
+    return true;
 }
 
 function readFileContents(filename) {
-	const filepath = _path.normalize(filename);
-
-	try {
-		// the replace() is necessary because Node.js only offers binary mode file
-		// access, regardless of platform, so we convert DOS-style line terminators
-		// to UNIX-style, just in case someone adds/edits a file and gets DOS-style
-		// line termination all over it
-		return _fs.readFileSync(filepath, { encoding : 'utf8' }).replace(/\r\n/g, '\n');
-	}
-	catch (ex) {
-		die(`cannot open file "${filepath}" for reading (reason: ${ex.message})`);
-	}
+    const filepath = path.normalize(filename);
+    try {
+        return fs.readFileSync(filepath, 'utf8').replace(/\r\n/g, '\n');
+    } catch (ex) {
+        die(`cannot open file "${filepath}" for reading (reason: ${ex.message})`);
+    }
 }
 
 function writeFileContents(filename, data) {
-	const filepath = _path.normalize(filename);
-
-	try {
-		_fs.writeFileSync(filepath, data, { encoding : 'utf8' });
-	}
-	catch (ex) {
-		die(`cannot open file "${filepath}" for writing (reason: ${ex.message})`);
-	}
+    const filepath = path.normalize(filename);
+    try {
+        fs.writeFileSync(filepath, data, 'utf8');
+    } catch (ex) {
+        die(`cannot open file "${filepath}" for writing (reason: ${ex.message})`);
+    }
 }
 
 function concatFiles(filenames, callback) {
-	const output = filenames.map(filename => {
-		const contents = readFileContents(filename);
-		return typeof callback === 'function' ? callback(contents, filename) : contents;
-	});
-	return output.join('\n');
+    return filenames
+        .map(f => {
+            const contents = readFileContents(f);
+            return typeof callback === 'function'
+                ? callback(contents, f)
+                : contents;
+        })
+        .join('\n');
 }
 
-exports.log               = log;
-exports.die               = die;
-exports.fileExists        = fileExists;
-exports.walkPaths         = walkPaths;
-exports.makePath          = makePath;
-exports.copyFile          = copyFile;
-exports.readFileContents  = readFileContents;
-exports.writeFileContents = writeFileContents;
-exports.concatFiles       = concatFiles;
+module.exports = {
+    log,
+    die,
+    fileExists,
+    walkPaths,
+    makePath,
+    copyFile,
+    readFileContents,
+    writeFileContents,
+    concatFiles
+};
