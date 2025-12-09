@@ -67,14 +67,6 @@ jQuery(() => {
 		// Initialize the localization (must be done after user scripts).
 		L10n.init();
 
-		// Alert when the browser is degrading required capabilities.
-		if (!session.has('rcWarn') && storage.name === 'cookie') {
-			/* eslint-disable no-alert */
-			session.set('rcWarn', 1);
-			window.alert(L10n.get('warningNoWebStorage'));
-			/* eslint-enable no-alert */
-		}
-
 		// Initialize the saves.
 		Save.init();
 

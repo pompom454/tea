@@ -96,9 +96,7 @@
 		Warnings.
 	*******************************************************************************/
 
-	l10nStrings.warningNoStorage = 'All usable storage APIs are missing. Possible causes are a disabled third-party cookie setting, which also affects Web Storage, or a private browsing mode.';
-
-	l10nStrings.warningNoWebStorage = 'The Web Storage API is missing, so this {textIdentity} is running in a degraded mode. You may be able to continue, however, some parts may not work properly.';
+	l10nStrings.warningNoStorage = 'Usable storage APIs are missing. Possible causes are a disabled third-party cookie setting, which also affects Web Storage, or a private browsing mode.';
 
 	l10nStrings.warningDegraded = 'Some capabilities required to support this {textIdentity} are missing, so it is running in a degraded mode. You may be able to continue, however, some parts may not work properly.';
 
