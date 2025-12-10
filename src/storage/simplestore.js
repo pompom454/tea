@@ -28,10 +28,11 @@ var SimpleStore = (() => {
             }
             catch (ex) {
                 console.warn(`SimpleStore: adapter "${adapter.name || '[unnamed]'}" failed to init:`, ex);
+                throw new Error(`Failed to initialize adapter: ${adapter.name || '[unnamed]'} - ${ex.message}`);
             }
         }
 
-        throw new Error('No valid storage adapters found');
+        throw new Error(`SimpleStore: No valid storage adapters found for storageId: ${storageId}`);
     }
 
     return Object.freeze({
