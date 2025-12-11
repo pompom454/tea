@@ -30,18 +30,23 @@ labels:
       - '\bbug[s]?\b'
     exclude: []
     branches:
-      - 'master'
-      - 'main'
+      - 'develop'
   'need some help':
     include:
       - '\bhelp( me)?\b'
     exclude:
       - '\b\[test(ing)?\]\b'
+    branches:
+      - 'develop'
   'a new Teabag':
     include:
       - '\bfeat\b'
     exclude: []
+    branches:
+      - 'develop'
   'how to drink Tea':
     include:
       - '\b.md\b'
     exclude: []
+    branches:
+      - 'develop'
