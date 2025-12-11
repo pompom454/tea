@@ -1,18 +1,25 @@
-name: Community
-on: 
+# .github/workflows/community.yml
+name: Blabeley
+
+on:
   issues:
-    types: [opened, edited, milestoned]
+    types: [opened, edited, unlabeled]
   pull_request_target:
-    types: [opened]
+    types: [opened, edited, unlabeled, synchronize]
 
 jobs:
-
-  labeler:
+  label-issues-and-prs:
     runs-on: ubuntu-latest
-
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: read
     steps:
-    - name: Check Labels
-      id: labeler
-      uses: jimschubert/labeler-action@v2
-      with:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Apply labels based on config
+        uses: jimschubert/labeler-action@v2
+        with:
+          config_path: '.github/workflows/labeler.yml'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
