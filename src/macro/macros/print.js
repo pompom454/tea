@@ -12,22 +12,27 @@
 	<<print>>, <<=>>, & <<->>
 */
 Macro.add(['print', '=', '-'], {
-	skipArgs : true,
+	skipArgs: true,
 
 	handler() {
+		// Early return if no expression is provided
 		if (this.args.full.length === 0) {
 			return this.error('no expression specified');
 		}
 
-		try {
-			const result = stringFrom(Scripting.evalJavaScript(this.args.full));
+		let result;
 
-			if (result !== null) {
-				new Wikifier(this.output, this.name === '-' ? encodeEntities(result) : result);
-			}
-		}
-		catch (ex) {
+		try {
+			// Evaluate and convert result to string
+			result = stringFrom(Scripting.evalJavaScript(this.args.full));
+		} catch (ex) {
 			return this.error(`bad evaluation: ${getErrorMessage(ex)}`);
+		}
+
+		// If the result is valid, output it
+		if (result !== null) {
+			const output = this.name === '-' ? encodeEntities(result) : result;
+			new Wikifier(this.output, output);
 		}
 	}
 });
