@@ -23,8 +23,7 @@ Macro.add('if', {
             let success = false;
 
             for (let i = 0; i < len; ++i) {
-                const clause = this.payload[i];
-                const { name, args } = clause;
+                const { name, args } = this.payload[i];
                 const isElse = name === 'else';
 
                 if (isElse) {
@@ -46,13 +45,16 @@ Macro.add('if', {
             }
 
             for (let i = 0; i < len; ++i) {
-                const clause = this.payload[i];
-                const { name, source, args, contents } = clause;
+                const { name, source, args, contents } = this.payload[i];
                 const isElse = name === 'else';
                 const condition = isElse || !!Scripting.evalJavaScript(args.full);
 
                 if (Config.debug) {
-                    this.createDebugView(name, source).modes({ nonvoid: false, hidden: !condition, invalid: !condition });
+                    this.createDebugView(name, source).modes({
+                        nonvoid: false,
+                        hidden: !condition,
+                        invalid: !condition
+                    });
                 }
 
                 if (condition) {
@@ -63,8 +65,8 @@ Macro.add('if', {
             }
 
             if (Config.debug) {
-				let clausesToProcess = this.payload.slice(success ? len : 0);
-                for (const clause of clausesToProcess) {
+                const remainingClauses = this.payload.slice(success ? len : 0);
+                for (const clause of remainingClauses) {
                     this.createDebugView(clause.name, clause.source).modes({
                         nonvoid: false,
                         hidden: true,
