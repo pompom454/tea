@@ -1,0 +1,23 @@
+name: Blabey
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run a daily scan
+    - cron: '0 0 * * *'
+    
+jobs:
+  snyk-security-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        command: monitor # Uses snyk monitor to enable continuous monitoring in the Snyk web UI
+        args: --severity-threshold=high # Example argument to only report high severity issues
