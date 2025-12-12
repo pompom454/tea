@@ -6,7 +6,7 @@
     Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-(function() {
+(function() { // this is to prevent global scope pollution, UNLESS that was intended
     var SimpleStore = (() => {
         const adapters = [];
         let initialized = null;
