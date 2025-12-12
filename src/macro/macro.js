@@ -18,79 +18,81 @@ var Macro = (() => { // eslint-disable-line no-unused-vars, no-var
 	// Valid macro name regular expression.
 	const _validNameRe = new RegExp(`^(?:${Patterns.macroName})$`);
 
+	/***************************************************************************
+        Helper functions (private)
+    ***************************************************************************/
+
+    // Add a macro definition object because optimizations and readability are key to a great project
+    function addMacroDefinition(name, def) {
+        _macros[name] = Object.assign(Object.create(null), def, { _MACRO_API: true });
+        Object.defineProperty(_macros, name, { writable: false });
+    }
+
+    // Add a macro alias pointing to an existing macro. This is quite needed, so pls keep it that way!
+    function addMacroAlias(name, target) {
+        if (!macrosHas(target)) {
+            throw new Error(`cannot create alias of nonexistent macro <<${target}>>`);
+        }
+        _macros[name] = Object.create(_macros[target], {
+            _ALIAS_OF: { enumerable: true, value: target }
+        });
+        Object.defineProperty(_macros, name, { writable: false });
+    }
+
+    // Process tags for a macro
+    function processMacroTags(name) {
+        const tags = _macros[name].tags;
+        if (tags === null || tags === undefined) {
+            tagsRegister(name);
+        } else if (Array.isArray(tags)) {
+            tagsRegister(name, tags);
+        } else {
+            throw new Error(`bad value for "tags" property of macro <<${name}>>`);
+        }
+    }
 
 	/*******************************************************************************
 		Macros Functions.
 	*******************************************************************************/
 
 	function macrosAdd(name, def) {
-		if (name instanceof Array) {
-			name.forEach(name => macrosAdd(name, def));
-			return;
-		}
+        if (Array.isArray(name)) {
+            name.forEach(n => macrosAdd(n, def));
+            return;
+        }
 
-		if (!_validNameRe.test(name)) {
-			throw new Error(`invalid macro name "${name}"`);
-		}
+        if (!_validNameRe.test(name)) {
+            throw new Error(`invalid macro name "${name}"`);
+        }
 
-		if (macrosHas(name)) {
-			throw new Error(`cannot clobber existing macro <<${name}>>`);
-		}
-		else if (tagsHas(name)) {
-			throw new Error(`cannot clobber child tag <<${name}>> of parent macro${_tags[name].length === 1 ? '' : 's'} <<${_tags[name].join('>>, <<')}>>`);
-		}
+        if (macrosHas(name)) {
+            throw new Error(`cannot clobber existing macro <<${name}>>`);
+        } else if (tagsHas(name)) {
+            throw new Error(
+                `cannot clobber child tag <<${name}>> of parent macro` +
+                (_tags[name].length === 1 ? '' : 's') +
+                ` <<${_tags[name].join('>>, <<')}>>`
+            );
+        }
 
-		try {
-			if (typeof def === 'object') {
-				// Add the macro definition.
-				//
-				// NOTE: Since `macrosGet()` may return legacy macros, we add the `_MACRO_API`
-				// flag to (modern) API macros, so that the macro formatter will know how to
-				// call the macro.  This should be removed in v3.
-				_macros[name] = Object.assign(Object.create(null), def, { _MACRO_API : true });
-			}
-			else {
-				// Add the macro alias.
-				if (macrosHas(def)) {
-					_macros[name] = Object.create(_macros[def], {
-						_ALIAS_OF : {
-							enumerable : true,
-							value      : def
-						}
-					});
-				}
-				else {
-					throw new Error(`cannot create alias of nonexistent macro <<${def}>>`);
-				}
-			}
-
-			Object.defineProperty(_macros, name, { writable : false });
-		}
-		catch (ex) {
-			if (ex.name === 'TypeError') {
-				throw new Error(`cannot clobber protected macro <<${name}>>`);
-			}
-			else {
-				throw new Error(`unknown error when attempting to add macro <<${name}>>: [${ex.name}] ${ex.message}`);
-			}
-		}
-
-		// Tags post-processing.
-		if (typeof _macros[name].tags !== 'undefined') {
-			if (_macros[name].tags == null) { // nullish test
-				tagsRegister(name);
-			}
-			else if (_macros[name].tags instanceof Array) {
-				tagsRegister(name, _macros[name].tags);
-			}
-			else {
-				throw new Error(`bad value for "tags" property of macro <<${name}>>`);
-			}
-		}
-	}
+        try {
+            if (typeof def === 'object') {
+                addMacroDefinition(name, def);
+            } else {
+                addMacroAlias(name, def);
+            }
+			processMacroTags(name);
+        } catch (ex) {
+            if (ex.name === 'TypeError') {
+                throw new Error(`cannot clobber protected macro <<${name}>>`);
+            } else {
+                throw new Error(`unknown error adding macro <<${name}>>: [${ex.name}] ${ex.message}`);
+            }
+        }
+    }
 
 	function macrosDelete(name) {
-		if (name instanceof Array) {
+		if (Array.isArray(name)) {
 			name.forEach(name => macrosDelete(name));
 			return;
 		}
@@ -120,7 +122,7 @@ var Macro = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	function macrosHas(name) {
-		return Object.hasOwn(_macros, name);
+		return Object.prototype.hasOwnProperty.call(_macros, name);
 	}
 
 	function macrosGet(name) {
@@ -138,103 +140,78 @@ var Macro = (() => { // eslint-disable-line no-unused-vars, no-var
 		return macro;
 	}
 
-	function macrosInit(handler = 'init') { // eslint-disable-line no-unused-vars
-		Object.keys(_macros).forEach(name => {
-			if (typeof _macros[name][handler] === 'function') {
-				_macros[name][handler](name);
-			}
-		});
+	function macrosInit(handler = 'init') {
+    for (const name of Object.keys(_macros)) {
+        const fn = _macros[name][handler];
+        if (typeof fn === 'function') {
+            fn(name);
+        }
+    }
 
-		/* legacy macro support */
-		Object.keys(macros).forEach(name => {
-			if (typeof macros[name][handler] === 'function') {
-				macros[name][handler](name);
-			}
-		});
-		/* /legacy macro support */
-	}
+    /* legacy macro support */
+    for (const name of Object.keys(macros)) {
+        const fn = macros[name][handler];
+        if (typeof fn === 'function') {
+            fn(name);
+        }
+    }
 
+}
 
-	/*******************************************************************************
-		Tags Functions.
-	*******************************************************************************/
+    /*******************************************************************************
+        Tags Functions.
+    *******************************************************************************/
 
-	function tagsRegister(parent, bodyTags) {
-		if (!parent) {
-			throw new Error('no parent specified');
-		}
+    function tagsRegister(parent, bodyTags) {
+        if (!parent) throw new Error('no parent specified');
 
-		const endTags = [`/${parent}`, `end${parent}`]; // automatically create the closing tags
-		const allTags = [].concat(endTags, bodyTags instanceof Array ? bodyTags : []);
+        const endTags = [`/${parent}`, `end${parent}`];
+        const allTags = endTags.concat(Array.isArray(bodyTags) ? bodyTags : []);
 
-		for (let i = 0; i < allTags.length; ++i) {
-			const tag = allTags[i];
-
-			if (macrosHas(tag)) {
-				throw new Error('cannot register tag for an existing macro');
-			}
-
-			if (tagsHas(tag)) {
-				if (!_tags[tag].includes(parent)) {
-					_tags[tag].push(parent);
-					_tags[tag].sort();
-				}
-			}
-			else {
+        for (const tag of allTags) {
+    		if (macrosHas(tag)) throw new Error('cannot register tag for an existing macro');
+    		if (tagsHas(tag)) {
+        		const parents = _tags[tag];
+        		if (!parents.includes(parent)) parents.push(parent);
+        		if (parents.length > 1) parents.sort();
+			} else {
 				_tags[tag] = [parent];
 			}
 		}
 	}
 
-	function tagsUnregister(parent) {
-		if (!parent) {
-			throw new Error('no parent specified');
-		}
+    function tagsUnregister(parent) {
+        if (!parent) throw new Error('no parent specified');
 
-		Object.keys(_tags).forEach(tag => {
-			const i = _tags[tag].indexOf(parent);
+        for (const tag in _tags) {
+            const parents = _tags[tag];
+            const idx = parents.indexOf(parent);
 
-			if (i !== -1) {
-				if (_tags[tag].length === 1) {
-					delete _tags[tag];
-				}
-				else {
-					_tags[tag].splice(i, 1);
-				}
-			}
-		});
-	}
+            if (idx !== -1) {
+                if (parents.length === 1) delete _tags[tag];
+                else parents.splice(idx, 1);
+            }
+        }
+    }
 
-	function tagsHas(name) {
-		return Object.hasOwn(_tags, name);
-	}
+    function tagsHas(name) {
+        return Object.prototype.hasOwnProperty.call(_tags, name);
+    }
 
-	function tagsGet(name) {
-		return tagsHas(name) ? _tags[name] : null;
-	}
-
+    function tagsGet(name) {
+        return tagsHas(name) ? _tags[name] : null;
+    }
 
 	/*******************************************************************************
 		Object Exports.
 	*******************************************************************************/
 
-	return Object.preventExtensions(Object.create(null, {
-		// Macro Functions.
-		add     : { value : macrosAdd },
-		delete  : { value : macrosDelete },
-		isEmpty : { value : macrosIsEmpty },
-		has     : { value : macrosHas },
-		get     : { value : macrosGet },
-		init    : { value : macrosInit },
-
-		// Tags Functions.
-		tags : {
-			value : Object.preventExtensions(Object.create(null, {
-				register   : { value : tagsRegister },
-				unregister : { value : tagsUnregister },
-				has        : { value : tagsHas },
-				get        : { value : tagsGet }
-			}))
-		}
-	}));
-})();
+	return Object.freeze({
+    	add: macrosAdd,
+    	delete: macrosDelete,
+    	isEmpty: macrosIsEmpty,
+    	has: macrosHas,
+    	get: macrosGet,
+    	init: macrosInit,
+    	tags: Object.freeze({ register: tagsRegister, unregister: tagsUnregister, has: tagsHas, get: tagsGet })
+	});
