@@ -25,6 +25,7 @@ Macro.add('unset', {
 		const cleanupRe = /^; /;
 
 		try {
+			const unsetExp = this.args.full.replace(searchRe, replacer).replace(cleanupRe, '');
 			Scripting.evalJavaScript(unsetExp)
 		} catch (ex) {
 			return this.error(`Bad evaluation during 'unset' macro. Expression: ${this.args.full}. Error: ${getErrorMessage(ex)}`);
