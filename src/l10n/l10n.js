@@ -14,7 +14,6 @@ var L10n = (() => { // eslint-disable-line no-unused-vars, no-var
 
 	// Replacement regular expressions.
 	const replaceRE    = /\{\w+\}/g;
-	const hasReplaceRE = new RegExp(replaceRE.source); // to drop the global flag
 
 
 	/*******************************************************************************
@@ -36,31 +35,24 @@ var L10n = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		const id = (ids instanceof Array ? ids : [ids]).find(id => Object.hasOwn(l10nStrings, id));
-
-		if (!id) {
+    
+		if (!id) {        
 			return '';
 		}
 
-		let value = l10nStrings[id];
+		let value = l10nStrings[id];    
 		let i     = 0;
-
-		while (hasReplaceRE.test(value)) {
-			if (++i > MAX_DEPTH) {
-				throw new Error('L10n.get exceeded maximum replacement depth, probable infinite loop');
+		
+		while (replaceRE.test(value)) {
+			if (++depth > MAX_DEPTH) {
+				throw new Error('L10n.get exceeded maximum replacement depth, probable infinite loop');    
 			}
-
-			// Possibly required by some old buggy browsers.
+    
 			replaceRE.lastIndex = 0;
 
-			value = value.replace(replaceRE, replacement => {
-				const rid = replacement.slice(1, -1);
-
-				if (overrides && Object.hasOwn(overrides, rid)) {
-					return overrides[rid];
-				}
-				else if (Object.hasOwn(l10nStrings, rid)) {
-					return l10nStrings[rid];
-				}
+			value = value.replace(replaceRE, (match) => {        
+				const replacementId = match.slice(1, -1);
+				return overrides[replacementId] || l10nStrings[replacementId] || match;
 			});
 		}
 
