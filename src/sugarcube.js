@@ -16,9 +16,12 @@
 /*******************************************************************************
 	Main function.  Entry point for the story.
 *******************************************************************************/
+const DOM_DELAY_TIMEOUT = Engine.DOM_DELAY * 2;
 
 jQuery(() => {
-	if (BUILD_DEBUG) { console.log('[SugarCube/main()] Document loaded; beginning startup.'); }
+	if (BUILD_DEBUG) { 
+		console.log('[SugarCube/main()] Document loaded; beginning startup.'); 
+	}
 
 	/*
 		WARNING!
@@ -28,57 +31,45 @@ jQuery(() => {
 	*/
 
 	// Acquire an initial lock for and initialize the loading screen.
-	const lockId = LoadScreen.lock();
 	LoadScreen.init();
+	LoadScreen.unlock(LoadScreen.lock());
+	
+	document.normalize && document.normalize();
 
-	// Normalize the document.
-	if (document.normalize) {
-		document.normalize();
-	}
-
-	// From this point on it's promises all the way down.
 	new Promise(resolve => {
-		// Initialize the story.
 		Story.init();
 
-		// Initialize the databases.
 		try {
-			SugarCube.storage = storage = SimpleStore.create(Story.id, true);  // eslint-disable-line no-undef
-			SugarCube.session = session = SimpleStore.create(Story.id, false); // eslint-disable-line no-undef
+			Story.init();
+			SugarCube.storage = SimpleStore.create(Story.id, true);  
+			SugarCube.session = SimpleStore.create(Story.id, false);
+		
+
+		
+			State.init();
+
+			// NOTE: Must be done before user scripts are loaded.
+			Dialog.init();
+			UIBar.init();
+			Engine.init();
+		
+			Outlines.init();
+
+			Engine.runUserScripts();
+			
+			L10n.init();
+
+			Save.init();
+			
+			Setting.init();
+
+			Macro.init();
+
+			DebugBar.init();
+
+		} catch (ex) {
+			throw new Error(`Error during story initialization: ${ex.message}`);
 		}
-		catch (ex) {
-			throw new Error(L10n.get('warningNoStorage'));
-		}
-
-		// Initialize the story state.
-		State.init();
-
-		// Initialize the user interfaces.
-		//
-		// NOTE: Must be done before user scripts are loaded.
-		Dialog.init();
-		UIBar.init();
-		Engine.init();
-		Outlines.init();
-
-		// Run user scripts (user stylesheet, JavaScript, and widgets).
-		Engine.runUserScripts();
-
-		// Initialize the localization (must be done after user scripts).
-		L10n.init();
-
-		// Initialize the saves.
-		Save.init();
-
-		// Initialize the settings.
-		Setting.init();
-
-		// Initialize the macros.
-		Macro.init();
-
-		// Initialize the debug bar interface.
-		DebugBar.init();
-
 		// Schedule the start of the engine and interfaces once both the DOM is
 		// reporting non-empty dimensions for the viewport and our loading screen
 		// lock is the only remaining one.
@@ -88,26 +79,20 @@ jQuery(() => {
 				clearInterval(vpReadyId);
 				resolve();
 			}
-		}, Engine.DOM_DELAY);
+		}, DOM_DELAY_TIMEOUT);
 	})
 		.then(() => {
-			// Run the user init passages.
 			Engine.runUserInit();
 
-			// Start the UI bar interface.
 			UIBar.start();
 
-			// Start the engine.
 			Engine.start();
 
-			// Start the debug bar interface.
 			DebugBar.start();
 
-			// Trigger the `:storyready` global synthetic event.
 			triggerEvent(':storyready');
 
-			// Release our loading screen lock after a short delay.
-			setTimeout(() => LoadScreen.unlock(lockId), Engine.DOM_DELAY * 2);
+			setTimeout(() => LoadScreen.unlock(lockId), DOM_DELAY_TIMEOUT);
 
 			if (BUILD_DEBUG) { console.log('[SugarCube/main()] Startup complete; story ready.'); }
 		})
