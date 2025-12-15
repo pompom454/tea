@@ -15,21 +15,19 @@ Macro.add('unset', {
 	skipArgs : true,
 
 	handler() {
-		if (this.args.full.length === 0) {
-			return this.error('no story/temporary variable list specified');
+		if (!this.args.full || this.args.full.length === 0) {
+			return this.error(`No story/temporary variable list specified. Please provide a valid input.`);
 		}
 
+		// Regular expression to match State variables and setup properties
 		const searchRe  = /(?<![[{+\s])[,;\s]*((?:State\.(?:variables|temporary)|setup)\.)/g;
 		const replacer  = (_, p1) => `; delete ${p1}`;
 		const cleanupRe = /^; /;
 
 		try {
-			const unsetExp = this.args.full.replace(searchRe, replacer).replace(cleanupRe, '');
-
-			Scripting.evalJavaScript(unsetExp);
-		}
-		catch (ex) {
-			return this.error(`bad evaluation: ${getErrorMessage(ex)}`);
+			Scripting.evalJavaScript(unsetExp)
+		} catch (ex) {
+			return this.error(`Bad evaluation during 'unset' macro. Expression: ${this.args.full}. Error: ${getErrorMessage(ex)}`);
 		}
 
 		// Custom debug view setup.
