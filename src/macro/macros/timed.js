@@ -11,6 +11,9 @@
 /*
 	<<timed>> & <<next>>
 */
+
+const getDelay = (arg) => Math.max(Engine.DOM_DELAY, cssTimeToMS(arg));
+
 Macro.add('timed', {
 	isAsync : true,
 	tags    : ['next'],
@@ -28,7 +31,7 @@ Macro.add('timed', {
 			items.push({
 				name    : this.name,
 				source  : this.source,
-				delay   : Math.max(Engine.DOM_DELAY, cssTimeToMS(this.args[0])),
+				delay	: getDelay(this.args[0]),
 				content : this.payload[0].contents
 			});
 		}
@@ -142,7 +145,7 @@ Macro.add('timed', {
 		// Set up a single-use event handler to remove pending timers upon passage navigation.
 		if (timers.size === 1) {
 			jQuery(document).one(':passageinit', () => {
-				timers.forEach(timerId => clearTimeout(timerId));
+				timers.forEach(clearTimeout);
 				timers.clear();
 			});
 		}
