@@ -79,7 +79,7 @@ jQuery(() => {
 				clearInterval(vpReadyId);
 				resolve();
 			}
-		}, DOM_DELAY_TIMEOUT);
+		}, Engine.DOM_DELAY);
 	})
 		.then(() => {
 			Engine.runUserInit();
