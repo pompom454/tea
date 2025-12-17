@@ -295,6 +295,7 @@
 	* [`Config.audio.preloadMetadata`](#config-api-property-audio-preloadmetadata)
 * [History Settings](#config-api-history)
 	* [`Config.history.controls`](#config-api-property-history-controls)
+	* [`Config.history.disableDeltas`](#config-api-property-history-disabledeltas)
 	* [`Config.history.maxStates`](#config-api-property-history-maxstates)
 * [Macros Settings](#config-api-macros)
 	* [`Config.macros.maxLoopIterations`](#config-api-property-macros-maxloopiterations)

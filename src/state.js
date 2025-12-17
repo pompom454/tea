@@ -103,17 +103,19 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*
 		Returns the current story state marshaled into a serializable object.
 	*/
-	function stateMarshal(noDelta) {
+	function stateMarshal(noDeltas) {
+		const deltaEncode = !(noDeltas || Config.history.disableDeltas);
+
 		// Gather the properties.
 		const state = {
 			index : activeIndex
 		};
 
-		if (noDelta) {
-			state.history = clone(momentHistory);
+		if (deltaEncode) {
+			state.delta = historyDeltaEncode(momentHistory);
 		}
 		else {
-			state.delta = historyDeltaEncode(momentHistory);
+			state.history = clone(momentHistory);
 		}
 
 		if (expired.length > 0) {
@@ -130,14 +132,16 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*
 		Restores the story state from a marshaled story state serialization object.
 	*/
-	function stateUnmarshal(state, noDelta) {
+	function stateUnmarshal(state, noDeltas) {
 		if (state == null) { // nullish test
 			throw new TypeError('state parameter must be an object');
 		}
 
+		const deltaDecode = !(noDeltas || Config.history.disableDeltas);
+
 		if (
-			!Object.hasOwn(state, noDelta ? 'history' : 'delta')
-			|| state[noDelta ? 'history' : 'delta'].length === 0
+			!Object.hasOwn(state, deltaDecode ? 'delta' : 'history')
+			|| state[deltaDecode ? 'delta' : 'history'].length === 0
 		) {
 			throw new Error('state object has no history or history is empty');
 		}
@@ -155,7 +159,7 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		// Restore the properties.
-		momentHistory = noDelta ? clone(state.history) : historyDeltaDecode(state.delta);
+		momentHistory = deltaDecode ? historyDeltaDecode(state.delta) : clone(state.history);
 		activeIndex   = state.index;
 		expired       = Object.hasOwn(state, 'expired') ? Array.from(state.expired) : [];
 
