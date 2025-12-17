@@ -243,6 +243,35 @@ Config.history.controls = false;
 
 <!-- *********************************************************************** -->
 
+### `Config.history.disableDeltas` ↔ `boolean` (default: `false`) {#config-api-property-history-disabledeltas}
+
+Determines whether the history states are delta encoded/decoded.
+
+<p role="note" class="tip"><b>Tip:</b>
+For the <em>vast majority</em> of projects it is <strong><em>strongly recommended</em></strong> to leave this setting at the default value of <code>false</code>.
+</p>
+
+<p role="note" class="warning"><b>Warning:</b>
+Changing this setting's value will invalidate all saves and sessions generated while the opposite value was in effect.
+</p>
+
+#### History:
+
+* `v2.38.0`: Introduced.
+
+#### Value:
+
+A `boolean` value signifying whether delta encoding/decoding of the history states is disabled.
+
+#### Examples:
+
+```javascript
+// Disables delta encoding/decoding of the history.
+Config.history.disableDeltas = true;
+```
+
+<!-- *********************************************************************** -->
+
 ### `Config.history.maxStates` ↔ *integer* `number` (default: `40`) {#config-api-property-history-maxstates}
 
 Sets the maximum number of states (moments) to which the history is allowed to grow.  Should the history exceed the limit, states will be dropped from the past (oldest first).
