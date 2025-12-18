@@ -39,9 +39,10 @@ Macro.add('checkbox', {
 		const uncheckValue = this.args[1];
 		const checkValue   = this.args[2];
 		const optArgs      = Object.assign(Object.create(null), {
-			classes   : [`macro-${this.name}`],
 			autocheck : false,
-			checked   : false
+			checked   : false,
+			classes   : [`macro-${this.name}`],
+			disabled  : false
 		});
 
 		// Process optional arguments.
@@ -63,6 +64,11 @@ Macro.add('checkbox', {
 					}
 
 					optArgs.classes.push(this.args[i]);
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -98,7 +104,7 @@ Macro.add('checkbox', {
 		const el    = document.createElement('input');
 
 		// Set up and append the input element to the output buffer.
-		jQuery(el)
+		const $checkbox = jQuery(el)
 			.attr({
 				id       : optArgs?.id ? optArgs.id : `${this.name}-${varId}`,
 				name     : `${this.name}-${varId}`,
@@ -110,6 +116,10 @@ Macro.add('checkbox', {
 				State.setVar(varName, this.checked ? checkValue : uncheckValue);
 			}))
 			.appendTo(this.output);
+
+		if (optArgs.disabled) {
+			$checkbox.ariaDisabled(true);
+		}
 
 		// Set the variable and input element to the appropriate value and state, as requested.
 		if (optArgs.autocheck) {

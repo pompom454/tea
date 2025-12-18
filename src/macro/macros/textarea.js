@@ -42,9 +42,10 @@ Macro.add('textarea', {
 
 		const defaultValue = this.args[1];
 		const optArgs      = Object.assign(Object.create(null), {
-			classes   : [`macro-${this.name}`],
 			autofocus : false,
+			classes   : [`macro-${this.name}`],
 			cols      : 64,
+			disabled  : false,
 			rows      : 4
 		});
 
@@ -76,6 +77,11 @@ Macro.add('textarea', {
 						return this.error(`cols option value must be an integer number greater-than or equal-to 1 (received: ${this.args[i]})`);
 					}
 
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -184,6 +190,10 @@ Macro.add('textarea', {
 				State.setVar(varName, this.value);
 			}))
 			.appendTo(this.output);
+
+		if (optArgs.disabled) {
+			$textarea.ariaDisabled(true);
+		}
 
 		if (optArgs?.minlength) {
 			$textarea.attr('minlength', optArgs.minlength);

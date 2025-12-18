@@ -41,8 +41,9 @@ Macro.add(['cycle', 'listbox'], {
 		}
 
 		const optArgs = Object.assign(Object.create(null), {
-			classes    : [`macro-${this.name}`],
 			autoselect : false,
+			classes    : [`macro-${this.name}`],
+			disabled   : false,
 			once       : false
 		});
 
@@ -60,6 +61,11 @@ Macro.add(['cycle', 'listbox'], {
 					}
 
 					optArgs.classes.push(this.args[i]);
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -226,7 +232,7 @@ Macro.add(['cycle', 'listbox'], {
 			}
 			else {
 				let cycleIndex = index;
-				jQuery(document.createElement('a'))
+				const $anchor = jQuery(document.createElement('a'))
 					.wikiWithOptions({ cleanup : false, profile : 'core' }, options[index].label)
 					.attr('id', optArgs?.id ? optArgs.id : `${this.name}-${varId}`)
 					.addClass(optArgs.classes)
@@ -246,6 +252,10 @@ Macro.add(['cycle', 'listbox'], {
 						triggerEvent('change', this);
 					}))
 					.appendTo(this.output);
+
+				if (optArgs.disabled) {
+					$anchor.ariaDisabled(true);
+				}
 			}
 		}
 		else { // this.name === 'listbox'
@@ -270,6 +280,10 @@ Macro.add(['cycle', 'listbox'], {
 					State.setVar(varName, options[Number(this.value)].value);
 				}))
 				.appendTo(this.output);
+
+			if (optArgs.disabled) {
+				$select.ariaDisabled(true);
+			}
 		}
 
 		// Set the variable to the appropriate value, as requested.
