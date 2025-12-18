@@ -37,9 +37,10 @@ Macro.add('radiobutton', {
 
 		const checkValue = this.args[1];
 		const optArgs    = Object.assign(Object.create(null), {
-			classes   : [`macro-${this.name}`],
 			autocheck : false,
-			checked   : false
+			checked   : false,
+			classes   : [`macro-${this.name}`],
+			disabled  : false
 		});
 
 		// Process optional arguments.
@@ -61,6 +62,11 @@ Macro.add('radiobutton', {
 					}
 
 					optArgs.classes.push(this.args[i]);
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -105,7 +111,7 @@ Macro.add('radiobutton', {
 		}
 
 		// Set up and append the input element to the output buffer.
-		jQuery(el)
+		const $radiobutton = jQuery(el)
 			.attr({
 				id       : optArgs?.id ? optArgs.id : `${this.name}-${varId}-${TempState[this.name][varId]++}`,
 				name     : `${this.name}-${varId}`,
@@ -119,6 +125,10 @@ Macro.add('radiobutton', {
 				}
 			}))
 			.appendTo(this.output);
+
+		if (optArgs.disabled) {
+			$radiobutton.ariaDisabled(true);
+		}
 
 		// Set the variable to the checked value and the input element to checked, if requested.
 		if (optArgs.autocheck) {

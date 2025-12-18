@@ -24,6 +24,7 @@ Macro.add(['linkappend', 'linkprepend', 'linkreplace'], {
 		const $insert = jQuery(document.createElement('span'));
 		const optArgs = Object.assign(Object.create(null), {
 			classes    : [`macro-${this.name}`, 'link-internal'],
+			disabled   : false,
 			transition : false
 		});
 
@@ -36,6 +37,11 @@ Macro.add(['linkappend', 'linkprepend', 'linkreplace'], {
 					}
 
 					optArgs.classes.push(this.args[i]);
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -122,6 +128,10 @@ Macro.add(['linkappend', 'linkprepend', 'linkreplace'], {
 				}
 			))
 			.appendTo(this.output);
+
+		if (optArgs.disabled) {
+			$link.ariaDisabled(true);
+		}
 
 		$insert.addClass(`macro-${this.name}-insert`);
 

@@ -85,8 +85,9 @@
 			}
 
 			const optArgs = Object.assign(Object.create(null), {
+				autofocus : false,
 				classes   : [`macro-${this.name}`],
-				autofocus : false
+				disabled  : false
 			});
 
 			// Process optional arguments.
@@ -103,6 +104,11 @@
 						}
 
 						optArgs.classes.push(this.args[i]);
+						break;
+					}
+
+					case 'disabled': {
+						optArgs.disabled = true;
 						break;
 					}
 
@@ -239,6 +245,10 @@
 					}
 				}))
 				.appendTo(this.output);
+
+			if (optArgs.disabled) {
+				$numberbox.ariaDisabled(true);
+			}
 
 			if (optArgs?.min != null) { // nullish test
 				$numberbox.attr('min', optArgs.min);

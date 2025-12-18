@@ -24,7 +24,8 @@ Macro.add(['button', 'link'], {
 		const $link    = jQuery(document.createElement(this.name === 'button' ? 'button' : 'a'));
 		const classes  = [`macro-${this.name}`];
 		const optArgs  = Object.assign(Object.create(null), {
-			classes : []
+			classes  : [],
+			disabled : false
 		});
 
 		// Argument is an object.
@@ -90,6 +91,11 @@ Macro.add(['button', 'link'], {
 					break;
 				}
 
+				case 'disabled': {
+					optArgs.disabled = true;
+					break;
+				}
+
 				case 'id': {
 					if (++i >= this.args.length) {
 						return this.error('id option missing required value');
@@ -134,6 +140,10 @@ Macro.add(['button', 'link'], {
 		}
 		else {
 			classes.push('link-internal');
+		}
+
+		if (optArgs.disabled) {
+			$link.ariaDisabled(true);
 		}
 
 		if (optArgs?.id != null) { // nullish test

@@ -3,12 +3,12 @@
 ************************************************************************************************ -->
 # Guide: Icon Font {#guide-icon-font}
 
-This guide is a reference to the icon font used by SugarCube, `sc-icons`, which is a subset of Font Awesome Free `6.7.2`.
+This guide is a reference to the icon font used by SugarCube, `sc-icons`, which is based upon the Font Awesome Free `7.1.0` set's *Solid* style.
 
 ```
-Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com
+Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com
 License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
-Copyright 2024 Fonticons, Inc.
+Copyright 2025 Fonticons, Inc.
 ```
 
 <!-- *********************************************************************** -->
@@ -242,10 +242,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="hands-bubbles" aria-label="hands-bubbles">&#xe05e;</span>
 		<code>e05e</code>
-	</div>
-	<div>
-		<span title="handshake-simple-slash" aria-label="handshake-simple-slash">&#xe05f;</span>
-		<code>e05f</code>
 	</div>
 	<div>
 		<span title="handshake-slash" aria-label="handshake-slash">&#xe060;</span>
@@ -1606,6 +1602,38 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="square-binary" aria-label="square-binary">&#xe69b;</span>
 		<code>e69b</code>
+	</div>
+	<div>
+		<span title="pentagon" aria-label="pentagon">&#xe790;</span>
+		<code>e790</code>
+	</div>
+	<div>
+		<span title="non-binary" aria-label="non-binary">&#xe807;</span>
+		<code>e807</code>
+	</div>
+	<div>
+		<span title="spiral" aria-label="spiral">&#xe80a;</span>
+		<code>e80a</code>
+	</div>
+	<div>
+		<span title="mobile-vibrate" aria-label="mobile-vibrate">&#xe816;</span>
+		<code>e816</code>
+	</div>
+	<div>
+		<span title="single-quote-left" aria-label="single-quote-left">&#xe81b;</span>
+		<code>e81b</code>
+	</div>
+	<div>
+		<span title="single-quote-right" aria-label="single-quote-right">&#xe81c;</span>
+		<code>e81c</code>
+	</div>
+	<div>
+		<span title="bus-side" aria-label="bus-side">&#xe81d;</span>
+		<code>e81d</code>
+	</div>
+	<div>
+		<span title="septagon" aria-label="septagon">&#xe820;</span>
+		<code>e820</code>
 	</div>
 	<div>
 		<span title="martini-glass-empty" aria-label="martini-glass-empty">&#xf000;</span>
@@ -3444,6 +3472,10 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 		<code>f305</code>
 	</div>
 	<div>
+		<span title="octagon" aria-label="octagon">&#xf306;</span>
+		<code>f306</code>
+	</div>
+	<div>
 		<span title="down-long" aria-label="down-long">&#xf309;</span>
 		<code>f309</code>
 	</div>
@@ -3458,6 +3490,10 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="up-long" aria-label="up-long">&#xf30c;</span>
 		<code>f30c</code>
+	</div>
+	<div>
+		<span title="hexagon" aria-label="hexagon">&#xf312;</span>
+		<code>f312</code>
 	</div>
 	<div>
 		<span title="file-pen" aria-label="file-pen">&#xf31c;</span>
@@ -3478,6 +3514,10 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="up-down" aria-label="up-down">&#xf338;</span>
 		<code>f338</code>
+	</div>
+	<div>
+		<span title="alarm-clock" aria-label="alarm-clock">&#xf34e;</span>
+		<code>f34e</code>
 	</div>
 	<div>
 		<span title="circle-down" aria-label="circle-down">&#xf358;</span>
@@ -3590,10 +3630,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="ticket-simple" aria-label="ticket-simple">&#xf3ff;</span>
 		<code>f3ff</code>
-	</div>
-	<div>
-		<span title="user-large" aria-label="user-large">&#xf406;</span>
-		<code>f406</code>
 	</div>
 	<div>
 		<span title="rectangle-xmark" aria-label="rectangle-xmark">&#xf410;</span>
@@ -3872,10 +3908,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 		<code>f4c4</code>
 	</div>
 	<div>
-		<span title="handshake-simple" aria-label="handshake-simple">&#xf4c6;</span>
-		<code>f4c6</code>
-	</div>
-	<div>
 		<span title="parachute-box" aria-label="parachute-box">&#xf4cd;</span>
 		<code>f4cd</code>
 	</div>
@@ -3926,10 +3958,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="wine-glass" aria-label="wine-glass">&#xf4e3;</span>
 		<code>f4e3</code>
-	</div>
-	<div>
-		<span title="user-large-slash" aria-label="user-large-slash">&#xf4fa;</span>
-		<code>f4fa</code>
 	</div>
 	<div>
 		<span title="user-astronaut" aria-label="user-astronaut">&#xf4fb;</span>
@@ -4476,10 +4504,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 		<code>f58e</code>
 	</div>
 	<div>
-		<span title="headphones-simple" aria-label="headphones-simple">&#xf58f;</span>
-		<code>f58f</code>
-	</div>
-	<div>
 		<span title="headset" aria-label="headset">&#xf590;</span>
 		<code>f590</code>
 	</div>
@@ -4674,10 +4698,6 @@ Each icon's hexadecimal reference ID is listed below it.  How to use the referen
 	<div>
 		<span title="umbrella-beach" aria-label="umbrella-beach">&#xf5ca;</span>
 		<code>f5ca</code>
-	</div>
-	<div>
-		<span title="vector-square" aria-label="vector-square">&#xf5cb;</span>
-		<code>f5cb</code>
 	</div>
 	<div>
 		<span title="weight-hanging" aria-label="weight-hanging">&#xf5cd;</span>

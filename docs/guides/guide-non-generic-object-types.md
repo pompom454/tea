@@ -18,6 +18,10 @@ In both cases, since the end goal is roughly the same, this means creating a new
 The <a href="#methods-serial-method-createreviver"><code>Serial.createReviver()</code> method</a> for additional information on implementing the <code>.toJSON()</code> method.
 </p>
 
+<p role="note" class="warning"><b>Warning:</b>
+Private fields in classes are only supported when the <a href="#config-api-property-history-disabledeltas"><code>Config.history.disableDeltas</code> setting</a> is set to <code>true</code>.
+</p>
+
 ## Examples: *(not an exhaustive list)*
 
 <!-- *********************************************************************** -->

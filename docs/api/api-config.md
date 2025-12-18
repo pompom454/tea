@@ -136,7 +136,7 @@ List of optional errors and warnings: *(not exhaustive)*
 
 #### Value:
 
-A `boolean` value signifying whether optional debugging errors and warnings are enabled.
+A `boolean` value signifying whether optional debugging errors and warnings are disabled.
 
 #### Examples:
 
@@ -225,7 +225,7 @@ Config.audio.preloadMetadata = false;
 
 ### `Config.history.controls` ↔ `boolean` (default: `true`) {#config-api-property-history-controls}
 
-Determines whether the story's history controls (Backward, Jump To, & Forward buttons) are enabled within the UI bar.
+Determines whether the history controls (Backward, Jump To, & Forward buttons) are enabled within the UI bar.
 
 #### History:
 
@@ -233,7 +233,7 @@ Determines whether the story's history controls (Backward, Jump To, & Forward bu
 
 #### Value:
 
-A `boolean` value signifying whether the story history controls are enabled.
+A `boolean` value signifying whether the history controls are enabled.
 
 #### Examples:
 
@@ -253,6 +253,10 @@ For the <em>vast majority</em> of projects it is <strong><em>strongly recommende
 
 <p role="note" class="warning"><b>Warning:</b>
 Changing this setting's value will invalidate all saves and sessions generated while the opposite value was in effect.
+</p>
+
+<p role="note" class="warning"><b>Warning:</b>
+Private fields in classes are only supported when this setting is set to <code>true</code>.
 </p>
 
 #### History:

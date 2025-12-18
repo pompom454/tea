@@ -42,8 +42,9 @@ Macro.add('textbox', {
 
 		const defaultValue = this.args[1];
 		const optArgs      = Object.assign(Object.create(null), {
+			autofocus : false,
 			classes   : [`macro-${this.name}`],
-			autofocus : false
+			disabled  : false
 		});
 
 		// Process optional arguments.
@@ -60,6 +61,11 @@ Macro.add('textbox', {
 					}
 
 					optArgs.classes.push(this.args[i]);
+					break;
+				}
+
+				case 'disabled': {
+					optArgs.disabled = true;
 					break;
 				}
 
@@ -201,6 +207,10 @@ Macro.add('textbox', {
 				}
 			}))
 			.appendTo(this.output);
+
+		if (optArgs.disabled) {
+			$textbox.ariaDisabled(true);
+		}
 
 		if (optArgs?.minlength) {
 			$textbox.attr('minlength', optArgs.minlength);

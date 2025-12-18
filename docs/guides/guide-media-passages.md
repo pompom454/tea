@@ -44,7 +44,7 @@ To manually create a media passage:
 2. Tag it with the appropriate media passage special tag, and only that tag—see below.
 3. Paste in the Base64-encoded media source as the passage's content.
 
-See the MDN article [<i>Media formats for HTML audio and video</i>](https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats) for more information on formats commonly supported in browsers—pay special attention to the [<i>Browser compatibility</i>](https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats#Browser_compatibility) section.
+See the [<i>Media types and formats for image, audio, and video content</i> article (MDN)](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats) for more information on formats commonly supported in browsers.<!--  In particular, pay special attention to the [<i>Browser compatibility</i>](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Containers#browser_compatibility) section of the [<i>Media container formats (file types)<i> sub-article (MDN)](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Containers). -->
 
 #### Media passage special tags
 
