@@ -255,6 +255,10 @@ For the <em>vast majority</em> of projects it is <strong><em>strongly recommende
 Changing this setting's value will invalidate all saves and sessions generated while the opposite value was in effect.
 </p>
 
+<p role="note" class="warning"><b>Warning:</b>
+Private fields in classes are only supported when this setting is set to <code>true</code>.
+</p>
+
 #### History:
 
 * `v2.38.0`: Introduced.
